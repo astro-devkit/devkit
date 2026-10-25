@@ -8,11 +8,21 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
 <link rel="canonical" href="https://astro-devkit.github.io/devkit/">
 <meta property="og:title" content="DevKit — free calculators, converters &amp; dev tools">
-<meta property="og:description" content="21 free calculators, file converters and dev tools. Everything runs in your browser — no uploads, no accounts, no tracking.">
+<meta property="og:description" content="45 free calculators, file converters and dev tools. Everything runs in your browser — no uploads, no accounts, no tracking.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://astro-devkit.github.io/devkit/">
 <meta name="twitter:card" content="summary">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DevKit","applicationCategory":"CalculatorApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free calculators, file converters and dev tools. Everything runs in your browser — no uploads, no accounts, no tracking."}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DevKit","applicationCategory":"CalculatorApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free calculators, file converters and dev tools. Everything runs in your browser — no uploads, no accounts, no tracking."}
+/* ---- v4 tools ---- */
+function xmlToJson(){const t=document.getElementById('xmlIn').value.trim();const out=document.getElementById('xmlOut');try{const doc=new DOMParser().parseFromString(t,'text/xml');if(doc.getElementsByTagName('parsererror').length)throw new Error('Not valid XML');function el(e){const o={};for(const a of e.attributes||[])o['@'+a.name]=a.value;const kids=[...e.children];if(!kids.length)return e.textContent;for(const k of kids){const v=el(k);if(o[k.tagName]!==undefined){if(!Array.isArray(o[k.tagName]))o[k.tagName]=[o[k.tagName]];o[k.tagName].push(v)}else o[k.tagName]=v}return o}const r={};r[doc.documentElement.tagName]=el(doc.documentElement);out.textContent=JSON.stringify(r,null,2)}catch(e){out.textContent='Error: '+e.message}}
+function jsonToXml(){const out=document.getElementById('xmlOut');try{const o=JSON.parse(document.getElementById('xmlIn').value);function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}function build(v,tag){if(v===null||typeof v!=='object')return '<'+tag+'>'+esc(v)+'</'+tag+'>';if(Array.isArray(v))return v.map(function(x){return build(x,tag)}).join('');let inner='';for(const k in v)inner+=build(v[k],k);return '<'+tag+'>'+inner+'</'+tag+'>'}const keys=Object.keys(o);out.textContent=keys.map(function(k){return build(o[k],k)}).join('')}catch(e){out.textContent='Error: '+e.message}}
+function csvToSql(){const out=document.getElementById('sqlOut');const table=(document.getElementById('sqlTable').value||'table').replace(/[^A-Za-z0-9_]/g,'')||'table';try{const rows=parseCsv(document.getElementById('sqlIn').value.trim());if(rows.length<2){out.textContent='Need a header row and at least one data row.';return}const cols=rows[0];const lines=rows.slice(1).map(function(r){return 'INSERT INTO '+table+' ('+cols.join(', ')+') VALUES ('+r.map(function(v){return isNaN(v)||v==='' ? "'"+String(v).replace(/'/g,"''")+"'" : v}).join(', ')+');'});out.textContent=lines.join('\n')}catch(e){out.textContent='Error: '+e.message}}
+function hashFileGo(f){const out=document.getElementById('hashOut');if(!f){out.textContent='Choose a file first.';return}out.textContent='Hashing '+f.name+' ('+fmtFileSize(f.size)+')…';f.arrayBuffer().then(function(buf){return crypto.subtle.digest('SHA-256',buf)}).then(function(h){out.textContent=[...new Uint8Array(h)].map(function(b){return b.toString(16).padStart(2,'0')}).join('')}).catch(function(e){out.textContent='Error: '+e.message})}
+function imgToB64(f){const out=document.getElementById('b64Out');if(!f){out.textContent='Choose an image first.';return}const r=new FileReader();r.onload=function(){out.textContent=r.result};r.onerror=function(){out.textContent='Could not read that file.'};r.readAsDataURL(f)}
+function wordCount(){const t=document.getElementById('wcIn').value;const words=t.trim()?t.trim().split(/\s+/).length:0;const chars=t.length,noSp=t.replace(/\s/g,'').length,lines=t?t.split(/\n/).length:0;document.getElementById('wcOut').textContent=words+' words · '+chars+' characters · '+noSp+' characters (no spaces) · '+lines+' lines · ~'+Math.max(1,Math.round(words/200))+' min read'}
+function sortLines(mode){const el=document.getElementById('sortIn');let lines=el.value.split('\n').filter(function(l){return l.trim()!==''});if(mode==='az')lines.sort(function(a,b){return a.localeCompare(b)});if(mode==='za')lines.sort(function(a,b){return b.localeCompare(a)});if(mode==='uniq')lines=[...new Set(lines)];document.getElementById('sortOut').textContent=lines.join('\n')}
+function jsonToTs(){const out=document.getElementById('tsOut');try{const o=JSON.parse(document.getElementById('tsIn').value);function ty(v,n){if(v===null)return 'null';if(Array.isArray(v))return v.length?ty(v[0],n)+'[]':'any[]';if(typeof v==='object'){let s='interface '+n+' {\n';for(const k in v)s+='  '+k+': '+ty(v[k],k.charAt(0).toUpperCase()+k.slice(1))+';\n';return s+'}'}return typeof v}out.textContent=ty(o,'Root')}catch(e){out.textContent='Error: '+e.message}}
+</script>
 <style>
 :root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -150,6 +160,10 @@ section{display:none}section.on{display:block}
 <button class="ghost" onclick="copyText('caseOut')">Copy</button>
 <pre id="caseOut"></pre>
 </div>
+<div class="card" id="tool-xml"><h3>XML ↔ JSON</h3><textarea id="xmlIn" rows="3" placeholder='&lt;person&gt;&lt;name&gt;Ada&lt;/name&gt;&lt;age&gt;36&lt;/age&gt;&lt;/person&gt;'></textarea><div class="row"><button class="btn" onclick="xmlToJson()">XML → JSON</button><button class="btn" onclick="jsonToXml()">JSON → XML</button></div><pre id="xmlOut"></pre></div>
+<div class="card" id="tool-csvsql"><h3>CSV → SQL INSERT</h3><input id="sqlTable" value="users" aria-label="Table name"><textarea id="sqlIn" rows="3" placeholder="name,age&#10;Ada,36&#10;Grace,41"></textarea><div class="row"><button class="btn" onclick="csvToSql()">Convert</button><button class="btn ghost" onclick="copyOut('sqlOut')">Copy</button></div><pre id="sqlOut"></pre></div>
+<div class="card" id="tool-hash"><h3>File SHA-256 hash</h3><div class="drop" id="hashDrop" onclick="document.getElementById('hashFile').click()">Drop a file here, or click to choose</div><input type="file" id="hashFile" class="hidden" onchange="hashFileGo(this.files[0])"><pre id="hashOut"></pre></div>
+<div class="card" id="tool-b64"><h3>Image → Base64</h3><div class="drop" id="b64Drop" onclick="document.getElementById('b64File').click()">Drop an image here, or click to choose</div><input type="file" id="b64File" accept="image/*" class="hidden" onchange="imgToB64(this.files[0])"><div class="row"><button class="btn ghost" onclick="copyOut('b64Out')">Copy data URI</button></div><pre id="b64Out"></pre></div>
 </div>
 </section>
 
@@ -222,6 +236,9 @@ section{display:none}section.on{display:block}
 <button class="act" onclick="diffText()">Compare</button>
 <pre id="diffOut"></pre>
 </div>
+<div class="card" id="tool-wc"><h3>Word counter</h3><textarea id="wcIn" rows="3" placeholder="Paste text to count words, characters and reading time"></textarea><div class="row"><button class="btn" onclick="wordCount()">Count</button></div><pre id="wcOut"></pre></div>
+<div class="card" id="tool-sort"><h3>Sort &amp; dedupe lines</h3><textarea id="sortIn" rows="3" placeholder="one line per item"></textarea><div class="row"><button class="btn" onclick="sortLines('az')">Sort A–Z</button><button class="btn" onclick="sortLines('za')">Sort Z–A</button><button class="btn" onclick="sortLines('uniq')">Remove duplicates</button></div><pre id="sortOut"></pre></div>
+<div class="card" id="tool-ts"><h3>JSON → TypeScript</h3><textarea id="tsIn" rows="3" placeholder='{"name":"Ada","age":36,"admin":true}'></textarea><div class="row"><button class="btn" onclick="jsonToTs()">Generate types</button><button class="btn ghost" onclick="copyOut('tsOut')">Copy</button></div><pre id="tsOut"></pre></div>
 </div>
 </section>
 </main>
@@ -306,16 +323,93 @@ CALCS.push(
  compute:function(v){let amt,unit,cost;if(v.mode==='mpg'){const mi=v.distunit==='mi'?v.distance:v.distance/1.60934;amt=mi/v.cons;unit='gal';cost=amt*v.price}else{const km=v.distunit==='km'?v.distance:v.distance*1.60934;amt=km*v.cons/100;unit='L';cost=amt*v.price}return{main:money(cost),sub:fmt(amt)+' '+unit+' · '+money(v.price)+' per '+unit}}}
 );
 
+var RATES={USD:1};
+CALCS.push(
+{id:'loan',name:'Loan payment',cat:'finance',tags:'loan auto car personal payment',f:'M = P·r(1+r)ⁿ ÷ ((1+r)ⁿ − 1), r = annual rate ÷ 12',
+ inputs:[{k:'p',label:'Loan amount ($)',type:'number',def:20000},{k:'rate',label:'Annual interest rate (%)',type:'number',def:5},{k:'years',label:'Term (years)',type:'number',def:5}],
+ compute:function(v){const r=v.rate/100/12,n=v.years*12;const m=r===0?v.p/n:v.p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);const tot=m*n;return{main:money(m)+'/mo',sub:'Total '+money(tot)+' · Interest '+money(tot-v.p)}}},
+{id:'retirement',name:'Retirement savings',cat:'finance',tags:'retirement 401k savings future value invest',f:'FV = P(1+r)ⁿ + PMT·((1+r)ⁿ − 1)/r, r = annual rate ÷ 12, n = years × 12',
+ inputs:[{k:'p',label:'Current savings ($)',type:'number',def:0},{k:'pmt',label:'Monthly contribution ($)',type:'number',def:500},{k:'rate',label:'Annual return (%)',type:'number',def:7},{k:'years',label:'Years',type:'number',def:30}],
+ compute:function(v){const r=v.rate/100/12,n=v.years*12;const fv=v.p*Math.pow(1+r,n)+(r===0?v.pmt*n:v.pmt*((Math.pow(1+r,n)-1)/r));const inn=v.p+v.pmt*n;return{main:money(fv),sub:'You put in '+money(inn)+' · Growth '+money(fv-inn)}}},
+{id:'roi',name:'Return on investment (ROI)',cat:'finance',tags:'roi return investment gain profit',f:'ROI = (gain − cost) ÷ cost × 100',
+ inputs:[{k:'cost',label:'Cost ($)',type:'number',def:1000},{k:'gain',label:'Final value ($)',type:'number',def:1300}],
+ compute:function(v){const r=v.cost===0?0:(v.gain-v.cost)/v.cost*100;return{main:fmt(r,1)+'%',sub:'Profit '+money(v.gain-v.cost)}}},
+{id:'breakeven',name:'Break-even point',cat:'finance',tags:'break even units business sales',f:'Units = fixed costs ÷ (price − variable cost)',
+ inputs:[{k:'fixed',label:'Fixed costs ($)',type:'number',def:10000},{k:'price',label:'Price per unit ($)',type:'number',def:50},{k:'varc',label:'Variable cost per unit ($)',type:'number',def:30}],
+ compute:function(v){const d=v.price-v.varc;if(d<=0)return{main:'—',sub:'Price must exceed variable cost'};const u=v.fixed/d;return{main:fmt(u,0)+' units',sub:'Revenue at break-even '+money(u*v.price)}}},
+{id:'margin',name:'Profit margin',cat:'finance',tags:'profit margin business revenue',f:'Margin = (revenue − cost) ÷ revenue × 100',
+ inputs:[{k:'rev',label:'Revenue ($)',type:'number',def:1000},{k:'cost',label:'Cost ($)',type:'number',def:700}],
+ compute:function(v){const m=v.rev===0?0:(v.rev-v.cost)/v.rev*100;return{main:fmt(m,1)+'%',sub:'Profit '+money(v.rev-v.cost)}}},
+{id:'markup',name:'Markup & selling price',cat:'finance',tags:'markup price cost sell retail',f:'Price = cost × (1 + markup%)',
+ inputs:[{k:'cost',label:'Cost ($)',type:'number',def:50},{k:'pct',label:'Markup (%)',type:'number',def:40}],
+ compute:function(v){const pr=v.cost*(1+v.pct/100);return{main:money(pr),sub:'Profit per item '+money(pr-v.cost)}}},
+{id:'macros',name:'Macro calculator',cat:'health',tags:'macros protein carbs fat diet nutrition',f:'Protein & carbs 4 kcal/g · Fat 9 kcal/g',
+ inputs:[{k:'cal',label:'Daily calories',type:'number',def:2000},{k:'pp',label:'Protein (%)',type:'number',def:30},{k:'cp',label:'Carbs (%)',type:'number',def:40},{k:'fp',label:'Fat (%)',type:'number',def:30}],
+ compute:function(v){const pr=v.cal*v.pp/100/4,cb=v.cal*v.cp/100/4,ft=v.cal*v.fp/100/9;return{main:'Protein '+fmt(pr,0)+' g',sub:'Carbs '+fmt(cb,0)+' g · Fat '+fmt(ft,0)+' g'}}},
+{id:'water',name:'Daily water intake',cat:'health',tags:'water hydration drink litres',f:'~35 ml per kg of body weight',
+ inputs:[{k:'kg',label:'Weight (kg)',type:'number',def:70}],
+ compute:function(v){const ml=v.kg*35;return{main:fmt(ml/1000,2)+' L/day',sub:fmt(ml,0)+' ml · ~'+fmt(ml/250,1)+' glasses (250 ml)'}}},
+{id:'onerepmax',name:'One-rep max (Epley)',cat:'health',tags:'one rep max strength lift gym',f:'1RM = weight × (1 + reps/30)',
+ inputs:[{k:'w',label:'Weight lifted (kg)',type:'number',def:100},{k:'reps',label:'Reps',type:'number',def:5}],
+ compute:function(v){const rm=v.w*(1+v.reps/30);return{main:fmt(rm,1)+' kg',sub:'70% ≈ '+fmt(rm*0.7,1)+' kg · 85% ≈ '+fmt(rm*0.85,1)+' kg'}}},
+{id:'hrzones',name:'Heart-rate zones',cat:'health',tags:'heart rate zones cardio max bpm',f:'Max HR = 220 − age · Zone 2 = 60–70% of max',
+ inputs:[{k:'age',label:'Age',type:'number',def:30}],
+ compute:function(v){const mx=220-v.age;return{main:'Max '+fmt(mx,0)+' bpm',sub:'Zone 2 (fat burn) '+fmt(mx*0.6,0)+'–'+fmt(mx*0.7,0)+' bpm · Zone 4 '+fmt(mx*0.8,0)+'–'+fmt(mx*0.9,0)+' bpm'}}},
+{id:'sleep',name:'Sleep cycle bedtimes',cat:'health',tags:'sleep bedtime cycles wake alarm',f:'Each cycle is 90 min + ~15 min to fall asleep',
+ inputs:[{k:'wake',label:'Wake-up time',type:'time',def:'07:00'}],
+ compute:function(v){const parts=String(v.wake||'07:00').split(':');const wh=parseInt(parts[0])||0,wm=parseInt(parts[1])||0;const tot=wh*60+wm;function bed(c){let m=(tot-(c*90+15))%1440;if(m<0)m+=1440;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')}return{main:bed(6)+' · 6 cycles',sub:'5 cycles '+bed(5)+' · 4 cycles '+bed(4)+' · 3 cycles '+bed(3)}}},
+{id:'gpa',name:'GPA calculator',cat:'math',tags:'gpa grades school college credits',f:'GPA = Σ(grade points × credits) ÷ Σcredits · A=4, B=3, C=2, D=1, F=0',
+ inputs:[{k:'grades',label:'Grades as Letter:credits, e.g. A:3, B:3',type:'textarea',def:'A:3, B:3'}],
+ compute:function(v){const map={A:4,'A-':3.7,'B+':3.3,B:3,'B-':2.7,'C+':2.3,C:2,'C-':1.7,D:1,F:0};let pts=0,cr=0;String(v.grades).split(',').forEach(function(pair){const p=pair.trim().split(':');if(p.length<2)return;const g=(p[0]||'').trim().toUpperCase(),c=parseFloat(p[1]);if(map[g]===undefined||!isFinite(c))return;pts+=map[g]*c;cr+=c});if(!cr)return{main:'—',sub:'Enter grades like A:3, B:3'};return{main:'GPA '+fmt(pts/cr,2),sub:fmt(cr,0)+' credits'}}},
+{id:'quadratic',name:'Quadratic solver',cat:'math',tags:'quadratic equation roots algebra',f:'x = (−b ± √(b²−4ac)) ÷ 2a',
+ inputs:[{k:'a',label:'a',type:'number',def:1},{k:'b',label:'b',type:'number',def:-3},{k:'c',label:'c',type:'number',def:2}],
+ compute:function(v){if(v.a===0)return{main:'—',sub:'a cannot be 0'};const d=v.b*v.b-4*v.a*v.c;if(d<0)return{main:'No real roots',sub:'Discriminant '+fmt(d)+' < 0'};const r1=(-v.b+Math.sqrt(d))/(2*v.a),r2=(-v.b-Math.sqrt(d))/(2*v.a);return{main:'x = '+fmt(r1)+' or '+fmt(r2),sub:'Discriminant '+fmt(d)}}},
+{id:'gcdlcm',name:'GCD & LCM',cat:'math',tags:'gcd lcm greatest common divisor multiple',f:'GCD by Euclid · LCM = a×b ÷ GCD',
+ inputs:[{k:'a',label:'First number',type:'number',def:12},{k:'b',label:'Second number',type:'number',def:18}],
+ compute:function(v){let x=Math.abs(Math.round(v.a)),y=Math.abs(Math.round(v.b));if(!x||!y)return{main:'—',sub:'Enter two positive integers'};let a=x,b=y;while(b){const t=b;b=a%b;a=t}const g=a,l=x*y/g;return{main:'GCD '+fmt(g,0)+' · LCM '+fmt(l,0),sub:v.a+' × '+v.b+' = '+fmt(x*y,0)}}},
+{id:'power',name:'Power & roots',cat:'math',tags:'power exponent square root log',f:'a^b · √a · log10(a)',
+ inputs:[{k:'base',label:'Base',type:'number',def:2},{k:'exp',label:'Exponent',type:'number',def:10}],
+ compute:function(v){const p=Math.pow(v.base,v.exp);return{main:fmt(p,0),sub:'√'+v.base+' = '+fmt(Math.sqrt(v.base),2)+' · log10 = '+fmt(Math.log10(v.base),2)}}},
+{id:'volume',name:'Volume converter',cat:'convert',tags:'volume litres gallons cups fluid ounces',f:'Convert via litres: 1 gal = 3.78541 L · 1 cup = 0.236588 L',
+ inputs:[{k:'value',label:'Value',type:'number',def:1},{k:'from',label:'From',type:'select',def:'gal',opts:[['ml','Millilitres'],['L','Litres'],['cup','Cups'],['floz','Fluid ounces'],['gal','Gallons'],['m3','Cubic metres']]},{k:'to',label:'To',type:'select',def:'L',opts:[['ml','Millilitres'],['L','Litres'],['cup','Cups'],['floz','Fluid ounces'],['gal','Gallons'],['m3','Cubic metres']]}],
+ compute:function(v){const f={ml:0.001,L:1,cup:0.236588,floz:0.0295735,gal:3.78541,m3:1000};const r=v.value*f[v.from]/f[v.to];return{main:fmt(r,4)+' '+v.to,sub:v.value+' '+v.from+' = '+fmt(r,4)+' '+v.to}}},
+{id:'areaunits',name:'Area converter',cat:'convert',tags:'area square metres acres hectares feet',f:'Convert via m²: 1 acre = 4046.86 m² · 1 ha = 10000 m²',
+ inputs:[{k:'value',label:'Value',type:'number',def:1},{k:'from',label:'From',type:'select',def:'acre',opts:[['m2','Square metres'],['ft2','Square feet'],['acre','Acres'],['ha','Hectares'],['km2','Square km']]},{k:'to',label:'To',type:'select',def:'m2',opts:[['m2','Square metres'],['ft2','Square feet'],['acre','Acres'],['ha','Hectares'],['km2','Square km']]}],
+ compute:function(v){const f={m2:1,ft2:0.092903,acre:4046.86,ha:10000,km2:1000000};const r=v.value*f[v.from]/f[v.to];return{main:fmt(r,4)+' '+v.to,sub:v.value+' '+v.from+' = '+fmt(r,4)+' '+v.to}}},
+{id:'timeunits',name:'Time converter',cat:'convert',tags:'time seconds minutes hours days weeks',f:'Convert via seconds: 1 week = 604800 s',
+ inputs:[{k:'value',label:'Value',type:'number',def:1},{k:'from',label:'From',type:'select',def:'wk',opts:[['s','Seconds'],['min','Minutes'],['h','Hours'],['d','Days'],['wk','Weeks']]},{k:'to',label:'To',type:'select',def:'s',opts:[['s','Seconds'],['min','Minutes'],['h','Hours'],['d','Days'],['wk','Weeks']]}],
+ compute:function(v){const f={s:1,min:60,h:3600,d:86400,wk:604800};const r=v.value*f[v.from]/f[v.to];return{main:fmt(r,0)+' '+v.to,sub:v.value+' '+v.from+' = '+fmt(r,0)+' '+v.to}}},
+{id:'cooking',name:'Cups ↔ grams',cat:'convert',tags:'cooking cups grams recipe ingredient flour sugar',f:'1 cup water 236.6 g · flour 120 g · sugar 200 g · butter 227 g',
+ inputs:[{k:'value',label:'Value',type:'number',def:1},{k:'ing',label:'Ingredient',type:'select',def:'flour',opts:[['water','Water'],['flour','Flour'],['sugar','Sugar'],['butter','Butter']]},{k:'dir',label:'Direction',type:'select',def:'c2g',opts:[['c2g','Cups → grams'],['g2c','Grams → cups']]}],
+ compute:function(v){const g={water:236.6,flour:120,sugar:200,butter:227}[v.ing];if(v.dir==='c2g')return{main:fmt(v.value*g,1)+' g',sub:v.value+' cup(s) of '+v.ing+' = '+fmt(v.value*g,1)+' g'};return{main:fmt(v.value/g,2)+' cups',sub:v.value+' g of '+v.ing+' = '+fmt(v.value/g,2)+' cups'}}},
+{id:'currency',name:'Currency converter (live rates)',cat:'convert',tags:'currency money exchange usd eur gbp',f:'Rates from the European Central Bank, updated daily · USD = 1',
+ inputs:[{k:'amount',label:'Amount',type:'number',def:100},{k:'from',label:'From',type:'select',def:'USD',opts:[['USD','USD'],['EUR','EUR'],['GBP','GBP'],['JPY','JPY'],['CAD','CAD'],['AUD','AUD'],['CHF','CHF'],['CNY','CNY'],['INR','INR'],['SEK','SEK'],['NZD','NZD'],['MXN','MXN']]},{k:'to',label:'To',type:'select',def:'EUR',opts:[['USD','USD'],['EUR','EUR'],['GBP','GBP'],['JPY','JPY'],['CAD','CAD'],['AUD','AUD'],['CHF','CHF'],['CNY','CNY'],['INR','INR'],['SEK','SEK'],['NZD','NZD'],['MXN','MXN']]}],
+ compute:function(v){const rf=RATES[v.from],rt=RATES[v.to];if(!rf||!rt)return{main:'—',sub:'Live rates unavailable — check your connection and reload'};const r=v.amount*rt/rf;return{main:fmt(r)+' '+v.to,sub:'1 '+v.from+' = '+fmt(rt/rf,4)+' '+v.to}}},
+{id:'pace',name:'Running pace',cat:'everyday',tags:'pace running marathon speed km mile',f:'Pace = time ÷ distance',
+ inputs:[{k:'dist',label:'Distance',type:'number',def:10},{k:'unit',label:'Unit',type:'select',def:'km',opts:[['km','Kilometres'],['mi','Miles']]},{k:'mins',label:'Time (minutes)',type:'number',def:50}],
+ compute:function(v){if(!v.dist||!v.mins)return{main:'—',sub:'Enter distance and time'};const p=v.mins/v.dist;const s=Math.round(p*60);const mm=Math.floor(s/60),ss=String(s%60).padStart(2,'0');return{main:mm+':'+ss+' /'+v.unit,sub:'Speed '+fmt(v.dist/(v.mins/60),2)+' '+v.unit+'/h'}}},
+{id:'paint',name:'Paint calculator',cat:'everyday',tags:'paint wall coverage litres room',f:'Litres = area ÷ coverage × coats',
+ inputs:[{k:'area',label:'Total wall area (m²)',type:'number',def:40},{k:'cov',label:'Coverage (m² per litre)',type:'number',def:10},{k:'coats',label:'Coats',type:'number',def:2}],
+ compute:function(v){const l=v.area/v.cov*v.coats;return{main:fmt(l,2)+' L',sub:fmt(v.area,0)+' m² · '+fmt(l/Math.max(1,v.coats),1)+' L per coat'}}},
+{id:'concrete',name:'Concrete calculator',cat:'everyday',tags:'concrete volume bags slab foundation',f:'Volume = length × width × depth · 25 kg bag ≈ 0.0125 m³',
+ inputs:[{k:'len',label:'Length (m)',type:'number',def:3},{k:'wid',label:'Width (m)',type:'number',def:2},{k:'dep',label:'Depth (m)',type:'number',def:0.1}],
+ compute:function(v){const vol=Math.round(v.len*v.wid*v.dep*1e6)/1e6;const bags=Math.ceil(vol/0.0125-1e-9);return{main:fmt(vol,2)+' m³',sub:fmt(bags,0)+' × 25 kg bags'}}},
+{id:'recipe',name:'Recipe scaler',cat:'everyday',tags:'recipe servings scale cooking ingredients',f:'New amount = amount × new servings ÷ old servings',
+ inputs:[{k:'from',label:'Recipe serves',type:'number',def:4},{k:'to',label:'You want to serve',type:'number',def:6},{k:'amt',label:'Ingredient amount (g)',type:'number',def:200}],
+ compute:function(v){if(!v.from)return{main:'—',sub:'Enter the original servings'};const n=v.amt*v.to/v.from;return{main:fmt(n,0)+' g',sub:'×'+fmt(v.to/v.from,2)+' the recipe'}}}
+);
+
 /* ---- render + filter ---- */
 function readVals(c){const v={};c.inputs.forEach(function(inp){const el=$('in_'+c.id+'_'+inp.k);if(!el){v[inp.k]=inp.def;return}v[inp.k]=inp.type==='number'?parseFloat(el.value):el.value});return v}
 function runCalc(c){try{const r=c.compute(readVals(c));$('out_'+c.id+'_main').textContent=r.main;$('out_'+c.id+'_sub').textContent=r.sub||''}catch(e){$('out_'+c.id+'_main').textContent='—';$('out_'+c.id+'_sub').textContent=''}}
-function renderCalcs(){const g=$('calcGrid');if(!g)return;g.innerHTML='';CALCS.forEach(function(c){const card=document.createElement('div');card.className='card calc';card.id='calc-'+c.id;card.dataset.cat=c.cat;card.dataset.name=(c.name+' '+c.tags).toLowerCase();let h='<h3>'+c.name+'</h3>';c.inputs.forEach(function(inp){h+='<div class="f">'+inp.label+'</div>';if(inp.type==='select'){h+='<select id="in_'+c.id+'_'+inp.k+'">'+inp.opts.map(function(o){return '<option value="'+o[0]+'"'+(String(o[0])===String(inp.def)?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'}else if(inp.type==='textarea'){h+='<textarea id="in_'+c.id+'_'+inp.k+'">'+inp.def+'</textarea>'}else if(inp.type==='date'){h+='<input type="date" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}else{h+='<input type="number" step="'+(inp.step||'any')+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}});h+='<div class="result"><div class="main" id="out_'+c.id+'_main"></div><div class="sub" id="out_'+c.id+'_sub"></div></div>';h+='<div class="formula">'+c.f+'</div>';card.innerHTML=h;g.appendChild(card);card.querySelectorAll('input,select,textarea').forEach(function(el){el.addEventListener('input',function(){runCalc(c)})});runCalc(c)})}
+function renderCalcs(){const g=$('calcGrid');if(!g)return;g.innerHTML='';CALCS.forEach(function(c){const card=document.createElement('div');card.className='card calc';card.id='calc-'+c.id;card.dataset.cat=c.cat;card.dataset.name=(c.name+' '+c.tags).toLowerCase();let h='<h3>'+c.name+'</h3>';c.inputs.forEach(function(inp){h+='<div class="f">'+inp.label+'</div>';if(inp.type==='select'){h+='<select id="in_'+c.id+'_'+inp.k+'">'+inp.opts.map(function(o){return '<option value="'+o[0]+'"'+(String(o[0])===String(inp.def)?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'}else if(inp.type==='textarea'){h+='<textarea id="in_'+c.id+'_'+inp.k+'">'+inp.def+'</textarea>'}else if(inp.type==='date'||inp.type==='time'){h+='<input type="'+inp.type+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}else{h+='<input type="number" step="'+(inp.step||'any')+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}});h+='<div class="result"><div class="main" id="out_'+c.id+'_main"></div><div class="sub" id="out_'+c.id+'_sub"></div></div>';h+='<div class="formula">'+c.f+'</div>';card.innerHTML=h;g.appendChild(card);card.querySelectorAll('input,select,textarea').forEach(function(el){el.addEventListener('input',function(){runCalc(c)})});runCalc(c)})}
 var curCat='all';
 function applyFilter(){const q=(($('q').value)||'').toLowerCase();const cats=['finance','health','math','convert','time','everyday'];const showCalcs=curCat==='all'||cats.indexOf(curCat)>=0;$('sec-calcs').classList.toggle('on',showCalcs);$('sec-files').classList.toggle('on',curCat==='files');$('sec-dev').classList.toggle('on',curCat==='dev');document.querySelectorAll('#calcGrid .calc').forEach(function(card){const okCat=curCat==='all'||card.dataset.cat===curCat;const okQ=!q||card.dataset.name.indexOf(q)>=0;card.classList.toggle('hide',!(okCat&&okQ))});document.querySelectorAll('.tool').forEach(function(card){card.classList.toggle('hide',!!q&&((card.dataset.name+' '+card.textContent).toLowerCase().indexOf(q)<0))})}
 function filterAll(){applyFilter()}
 function popCalc(q){$('q').value=q;curCat='all';document.querySelectorAll('#cats button').forEach(function(x){x.classList.remove('on')});document.querySelectorAll('#cats button')[0].classList.add('on');applyFilter();const g=$('calcGrid');if(g)g.scrollIntoView()}
 if(typeof document!=='undefined'&&document.getElementById('calcGrid')){renderCalcs();const qEl=$('q');if(qEl)qEl.addEventListener('input',filterAll);document.querySelectorAll('#cats button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#cats button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');curCat=b.dataset.cat;applyFilter()})});if(location.hash&&location.hash.indexOf('#calc-')===0){const el=document.getElementById(location.hash.slice(1));if(el){curCat=el.dataset.cat;document.querySelectorAll('#cats button').forEach(function(x){x.classList.toggle('on',x.dataset.cat===curCat)});applyFilter();setTimeout(function(){el.scrollIntoView()},50)}}}
 
+if(typeof fetch!=='undefined'){fetch('https://api.frankfurter.dev/v1/latest?from=USD').then(function(r){return r.json()}).then(function(d){RATES=d.rates||{};RATES.USD=1;const c=CALCS.find(function(x){return x.id==='currency'});if(c)runCalc(c)}).catch(function(){})}
 /* ---- file converters & dev tools (from v2) ---- */
 function fmtJson(){try{out('jsonOut',JSON.stringify(JSON.parse($('jsonIn').value),null,2))}catch(e){out('jsonOut','Invalid JSON: '+e.message)}}
 function minJson(){try{out('jsonOut',JSON.stringify(JSON.parse($('jsonIn').value)))}catch(e){out('jsonOut','Invalid JSON: '+e.message)}}
