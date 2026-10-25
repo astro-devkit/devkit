@@ -492,13 +492,15 @@ var TABS={
  files:{title:'File converters',desc:'Change formats without uploading anything — your files never leave your browser.'},
  dev:{title:'Dev tools',desc:'JSON, encoders, diffs and text tools for daily dev work.'}
 };
-function setTab(cat,scroll){
+function setTab(cat,scroll,keepHash){
  if(!TABS[cat])cat='all';
  curCat=cat;
  document.querySelectorAll('#cats button').forEach(function(x){x.classList.toggle('on',x.dataset.cat===cat)});
  var qEl=$('q');if(qEl&&qEl.value)qEl.value='';
- if(cat==='all'){history.replaceState(null,'',location.pathname+location.search)}
- else if(location.hash!=='#tab-'+cat){location.hash='#tab-'+cat}
+ if(!keepHash){
+  if(cat==='all'){history.replaceState(null,'',location.pathname+location.search)}
+  else if(location.hash!=='#tab-'+cat){location.hash='#tab-'+cat}
+ }
  applyFilter();
  if(scroll)window.scrollTo(0,0);
 }
@@ -533,19 +535,25 @@ function applyFilter(){
  document.querySelectorAll('#sec-files .card, #sec-dev .card').forEach(function(card){var sec=card.closest('section');if(!card.classList.contains('hide')&&sec&&sec.classList.contains('on'))any=true});
  var nr=$('noResults');
  if(nr){nr.classList.toggle('hide',any||!q);var nq=$('noResultsQ');if(nq)nq.textContent=q}
+ var fH=document.querySelector('#sec-files h2'),fS=document.querySelector('#sec-files .secsub');
+ var dH=document.querySelector('#sec-dev h2'),dS=document.querySelector('#sec-dev .secsub');
+ var hideF=curCat==='files'&&!q,hideD=curCat==='dev'&&!q;
+ if(fH)fH.classList.toggle('hide',hideF);if(fS)fS.classList.toggle('hide',hideF);
+ if(dH)dH.classList.toggle('hide',hideD);if(dS)dS.classList.toggle('hide',hideD);
  var ph=$('pageHead'),pt=$('pageTitle'),pd=$('pageDesc');
  if(ph&&pt&&pd){
   ph.classList.toggle('hide',home);
   var n=0;
-  document.querySelectorAll('#calcGrid .calc:not(.hide)').forEach(function(){n++});
-  document.querySelectorAll('#sec-files .card:not(.hide), #sec-dev .card:not(.hide)').forEach(function(){n++});
+  if($('sec-calcs').classList.contains('on'))document.querySelectorAll('#calcGrid .calc:not(.hide)').forEach(function(){n++});
+  if($('sec-files').classList.contains('on'))document.querySelectorAll('#sec-files .card:not(.hide)').forEach(function(){n++});
+  if($('sec-dev').classList.contains('on'))document.querySelectorAll('#sec-dev .card:not(.hide)').forEach(function(){n++});
   if(q){pt.textContent='Results for \u201c'+q+'\u201d';pd.textContent=n===1?'1 tool matches':n+' tools match'}
   else{var t=TABS[curCat]||TABS.all;pt.textContent=t.title;pd.textContent=t.desc+' \u2014 '+n+' tools'}
  }
 }
 function filterAll(){applyFilter()}
 function popCalc(q){$('q').value=q;curCat='all';document.querySelectorAll('#cats button').forEach(function(x){x.classList.remove('on')});document.querySelectorAll('#cats button')[0].classList.add('on');applyFilter();const g=$('calcGrid');if(g)g.scrollIntoView()}
-if(typeof document!=='undefined'&&document.getElementById('calcGrid')){renderCalcs();var qEl=$('q');if(qEl)qEl.addEventListener('input',filterAll);document.querySelectorAll('#cats button').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.cat,true)})});function tabFromHash(){var h=location.hash||'';if(h.indexOf('#calc-')===0){var el=document.getElementById(h.slice(1));if(el){setTab(el.dataset.cat,false);setTimeout(function(){el.scrollIntoView()},50);return}}if(h.indexOf('#tab-')===0){var c=h.slice(5);if(TABS[c]){if(c!==curCat)setTab(c,false);else applyFilter()}return}if(!h)setTab('all',false)}window.addEventListener('hashchange',tabFromHash);tabFromHash();applyFilter()}
+if(typeof document!=='undefined'&&document.getElementById('calcGrid')){renderCalcs();var qEl=$('q');if(qEl)qEl.addEventListener('input',filterAll);document.querySelectorAll('#cats button').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.cat,true)})});function tabFromHash(){var h=location.hash||'';if(h.indexOf('#calc-')===0){var el=document.getElementById(h.slice(1));if(el){setTab(el.dataset.cat,false,true);setTimeout(function(){el.scrollIntoView()},50);return}}if(h.indexOf('#tab-')===0){var c=h.slice(5);if(TABS[c]){if(c!==curCat)setTab(c,false);else applyFilter()}return}if(!h)setTab('all',false)}window.addEventListener('hashchange',tabFromHash);tabFromHash();applyFilter()}
 
 if(typeof fetch!=='undefined'){fetch('https://api.frankfurter.dev/v1/latest?from=USD').then(function(r){return r.json()}).then(function(d){RATES=d.rates||{};RATES.USD=1;RATES_STATE='ok';const c=CALCS.find(function(x){return x.id==='currency'});if(c)runCalc(c)}).catch(function(){RATES_STATE='fail';const c=CALCS.find(function(x){return x.id==='currency'});if(c)runCalc(c)})}
 /* ---- file converters & dev tools (from v2) ---- */
