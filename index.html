@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DevKit — free dev tools &amp; file converter</title>
+<meta name="description" content="Free dev tools and a private client-side file converter. No uploads, no tracking.">
+<style>
+:root{--bg:#0f1115;--card:#171a21;--line:#262b36;--txt:#e8eaf0;--mut:#9aa3b2;--acc:#7dd3fc;--good:#86efac}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}header{max-width:960px;margin:0 auto;padding:32px 20px 8px}
+h1{margin:0;font-size:32px}h1 span{color:var(--acc)}p.sub{color:var(--mut);margin:6px 0 0}
+nav{max-width:960px;margin:16px auto 0;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap}
+nav button{background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-size:15px;cursor:pointer}
+nav button.on{background:var(--acc);color:#082f49;border-color:var(--acc);font-weight:600}
+main{max-width:960px;margin:0 auto;padding:20px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin:0 0 16px}
+h2{margin:0 0 8px;font-size:21px}h3{margin:16px 0 6px;font-size:16px}
+small,.note{color:var(--mut);font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:600}
+textarea,input[type=text],select{width:100%;background:#0b0d12;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:10px;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace}
+textarea{min-height:140px}
+button.act{background:var(--acc);color:#082f49;border:0;border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;margin:6px 6px 0 0}
+button.ghost{background:transparent;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:9px 14px;cursor:pointer;margin:6px 6px 0 0}
+pre{white-space:pre-wrap;word-break:break-word;background:#0b0d12;border:1px solid var(--line);border-radius:8px;padding:12px;font-size:13px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+footer{max-width:960px;margin:0 auto;padding:8px 20px 32px;color:var(--mut);font-size:13px}
+.pill{display:inline-block;background:#0b0d12;border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:12px;color:var(--good);margin:0 4px 4px 0}
+</style>
+</head>
+<body>
+<header>
+<h1>Dev<span>Kit</span></h1>
+<p class="sub">Free dev tools and a private file converter. Everything on this page runs in your browser. No uploads, no tracking, no accounts.</p>
+</header>
+<nav>
+<button class="on" data-tab="tools">Dev tools</button>
+<button data-tab="convert">File converter</button>
+</nav>
+<main>
+
+<!-- ============ DEV TOOLS ============ -->
+<section id="tools" class="on">
+<div class="card">
+<h2>JSON formatter &amp; validator</h2>
+<textarea id="jsonIn" placeholder='Paste JSON here, e.g. {"a":1}'></textarea>
+<button class="act" onclick="fmtJson()">Format</button>
+<button class="ghost" onclick="minJson()">Minify</button>
+<pre id="jsonOut">Output appears here.</pre>
+</div>
+<div class="grid">
+<div class="card">
+<h2>Base64</h2>
+<textarea id="b64In" placeholder="Text to encode or decode"></textarea>
+<button class="act" onclick="b64('en')">Encode</button>
+<button class="ghost" onclick="b64('de')">Decode</button>
+<pre id="b64Out"></pre>
+</div>
+<div class="card">
+<h2>URL encode / decode</h2>
+<textarea id="urlIn" placeholder="https://example.com/a b?x=1&amp;y=2"></textarea>
+<button class="act" onclick="urlC('en')">Encode</button>
+<button class="ghost" onclick="urlC('de')">Decode</button>
+<pre id="urlOut"></pre>
+</div>
+<div class="card">
+<h2>Regex tester</h2>
+<input type="text" id="rePat" placeholder="Pattern, e.g. \d{3}-\d{4}">
+<input type="text" id="reFlags" placeholder="Flags, e.g. gi" style="margin-top:6px">
+<textarea id="reText" placeholder="Test text" style="margin-top:6px"></textarea>
+<button class="act" onclick="reTest()">Test</button>
+<pre id="reOut"></pre>
+</div>
+<div class="card">
+<h2>Unix timestamp</h2>
+<input type="text" id="tsIn" placeholder="Unix seconds, e.g. 1792883317">
+<button class="act" onclick="tsConv()">Convert</button>
+<button class="ghost" onclick="tsNow()">Now</button>
+<pre id="tsOut"></pre>
+</div>
+<div class="card">
+<h2>UUID &amp; SHA-256</h2>
+<button class="act" onclick="genUuid()">New UUID</button>
+<input type="text" id="hashIn" placeholder="Text to hash (SHA-256)" style="margin-top:6px">
+<button class="act" onclick="hashIt()">Hash</button>
+<pre id="hashOut"></pre>
+</div>
+<div class="card">
+<h2>Token estimator</h2>
+<p class="note">Rough estimate only: ~1 token per 4 characters of English text, ~1 token per 0.75 words. Useful for sizing prompts, not billing.</p>
+<textarea id="tokIn" placeholder="Paste text to estimate tokens"></textarea>
+<button class="act" onclick="tokEst()">Estimate</button>
+<pre id="tokOut"></pre>
+</div>
+</div>
+</section>
+
+<!-- ============ FILE CONVERTER ============ -->
+<section id="convert">
+<div class="card">
+<h2>CSV ↔ JSON</h2>
+<p class="note">Runs entirely in your browser. Your file never leaves your machine.</p>
+<textarea id="cvIn" placeholder="Paste CSV or JSON here"></textarea>
+<button class="act" onclick="csvToJson()">CSV → JSON</button>
+<button class="ghost" onclick="jsonToCsv()">JSON → CSV</button>
+<button class="ghost" onclick="downloadOut('cvOut','converted.txt')">Download result</button>
+<pre id="cvOut">Result appears here.</pre>
+<p><input type="file" id="cvFile" accept=".csv,.json,.txt" onchange="loadFile(this,'cvIn')"></p>
+</div>
+<div class="card">
+<h2>Image converter</h2>
+<p class="note">Convert PNG / JPEG / WebP in your browser. No upload.</p>
+<p><input type="file" id="imgFile" accept="image/*" onchange="imgLoad(this)"></p>
+<p><label>Output format: <select id="imgFmt" style="width:auto"><option value="image/png">PNG</option><option value="image/jpeg">JPEG</option><option value="image/webp">WebP</option></select></label>
+<label style="margin-left:12px">Quality: <input type="text" id="imgQ" value="0.92" style="width:60px"></label></p>
+<button class="act" onclick="imgConvert()">Convert &amp; download</button>
+<p id="imgInfo" class="note"></p>
+</div>
+<div class="card">
+<h2>Text case converter</h2>
+<textarea id="caseIn" placeholder="Paste text"></textarea>
+<button class="act" onclick="caseConv('upper')">UPPER</button>
+<button class="ghost" onclick="caseConv('lower')">lower</button>
+<button class="ghost" onclick="caseConv('title')">Title Case</button>
+<button class="ghost" onclick="caseConv('snake')">snake_case</button>
+<button class="ghost" onclick="caseConv('kebab')">kebab-case</button>
+<pre id="caseOut"></pre>
+</div>
+</section>
+</main>
+<footer>
+DevKit — dev tools and file converter. All client-side. No cookies, no tracking.
+</footer>
+<script>
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{
+document.querySelectorAll('nav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+document.querySelectorAll('main section').forEach(s=>s.classList.remove('on'));
+document.getElementById(b.dataset.tab).classList.add('on');}));
+function out(id,t){document.getElementById(id).textContent=t}
+function fmtJson(){try{out('jsonOut',JSON.stringify(JSON.parse(document.getElementById('jsonIn').value),null,2))}catch(e){out('jsonOut','Invalid JSON: '+e.message)}}
+function minJson(){try{out('jsonOut',JSON.stringify(JSON.parse(document.getElementById('jsonIn').value)))}catch(e){out('jsonOut','Invalid JSON: '+e.message)}}
+function b64(d){const v=document.getElementById('b64In').value;try{out('b64Out',d==='en'?btoa(unescape(encodeURIComponent(v))):decodeURIComponent(escape(atob(v))))}catch(e){out('b64Out','Error: '+e.message)}}
+function urlC(d){const v=document.getElementById('urlIn').value;try{out('urlOut',d==='en'?encodeURIComponent(v):decodeURIComponent(v))}catch(e){out('urlOut','Error: '+e.message)}}
+function reTest(){try{const re=new RegExp(document.getElementById('rePat').value,document.getElementById('reFlags').value);const t=document.getElementById('reText').value;const m=[...t.matchAll(re)];out('reOut',m.length?m.map(x=>JSON.stringify(x)).join('\n'):'No matches')}catch(e){out('reOut','Error: '+e.message)}}
+function tsConv(){const v=Number(document.getElementById('tsIn').value);if(!v){out('tsOut','Enter Unix seconds');return}out('tsOut',new Date(v*1000).toISOString()+'\n'+new Date(v*1000).toLocaleString())}
+function tsNow(){const n=Math.floor(Date.now()/1000);document.getElementById('tsIn').value=n;tsConv()}
+function genUuid(){out('hashOut',crypto.randomUUID())}
+async function hashIt(){const v=document.getElementById('hashIn').value;const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));out('hashOut',[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join(''))}
+function tokEst(){const v=document.getElementById('tokIn').value;const words=v.trim()?v.trim().split(/\s+/).length:0;out('tokOut','Characters: '+v.length+'\nWords: '+words+'\nEstimated tokens: ~'+Math.round(v.length/4)+' (chars/4) / ~'+Math.round(words/0.75)+' (words/0.75)')}
+function loadFile(inp,target){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{document.getElementById(target).value=r.result};r.readAsText(f)}
+function downloadOut(id,name){const blob=new Blob([document.getElementById(id).textContent],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click()}
+function parseCsv(t){const rows=[];let row=[],cur='',q=false;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){cur+='"';i++}else q=false}else cur+=c}else if(c==='"')q=true;else if(c===','){row.push(cur);cur=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(cur);rows.push(row);row=[];cur=''}else cur+=c}if(cur!==''||row.length){row.push(cur);rows.push(row)}return rows.filter(r=>r.length>1||r[0]!=='')}
+function csvToJson(){try{const rows=parseCsv(document.getElementById('cvIn').value);const h=rows[0];out('cvOut',JSON.stringify(rows.slice(1).map(r=>Object.fromEntries(h.map((k,i)=>[k,r[i]??'']))),null,2))}catch(e){out('cvOut','Error: '+e.message)}}
+function jsonToCsv(){try{const arr=JSON.parse(document.getElementById('cvIn').value);if(!Array.isArray(arr))throw new Error('Expected a JSON array of objects');const keys=[...new Set(arr.flatMap(o=>Object.keys(o)))];const esc=v=>{v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};out('cvOut',[keys.join(',')].concat(arr.map(o=>keys.map(k=>esc(o[k])).join(','))).join('\n'))}catch(e){out('cvOut','Error: '+e.message)}}
+let imgEl=null;
+function imgLoad(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{imgEl=new Image();imgEl.onload=()=>{document.getElementById('imgInfo').textContent=f.name+' — '+imgEl.naturalWidth+'x'+imgEl.naturalHeight};imgEl.src=r.result};r.readAsDataURL(f)}
+function imgConvert(){if(!imgEl){document.getElementById('imgInfo').textContent='Choose an image first';return}const c=document.createElement('canvas');c.width=imgEl.naturalWidth;c.height=imgEl.naturalHeight;c.getContext('2d').drawImage(imgEl,0,0);const fmt=document.getElementById('imgFmt').value;const q=parseFloat(document.getElementById('imgQ').value)||0.92;c.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='converted.'+fmt.split('/')[1];a.click()},fmt,q)}
+function caseConv(m){const v=document.getElementById('caseIn').value;let r=v;if(m==='upper')r=v.toUpperCase();if(m==='lower')r=v.toLowerCase();if(m==='title')r=v.replace(/\w\S*/g,w=>w[0].toUpperCase()+w.slice(1).toLowerCase());if(m==='snake')r=v.trim().replace(/[\s-]+/g,'_').replace(/([a-z])([A-Z])/g,'$1_$2').toLowerCase();if(m==='kebab')r=v.trim().replace(/[\s_]+/g,'-').replace(/([a-z])([A-Z])/g,'$1-$2').toLowerCase();out('caseOut',r)}
+</script>
+</body>
+</html>
