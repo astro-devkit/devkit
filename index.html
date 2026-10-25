@@ -3,163 +3,351 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DevKit — free dev tools &amp; file converter</title>
-<meta name="description" content="Free dev tools and a private client-side file converter. No uploads, no tracking.">
+<title>DevKit — calculators, file converters &amp; dev tools</title>
+<meta name="description" content="Free calculators, file converters and dev tools. Everything runs in your browser — no uploads, no accounts, no tracking.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<link rel="canonical" href="https://astro-devkit.github.io/devkit/">
+<meta property="og:title" content="DevKit — free calculators, converters &amp; dev tools">
+<meta property="og:description" content="21 free calculators, file converters and dev tools. Everything runs in your browser — no uploads, no accounts, no tracking.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://astro-devkit.github.io/devkit/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DevKit","applicationCategory":"CalculatorApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free calculators, file converters and dev tools. Everything runs in your browser — no uploads, no accounts, no tracking."}</script>
 <style>
-:root{--bg:#0f1115;--card:#171a21;--line:#262b36;--txt:#e8eaf0;--mut:#9aa3b2;--acc:#7dd3fc;--good:#86efac}
+:root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-a{color:var(--acc)}header{max-width:960px;margin:0 auto;padding:32px 20px 8px}
-h1{margin:0;font-size:32px}h1 span{color:var(--acc)}p.sub{color:var(--mut);margin:6px 0 0}
-nav{max-width:960px;margin:16px auto 0;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap}
-nav button{background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-size:15px;cursor:pointer}
-nav button.on{background:var(--acc);color:#082f49;border-color:var(--acc);font-weight:600}
-main{max-width:960px;margin:0 auto;padding:20px}
+a{color:var(--acc)}
+header{max-width:1060px;margin:0 auto;padding:44px 20px 4px;text-align:center}
+h1{margin:0;font-size:28px;letter-spacing:-.5px}h1 span{color:var(--acc)}
+.hero{font-size:38px;font-weight:800;letter-spacing:-1px;margin:14px 0 0;line-height:1.15}
+.hero span{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+p.sub{color:var(--mut);margin:10px auto 0;max-width:560px;font-size:16px}
+.pop{margin:16px 0 0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.pop button{background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:14px;cursor:pointer;color:var(--txt)}
+.pop button:hover{border-color:var(--acc);color:var(--acc)}
+.search{max-width:680px;margin:20px auto 0;padding:0 20px}
+.search input{width:100%;background:#fff;border:1px solid var(--line);border-radius:999px;padding:15px 20px;color:var(--txt);font-size:16px;box-shadow:0 2px 12px rgba(35,42,61,.06)}
+.search input::placeholder{color:var(--mut)}
+nav{max-width:1060px;margin:18px auto 0;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+nav button{background:#fff;color:var(--txt);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:14px;cursor:pointer}
+nav button.on{background:var(--acc);color:#fff;border-color:transparent;font-weight:700}
+main{max-width:1060px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 4px rgba(35,42,61,.05)}
+.card h3{margin:0 0 10px;font-size:16px}
+.card .f{font-size:12px;color:var(--mut);margin:8px 0 3px}
+.card .f:first-of-type{margin-top:0}
+.result{margin-top:12px;padding:10px 12px;background:#f0fdf6;border:1px solid #bbf7d0;border-radius:10px}
+.result .main{font-size:22px;font-weight:700;color:var(--good)}
+.result .sub{font-size:13px;color:var(--mut);margin-top:2px}
+.formula{font-size:12px;color:var(--mut);margin-top:10px;font-family:ui-monospace,Menlo,Consolas,monospace}
+textarea,input[type=text],input[type=number],input[type=date],select{width:100%;background:#fff;color:var(--txt);border:1px solid var(--line);border-radius:9px;padding:9px 10px;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace}
+textarea{min-height:110px}
+button.act{background:var(--acc);color:#fff;border:0;border-radius:9px;padding:9px 14px;font-weight:700;cursor:pointer;margin:6px 6px 0 0}
+button.ghost{background:transparent;color:var(--txt);border:1px solid var(--line);border-radius:9px;padding:9px 14px;cursor:pointer;margin:6px 6px 0 0}
+pre{white-space:pre-wrap;word-break:break-word;background:#f7f5f0;border:1px solid var(--line);border-radius:9px;padding:10px;font-size:13px;max-height:300px;overflow:auto;margin:10px 0 0}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:18px;text-align:center;color:var(--mut);cursor:pointer;background:#fff}
+.drop.over{border-color:var(--acc);color:var(--acc)}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:130px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#052e16;color:#fff;padding:10px 18px;border-radius:999px;font-weight:600;display:none;z-index:9}
+footer{max-width:1060px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font-size:13px;text-align:center}
+.hide{display:none!important}
 section{display:none}section.on{display:block}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin:0 0 16px}
-h2{margin:0 0 8px;font-size:21px}h3{margin:16px 0 6px;font-size:16px}
-small,.note{color:var(--mut);font-size:13px}
-table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}
-th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
-th{color:var(--mut);font-weight:600}
-textarea,input[type=text],select{width:100%;background:#0b0d12;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:10px;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace}
-textarea{min-height:140px}
-button.act{background:var(--acc);color:#082f49;border:0;border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;margin:6px 6px 0 0}
-button.ghost{background:transparent;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:9px 14px;cursor:pointer;margin:6px 6px 0 0}
-pre{white-space:pre-wrap;word-break:break-word;background:#0b0d12;border:1px solid var(--line);border-radius:8px;padding:12px;font-size:13px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:700px){.grid{grid-template-columns:1fr}}
-footer{max-width:960px;margin:0 auto;padding:8px 20px 32px;color:var(--mut);font-size:13px}
-.pill{display:inline-block;background:#0b0d12;border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:12px;color:var(--good);margin:0 4px 4px 0}
+@media(max-width:640px){.hero{font-size:28px}h1{font-size:24px}}
 </style>
 </head>
 <body>
 <header>
 <h1>Dev<span>Kit</span></h1>
-<p class="sub">Free dev tools and a private file converter. Everything on this page runs in your browser. No uploads, no tracking, no accounts.</p>
+<p class="hero">What do you want to <span>calculate?</span></p>
+<p class="sub">21 free calculators, file converters and dev tools. No accounts, no uploads, no tracking.</p>
+<div class="pop">
+<button onclick="popCalc('mortgage')">Mortgage</button>
+<button onclick="popCalc('bmi')">BMI</button>
+<button onclick="popCalc('tip')">Tip</button>
+<button onclick="popCalc('compound')">Compound interest</button>
+<button onclick="popCalc('temperature')">Temperature</button>
+<button onclick="popCalc('age')">Age</button>
+</div>
 </header>
-<nav>
-<button class="on" data-tab="tools">Dev tools</button>
-<button data-tab="convert">File converter</button>
+<div class="search"><input type="text" id="q" placeholder="Search — try “mortgage”, “bmi”, “json”, “image”…” oninput="filterAll()"></div>
+<nav id="cats">
+<button class="on" data-cat="all">All</button>
+<button data-cat="finance">Finance</button>
+<button data-cat="health">Health</button>
+<button data-cat="math">Math</button>
+<button data-cat="convert">Convert</button>
+<button data-cat="time">Time</button>
+<button data-cat="everyday">Everyday</button>
+<button data-cat="files">Files</button>
+<button data-cat="dev">Dev</button>
 </nav>
 <main>
+<section id="sec-calcs" class="on"><div class="grid" id="calcGrid"></div></section>
 
-<!-- ============ DEV TOOLS ============ -->
-<section id="tools" class="on">
-<div class="card">
-<h2>JSON formatter &amp; validator</h2>
-<textarea id="jsonIn" placeholder='Paste JSON here, e.g. {"a":1}'></textarea>
-<button class="act" onclick="fmtJson()">Format</button>
-<button class="ghost" onclick="minJson()">Minify</button>
-<pre id="jsonOut">Output appears here.</pre>
-</div>
+<!-- ============ FILE CONVERTERS ============ -->
+<section id="sec-files">
 <div class="grid">
-<div class="card">
-<h2>Base64</h2>
-<textarea id="b64In" placeholder="Text to encode or decode"></textarea>
-<button class="act" onclick="b64('en')">Encode</button>
-<button class="ghost" onclick="b64('de')">Decode</button>
-<pre id="b64Out"></pre>
-</div>
-<div class="card">
-<h2>URL encode / decode</h2>
-<textarea id="urlIn" placeholder="https://example.com/a b?x=1&amp;y=2"></textarea>
-<button class="act" onclick="urlC('en')">Encode</button>
-<button class="ghost" onclick="urlC('de')">Decode</button>
-<pre id="urlOut"></pre>
-</div>
-<div class="card">
-<h2>Regex tester</h2>
-<input type="text" id="rePat" placeholder="Pattern, e.g. \d{3}-\d{4}">
-<input type="text" id="reFlags" placeholder="Flags, e.g. gi" style="margin-top:6px">
-<textarea id="reText" placeholder="Test text" style="margin-top:6px"></textarea>
-<button class="act" onclick="reTest()">Test</button>
-<pre id="reOut"></pre>
-</div>
-<div class="card">
-<h2>Unix timestamp</h2>
-<input type="text" id="tsIn" placeholder="Unix seconds, e.g. 1792883317">
-<button class="act" onclick="tsConv()">Convert</button>
-<button class="ghost" onclick="tsNow()">Now</button>
-<pre id="tsOut"></pre>
-</div>
-<div class="card">
-<h2>UUID &amp; SHA-256</h2>
-<button class="act" onclick="genUuid()">New UUID</button>
-<input type="text" id="hashIn" placeholder="Text to hash (SHA-256)" style="margin-top:6px">
-<button class="act" onclick="hashIt()">Hash</button>
-<pre id="hashOut"></pre>
-</div>
-<div class="card">
-<h2>Token estimator</h2>
-<p class="note">Rough estimate only: ~1 token per 4 characters of English text, ~1 token per 0.75 words. Useful for sizing prompts, not billing.</p>
-<textarea id="tokIn" placeholder="Paste text to estimate tokens"></textarea>
-<button class="act" onclick="tokEst()">Estimate</button>
-<pre id="tokOut"></pre>
-</div>
-</div>
-</section>
-
-<!-- ============ FILE CONVERTER ============ -->
-<section id="convert">
-<div class="card">
-<h2>CSV ↔ JSON</h2>
-<p class="note">Runs entirely in your browser. Your file never leaves your machine.</p>
+<div class="card tool" data-name="csv json data converter">
+<h3>CSV ↔ JSON</h3>
+<div class="drop" onclick="document.getElementById('cvFile').click()" ondrop="dropFile(event,'cvIn')" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')">Drop a .csv or .json file here, or click to choose</div>
+<input type="file" id="cvFile" accept=".csv,.json,.txt" class="hide" onchange="loadFile(this,'cvIn')">
 <textarea id="cvIn" placeholder="Paste CSV or JSON here"></textarea>
 <button class="act" onclick="csvToJson()">CSV → JSON</button>
 <button class="ghost" onclick="jsonToCsv()">JSON → CSV</button>
-<button class="ghost" onclick="downloadOut('cvOut','converted.txt')">Download result</button>
+<button class="ghost" onclick="copyText('cvOut')">Copy</button>
+<button class="ghost" onclick="downloadOut('cvOut','converted.txt')">Download</button>
 <pre id="cvOut">Result appears here.</pre>
-<p><input type="file" id="cvFile" accept=".csv,.json,.txt" onchange="loadFile(this,'cvIn')"></p>
 </div>
-<div class="card">
-<h2>Image converter</h2>
-<p class="note">Convert PNG / JPEG / WebP in your browser. No upload.</p>
-<p><input type="file" id="imgFile" accept="image/*" onchange="imgLoad(this)"></p>
-<p><label>Output format: <select id="imgFmt" style="width:auto"><option value="image/png">PNG</option><option value="image/jpeg">JPEG</option><option value="image/webp">WebP</option></select></label>
-<label style="margin-left:12px">Quality: <input type="text" id="imgQ" value="0.92" style="width:60px"></label></p>
+
+<div class="card tool" data-name="json yaml converter">
+<h3>JSON ↔ YAML</h3>
+<textarea id="yjIn" placeholder="Paste JSON or YAML here"></textarea>
+<button class="act" onclick="jsonToYaml()">JSON → YAML</button>
+<button class="ghost" onclick="yamlToJson()">YAML → JSON</button>
+<button class="ghost" onclick="copyText('yjOut')">Copy</button>
+<pre id="yjOut">Result appears here.</pre>
+</div>
+
+<div class="card tool" data-name="markdown html preview converter">
+<h3>Markdown → HTML</h3>
+<textarea id="mdIn" placeholder="# Hello&#10;&#10;Some **bold** text and a [link](https://example.com)"></textarea>
+<button class="act" onclick="mdToHtml()">Convert &amp; preview</button>
+<button class="ghost" onclick="copyText('mdOut')">Copy HTML</button>
+<pre id="mdOut">HTML appears here.</pre>
+<div id="mdPrev" style="background:#f7f5f0;border:1px solid var(--line);border-radius:9px;padding:10px;margin-top:8px">Preview appears here.</div>
+</div>
+
+<div class="card tool" data-name="csv markdown table converter">
+<h3>CSV → Markdown table</h3>
+<textarea id="cmtIn" placeholder="name,age&#10;Ada,36&#10;Grace,28"></textarea>
+<button class="act" onclick="csvToMd()">Convert</button>
+<button class="ghost" onclick="copyText('cmtOut')">Copy</button>
+<pre id="cmtOut">Result appears here.</pre>
+</div>
+
+<div class="card tool" data-name="image converter resize compress png jpg webp">
+<h3>Image converter, resize &amp; compress</h3>
+<div class="drop" onclick="document.getElementById('imgFile').click()" ondrop="dropImg(event)" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')">Drop an image here, or click to choose</div>
+<input type="file" id="imgFile" accept="image/*" class="hide" onchange="imgLoad(this)">
+<div class="row">
+<div><div class="f">Output format</div><select id="imgFmt"><option value="image/png">PNG</option><option value="image/jpeg">JPEG</option><option value="image/webp">WebP</option></select></div>
+<div><div class="f">Max width (px)</div><input type="number" id="imgW" placeholder="e.g. 1200"></div>
+<div><div class="f">Quality (0–1)</div><input type="text" id="imgQ" value="0.85"></div>
+</div>
 <button class="act" onclick="imgConvert()">Convert &amp; download</button>
-<p id="imgInfo" class="note"></p>
+<div id="imgInfo" style="color:var(--mut);font-size:13px;margin-top:8px"></div>
 </div>
-<div class="card">
-<h2>Text case converter</h2>
+
+<div class="card tool" data-name="text case converter upper lower snake kebab">
+<h3>Text case converter</h3>
 <textarea id="caseIn" placeholder="Paste text"></textarea>
 <button class="act" onclick="caseConv('upper')">UPPER</button>
 <button class="ghost" onclick="caseConv('lower')">lower</button>
 <button class="ghost" onclick="caseConv('title')">Title Case</button>
 <button class="ghost" onclick="caseConv('snake')">snake_case</button>
 <button class="ghost" onclick="caseConv('kebab')">kebab-case</button>
+<button class="ghost" onclick="copyText('caseOut')">Copy</button>
 <pre id="caseOut"></pre>
+</div>
+</div>
+</section>
+
+<!-- ============ DEV TOOLS ============ -->
+<section id="sec-dev">
+<div class="grid">
+<div class="card tool" data-name="json formatter validator">
+<h3>JSON formatter &amp; validator</h3>
+<textarea id="jsonIn" placeholder='Paste JSON here, e.g. {"a":1}'></textarea>
+<button class="act" onclick="fmtJson()">Format</button>
+<button class="ghost" onclick="minJson()">Minify</button>
+<button class="ghost" onclick="copyText('jsonOut')">Copy</button>
+<pre id="jsonOut">Output appears here.</pre>
+</div>
+<div class="card tool" data-name="base64 encode decode">
+<h3>Base64</h3>
+<textarea id="b64In" placeholder="Text to encode or decode"></textarea>
+<button class="act" onclick="b64('en')">Encode</button>
+<button class="ghost" onclick="b64('de')">Decode</button>
+<button class="ghost" onclick="copyText('b64Out')">Copy</button>
+<pre id="b64Out"></pre>
+</div>
+<div class="card tool" data-name="url encode decode">
+<h3>URL encode / decode</h3>
+<textarea id="urlIn" placeholder="https://example.com/a b?x=1&amp;y=2"></textarea>
+<button class="act" onclick="urlC('en')">Encode</button>
+<button class="ghost" onclick="urlC('de')">Decode</button>
+<button class="ghost" onclick="copyText('urlOut')">Copy</button>
+<pre id="urlOut"></pre>
+</div>
+<div class="card tool" data-name="regex tester">
+<h3>Regex tester</h3>
+<input type="text" id="rePat" placeholder="Pattern, e.g. \d{3}-\d{4}">
+<input type="text" id="reFlags" placeholder="Flags, e.g. gi" style="margin-top:6px">
+<textarea id="reText" placeholder="Test text" style="margin-top:6px"></textarea>
+<button class="act" onclick="reTest()">Test</button>
+<pre id="reOut"></pre>
+</div>
+<div class="card tool" data-name="unix timestamp date converter">
+<h3>Unix timestamp</h3>
+<input type="text" id="tsIn" placeholder="Unix seconds, e.g. 1792883317">
+<button class="act" onclick="tsConv()">Convert</button>
+<button class="ghost" onclick="tsNow()">Now</button>
+<pre id="tsOut"></pre>
+</div>
+<div class="card tool" data-name="uuid password generator sha256 hash">
+<h3>UUID, password &amp; SHA-256</h3>
+<button class="act" onclick="genUuid()">New UUID</button>
+<button class="ghost" onclick="genPass()">New password</button>
+<input type="text" id="hashIn" placeholder="Text to hash (SHA-256)" style="margin-top:6px">
+<button class="act" onclick="hashIt()">Hash</button>
+<pre id="hashOut"></pre>
+</div>
+<div class="card tool" data-name="token estimator llm prompt">
+<h3>Token estimator</h3>
+<textarea id="tokIn" placeholder="Paste text to estimate tokens"></textarea>
+<button class="act" onclick="tokEst()">Estimate</button>
+<pre id="tokOut"></pre>
+</div>
+<div class="card tool" data-name="color converter hex rgb hsl">
+<h3>Color converter</h3>
+<input type="text" id="colIn" placeholder="#38bdf8 or rgb(56, 189, 248) or hsl(199, 92%, 56%)">
+<button class="act" onclick="colConv()">Convert</button>
+<pre id="colOut"></pre>
+</div>
+<div class="card tool" data-name="text diff compare">
+<h3>Text diff</h3>
+<textarea id="diffA" placeholder="Original text"></textarea>
+<textarea id="diffB" placeholder="Changed text" style="margin-top:6px"></textarea>
+<button class="act" onclick="diffText()">Compare</button>
+<pre id="diffOut"></pre>
+</div>
 </div>
 </section>
 </main>
 <footer>
-DevKit — dev tools and file converter. All client-side. No cookies, no tracking.
+DevKit — calculators, converters and dev tools. All client-side, no cookies, no tracking, no uploads. Built by Astro.
 </footer>
+<div class="toast" id="toast">Copied</div>
 <script>
-document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{
-document.querySelectorAll('nav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
-document.querySelectorAll('main section').forEach(s=>s.classList.remove('on'));
-document.getElementById(b.dataset.tab).classList.add('on');}));
-function out(id,t){document.getElementById(id).textContent=t}
-function fmtJson(){try{out('jsonOut',JSON.stringify(JSON.parse(document.getElementById('jsonIn').value),null,2))}catch(e){out('jsonOut','Invalid JSON: '+e.message)}}
-function minJson(){try{out('jsonOut',JSON.stringify(JSON.parse(document.getElementById('jsonIn').value)))}catch(e){out('jsonOut','Invalid JSON: '+e.message)}}
-function b64(d){const v=document.getElementById('b64In').value;try{out('b64Out',d==='en'?btoa(unescape(encodeURIComponent(v))):decodeURIComponent(escape(atob(v))))}catch(e){out('b64Out','Error: '+e.message)}}
-function urlC(d){const v=document.getElementById('urlIn').value;try{out('urlOut',d==='en'?encodeURIComponent(v):decodeURIComponent(v))}catch(e){out('urlOut','Error: '+e.message)}}
-function reTest(){try{const re=new RegExp(document.getElementById('rePat').value,document.getElementById('reFlags').value);const t=document.getElementById('reText').value;const m=[...t.matchAll(re)];out('reOut',m.length?m.map(x=>JSON.stringify(x)).join('\n'):'No matches')}catch(e){out('reOut','Error: '+e.message)}}
-function tsConv(){const v=Number(document.getElementById('tsIn').value);if(!v){out('tsOut','Enter Unix seconds');return}out('tsOut',new Date(v*1000).toISOString()+'\n'+new Date(v*1000).toLocaleString())}
-function tsNow(){const n=Math.floor(Date.now()/1000);document.getElementById('tsIn').value=n;tsConv()}
+function $(id){return document.getElementById(id)}
+function out(id,t){const e=$(id);if(e)e.textContent=t}
+function fmt(n,d){d=(d===undefined)?2:d;if(n===null||n===undefined||!isFinite(n))return '—';return n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function money(n){return '$'+fmt(n)}
+function toast(m){const t=$('toast');if(!t)return;t.textContent=m||'Copied';t.style.display='block';setTimeout(()=>t.style.display='none',1500)}
+function copyText(id){const v=$(id).textContent;if(navigator.clipboard)navigator.clipboard.writeText(v).then(()=>toast('Copied to clipboard'))}
+
+/* ---- Calculator library: every formula is a pure function, tested in tests/v3-calc-tests.js ---- */
+var CALCS=[
+{id:'mortgage',name:'Mortgage / loan payment',cat:'finance',tags:'mortgage loan house payment interest',f:'M = P·r(1+r)ⁿ ÷ ((1+r)ⁿ − 1), r = annual rate ÷ 12, n = years × 12',
+ inputs:[{k:'p',label:'Loan amount ($)',type:'number',def:300000},{k:'rate',label:'Annual interest rate (%)',type:'number',def:6},{k:'years',label:'Term (years)',type:'number',def:30}],
+ compute:function(v){const r=v.rate/100/12,n=v.years*12;const m=r===0?v.p/n:v.p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);const tot=m*n;return{main:money(m)+'/mo',sub:'Total '+money(tot)+' · Interest '+money(tot-v.p)}}},
+{id:'compound',name:'Compound interest',cat:'finance',tags:'compound interest savings growth invest',f:'A = P(1 + r/n)^(nt)',
+ inputs:[{k:'p',label:'Principal ($)',type:'number',def:10000},{k:'rate',label:'Annual rate (%)',type:'number',def:5},{k:'years',label:'Years',type:'number',def:10},{k:'freq',label:'Compounds per year',type:'select',def:12,opts:[[1,'Yearly'],[2,'Half-yearly'],[4,'Quarterly'],[12,'Monthly'],[365,'Daily']]}],
+ compute:function(v){const a=v.p*Math.pow(1+v.rate/100/v.freq,v.freq*v.years);return{main:money(a),sub:'Interest earned '+money(a-v.p)}}},
+{id:'simple',name:'Simple interest',cat:'finance',tags:'simple interest loan',f:'I = P·r·t',
+ inputs:[{k:'p',label:'Principal ($)',type:'number',def:5000},{k:'rate',label:'Annual rate (%)',type:'number',def:4},{k:'years',label:'Years',type:'number',def:3}],
+ compute:function(v){const i=v.p*v.rate/100*v.years;return{main:money(v.p+i),sub:'Interest '+money(i)}}},
+{id:'tip',name:'Tip calculator',cat:'finance',tags:'tip restaurant bill split',f:'Tip = bill × % · Total = bill + tip',
+ inputs:[{k:'bill',label:'Bill ($)',type:'number',def:100},{k:'pct',label:'Tip (%)',type:'number',def:15},{k:'people',label:'People',type:'number',def:1}],
+ compute:function(v){const tip=v.bill*v.pct/100,tot=v.bill+tip;return{main:money(tot),sub:'Tip '+money(tip)+' · '+money(tot/Math.max(1,v.people))+' each'}}},
+{id:'discount',name:'Discount / sale price',cat:'finance',tags:'discount sale percent off',f:'Sale = price × (1 − %)',
+ inputs:[{k:'price',label:'Original price ($)',type:'number',def:80},{k:'off',label:'Discount (%)',type:'number',def:25}],
+ compute:function(v){const s=v.price*v.off/100;return{main:money(v.price-s),sub:'You save '+money(s)}}},
+{id:'salary',name:'Hourly ↔ annual salary',cat:'finance',tags:'salary wage hourly annual pay',f:'Annual = hourly × hours/week × 52',
+ inputs:[{k:'hourly',label:'Hourly rate ($)',type:'number',def:25},{k:'hrs',label:'Hours per week',type:'number',def:40}],
+ compute:function(v){const a=v.hourly*v.hrs*52;return{main:money(a)+'/yr',sub:money(a/12)+'/mo · '+money(v.hourly*v.hrs)+'/wk'}}},
+{id:'percent',name:'Percentage calculator',cat:'finance',tags:'percent percentage',f:'x% of y = x/100 × y · x is (x/y × 100)% of y',
+ inputs:[{k:'mode',label:'Mode',type:'select',def:'of',opts:[['of','What is x% of y?'],['is','x is what % of y?']]},{k:'x',label:'x',type:'number',def:20},{k:'y',label:'y',type:'number',def:150}],
+ compute:function(v){if(v.mode==='of')return{main:fmt(v.x/100*v.y),sub:v.x+'% of '+v.y};const r=v.y===0?0:v.x/v.y*100;return{main:fmt(r)+'%',sub:v.x+' is '+fmt(r)+'% of '+v.y}}},
+{id:'bmi',name:'BMI calculator',cat:'health',tags:'bmi body mass index weight',f:'BMI = kg ÷ m²',
+ inputs:[{k:'kg',label:'Weight (kg)',type:'number',def:70},{k:'cm',label:'Height (cm)',type:'number',def:175}],
+ compute:function(v){const h=v.cm/100,b=v.kg/(h*h);const c=b<18.5?'Underweight':b<25?'Normal':b<30?'Overweight':'Obese';return{main:fmt(b,1),sub:c+' · Healthy weight '+fmt(18.5*h*h,1)+'–'+fmt(24.9*h*h,1)+' kg'}}},
+{id:'bmr',name:'BMR & daily calories (TDEE)',cat:'health',tags:'bmr tdee calories metabolism',f:'Mifflin-St Jeor: men 10w+6.25h−5a+5 · women 10w+6.25h−5a−161 · TDEE = BMR × activity',
+ inputs:[{k:'sex',label:'Sex',type:'select',def:'m',opts:[['m','Male'],['f','Female']]},{k:'age',label:'Age',type:'number',def:30},{k:'kg',label:'Weight (kg)',type:'number',def:80},{k:'cm',label:'Height (cm)',type:'number',def:180},{k:'act',label:'Activity',type:'select',def:'1.55',opts:[['1.2','Sedentary'],['1.375','Lightly active'],['1.55','Moderately active'],['1.725','Very active'],['1.9','Extremely active']]}],
+ compute:function(v){const b=v.sex==='m'?10*v.kg+6.25*v.cm-5*v.age+5:10*v.kg+6.25*v.cm-5*v.age-161;const t=b*parseFloat(v.act);return{main:fmt(t,0)+' kcal/day',sub:'BMR '+fmt(b,0)+' kcal · Lose weight ≈ '+fmt(t-500,0)+' · Gain ≈ '+fmt(t+500,0)}}},
+{id:'bodyfat',name:'Body fat % (US Navy)',cat:'health',tags:'body fat navy waist',f:'Men: 495÷(1.0324−0.19077·log10(waist−neck)+0.15456·log10(height))−450 · Women: 495÷(1.29579−0.35004·log10(waist+hip−neck)+0.22100·log10(height))−450',
+ inputs:[{k:'sex',label:'Sex',type:'select',def:'m',opts:[['m','Male'],['f','Female']]},{k:'waist',label:'Waist (cm)',type:'number',def:90},{k:'neck',label:'Neck (cm)',type:'number',def:40},{k:'hip',label:'Hip (cm, women)',type:'number',def:95},{k:'height',label:'Height (cm)',type:'number',def:180}],
+ compute:function(v){const L=Math.log10,toIn=function(x){return x/2.54};let bf;if(v.sex==='m'){bf=495/(1.0324-0.19077*L(toIn(v.waist)-toIn(v.neck))+0.15456*L(toIn(v.height)))-450}else{bf=495/(1.29579-0.35004*L(toIn(v.waist)+toIn(v.hip)-toIn(v.neck))+0.22100*L(toIn(v.height)))-450}const lim=v.sex==='m'?[6,14,18,25]:[14,21,25,32];const c=bf<lim[0]?'Essential fat':bf<lim[1]?'Athletic':bf<lim[2]?'Fitness':bf<lim[3]?'Average':'Obese';return{main:fmt(bf,1)+'%',sub:c}}},
+{id:'meansd',name:'Mean & standard deviation',cat:'math',tags:'mean average standard deviation statistics',f:'Mean = Σx ÷ n · SD = √(Σ(x−mean)² ÷ n)',
+ inputs:[{k:'nums',label:'Numbers (comma or space separated)',type:'textarea',def:'2, 4, 4, 4, 5, 5, 7, 9'}],
+ compute:function(v){const xs=String(v.nums).split(/[\s,]+/).map(Number).filter(function(x){return isFinite(x)});if(!xs.length)return{main:'—',sub:'Enter numbers'};const m=xs.reduce(function(a,b){return a+b},0)/xs.length;const pop=Math.sqrt(xs.reduce(function(a,x){return a+(x-m)*(x-m)},0)/xs.length);const sam=xs.length>1?Math.sqrt(xs.reduce(function(a,x){return a+(x-m)*(x-m)},0)/(xs.length-1)):0;return{main:'Mean '+fmt(m),sub:'Population SD '+fmt(pop)+' · Sample SD '+fmt(sam)+' · n = '+xs.length}}},
+{id:'area',name:'Area calculator',cat:'math',tags:'area rectangle circle triangle geometry',f:'Rectangle a×b · Circle πr² · Triangle ½ab',
+ inputs:[{k:'shape',label:'Shape',type:'select',def:'rect',opts:[['rect','Rectangle'],['circle','Circle'],['tri','Triangle']]},{k:'a',label:'Length / radius',type:'number',def:5},{k:'b',label:'Width / base',type:'number',def:4}],
+ compute:function(v){let a,lab;if(v.shape==='circle'){a=Math.PI*v.a*v.a;lab='πr², r = '+v.a}else if(v.shape==='tri'){a=0.5*v.a*v.b;lab='½ × '+v.a+' × '+v.b}else{a=v.a*v.b;lab=v.a+' × '+v.b}return{main:fmt(a)+' units²',sub:lab}}},
+{id:'pythag',name:'Pythagoras (hypotenuse)',cat:'math',tags:'pythagoras triangle hypotenuse',f:'c = √(a² + b²)',
+ inputs:[{k:'a',label:'Side a',type:'number',def:3},{k:'b',label:'Side b',type:'number',def:4}],
+ compute:function(v){const c=Math.sqrt(v.a*v.a+v.b*v.b);return{main:'c = '+fmt(c),sub:'a² + b² = '+fmt(v.a*v.a+v.b*v.b)}}}
+];
+CALCS.push(
+{id:'length',name:'Length converter',cat:'convert',tags:'length distance metres feet miles inches',f:'Convert via metres: 1 mi = 1609.344 m · 1 ft = 0.3048 m · 1 in = 0.0254 m',
+ inputs:[{k:'value',label:'Value',type:'number',def:1},{k:'from',label:'From',type:'select',def:'mi',opts:[['mm','Millimetres'],['cm','Centimetres'],['m','Metres'],['km','Kilometres'],['in','Inches'],['ft','Feet'],['yd','Yards'],['mi','Miles']]},{k:'to',label:'To',type:'select',def:'km',opts:[['mm','Millimetres'],['cm','Centimetres'],['m','Metres'],['km','Kilometres'],['in','Inches'],['ft','Feet'],['yd','Yards'],['mi','Miles']]}],
+ compute:function(v){const f={mm:0.001,cm:0.01,m:1,km:1000,'in':0.0254,ft:0.3048,yd:0.9144,mi:1609.344};const r=v.value*f[v.from]/f[v.to];return{main:fmt(r,4)+' '+v.to,sub:v.value+' '+v.from+' = '+fmt(r,4)+' '+v.to}}},
+{id:'weight',name:'Weight converter',cat:'convert',tags:'weight mass kg lb oz stone',f:'Convert via grams: 1 lb = 453.59237 g · 1 oz = 28.349523125 g',
+ inputs:[{k:'value',label:'Value',type:'number',def:1},{k:'from',label:'From',type:'select',def:'kg',opts:[['g','Grams'],['kg','Kilograms'],['oz','Ounces'],['lb','Pounds'],['st','Stone']]},{k:'to',label:'To',type:'select',def:'lb',opts:[['g','Grams'],['kg','Kilograms'],['oz','Ounces'],['lb','Pounds'],['st','Stone']]}],
+ compute:function(v){const f={g:1,kg:1000,oz:28.349523125,lb:453.59237,st:6350.29318};const r=v.value*f[v.from]/f[v.to];return{main:fmt(r,4)+' '+v.to,sub:v.value+' '+v.from+' = '+fmt(r,4)+' '+v.to}}},
+{id:'temp',name:'Temperature converter',cat:'convert',tags:'temperature celsius fahrenheit kelvin',f:'°F = °C × 9/5 + 32 · K = °C + 273.15',
+ inputs:[{k:'value',label:'Value',type:'number',def:100},{k:'from',label:'From',type:'select',def:'C',opts:[['C','Celsius'],['F','Fahrenheit'],['K','Kelvin']]},{k:'to',label:'To',type:'select',def:'F',opts:[['C','Celsius'],['F','Fahrenheit'],['K','Kelvin']]}],
+ compute:function(v){let c=v.from==='C'?v.value:v.from==='F'?(v.value-32)*5/9:v.value-273.15;const r=v.to==='C'?c:v.to==='F'?c*9/5+32:c+273.15;return{main:fmt(r)+' °'+v.to,sub:v.value+' °'+v.from+' = '+fmt(r)+' °'+v.to}}},
+{id:'data',name:'Data size converter',cat:'convert',tags:'data bytes kb mb gb tb storage',f:'1 KB = 1024 B · 1 MB = 1024² B · 1 GB = 1024³ B',
+ inputs:[{k:'value',label:'Value',type:'number',def:1},{k:'from',label:'From',type:'select',def:'GB',opts:[['B','Bytes'],['KB','Kilobytes'],['MB','Megabytes'],['GB','Gigabytes'],['TB','Terabytes']]},{k:'to',label:'To',type:'select',def:'B',opts:[['B','Bytes'],['KB','Kilobytes'],['MB','Megabytes'],['GB','Gigabytes'],['TB','Terabytes']]}],
+ compute:function(v){const f={B:1,KB:1024,MB:1048576,GB:1073741824,TB:1099511627776};const r=v.value*f[v.from]/f[v.to];return{main:fmt(r)+' '+v.to,sub:v.value+' '+v.from+' = '+fmt(r)+' '+v.to}}},
+{id:'speed',name:'Speed converter',cat:'convert',tags:'speed kmh mph knots',f:'Convert via m/s: 1 km/h = 1/3.6 m/s · 1 mph = 0.44704 m/s · 1 knot = 0.514444 m/s',
+ inputs:[{k:'value',label:'Value',type:'number',def:100},{k:'from',label:'From',type:'select',def:'kmh',opts:[['kmh','km/h'],['mph','mph'],['ms','m/s'],['knot','knots']]},{k:'to',label:'To',type:'select',def:'mph',opts:[['kmh','km/h'],['mph','mph'],['ms','m/s'],['knot','knots']]}],
+ compute:function(v){const f={kmh:1/3.6,mph:0.44704,ms:1,knot:0.514444};const r=v.value*f[v.from]/f[v.to];return{main:fmt(r)+' '+v.to,sub:v.value+' '+v.from+' = '+fmt(r)+' '+v.to}}},
+{id:'age',name:'Age calculator',cat:'time',tags:'age birthday date',f:'Years, months and days from birth date to today',
+ inputs:[{k:'birth',label:'Date of birth',type:'date',def:'2000-01-01'}],
+ compute:function(v,now){now=now||new Date();const b=new Date(v.birth+'T00:00:00');if(isNaN(b))return{main:'—',sub:'Enter a date'};let y=now.getFullYear()-b.getFullYear(),mo=now.getMonth()-b.getMonth(),d=now.getDate()-b.getDate();if(d<0){mo--;d+=new Date(now.getFullYear(),now.getMonth(),0).getDate()}if(mo<0){y--;mo+=12}const days=Math.floor((now-b)/86400000);return{main:y+' years',sub:mo+' months, '+d+' days · '+days.toLocaleString('en-US')+' days lived'}}},
+{id:'datediff',name:'Days between dates',cat:'time',tags:'date difference days between',f:'Days = (date 2 − date 1) ÷ 86400000',
+ inputs:[{k:'d1',label:'From',type:'date',def:'2025-01-01'},{k:'d2',label:'To',type:'date',def:'2025-02-01'}],
+ compute:function(v){const a=new Date(v.d1+'T00:00:00'),b=new Date(v.d2+'T00:00:00');if(isNaN(a)||isNaN(b))return{main:'—',sub:'Enter both dates'};const days=Math.round((b-a)/86400000);return{main:days+' days',sub:fmt(days/7,1)+' weeks · '+fmt(days/365.25,2)+' years'}}},
+{id:'fuel',name:'Fuel cost calculator',cat:'everyday',tags:'fuel petrol gas mpg cost trip',f:'MPG: gallons = miles ÷ mpg · L/100km: litres = km × L/100km ÷ 100 · Cost = fuel × price',
+ inputs:[{k:'mode',label:'Economy unit',type:'select',def:'mpg',opts:[['mpg','Miles per gallon'],['l100km','Litres / 100 km']]},{k:'distance',label:'Distance',type:'number',def:300},{k:'distunit',label:'Distance unit',type:'select',def:'mi',opts:[['mi','Miles'],['km','Kilometres']]},{k:'cons',label:'Consumption (mpg or L/100km)',type:'number',def:30},{k:'price',label:'Fuel price (per gal or L)',type:'number',def:3.5}],
+ compute:function(v){let amt,unit,cost;if(v.mode==='mpg'){const mi=v.distunit==='mi'?v.distance:v.distance/1.60934;amt=mi/v.cons;unit='gal';cost=amt*v.price}else{const km=v.distunit==='km'?v.distance:v.distance*1.60934;amt=km*v.cons/100;unit='L';cost=amt*v.price}return{main:money(cost),sub:fmt(amt)+' '+unit+' · '+money(v.price)+' per '+unit}}}
+);
+
+/* ---- render + filter ---- */
+function readVals(c){const v={};c.inputs.forEach(function(inp){const el=$('in_'+c.id+'_'+inp.k);if(!el){v[inp.k]=inp.def;return}v[inp.k]=inp.type==='number'?parseFloat(el.value):el.value});return v}
+function runCalc(c){try{const r=c.compute(readVals(c));$('out_'+c.id+'_main').textContent=r.main;$('out_'+c.id+'_sub').textContent=r.sub||''}catch(e){$('out_'+c.id+'_main').textContent='—';$('out_'+c.id+'_sub').textContent=''}}
+function renderCalcs(){const g=$('calcGrid');if(!g)return;g.innerHTML='';CALCS.forEach(function(c){const card=document.createElement('div');card.className='card calc';card.id='calc-'+c.id;card.dataset.cat=c.cat;card.dataset.name=(c.name+' '+c.tags).toLowerCase();let h='<h3>'+c.name+'</h3>';c.inputs.forEach(function(inp){h+='<div class="f">'+inp.label+'</div>';if(inp.type==='select'){h+='<select id="in_'+c.id+'_'+inp.k+'">'+inp.opts.map(function(o){return '<option value="'+o[0]+'"'+(String(o[0])===String(inp.def)?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'}else if(inp.type==='textarea'){h+='<textarea id="in_'+c.id+'_'+inp.k+'">'+inp.def+'</textarea>'}else if(inp.type==='date'){h+='<input type="date" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}else{h+='<input type="number" step="'+(inp.step||'any')+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}});h+='<div class="result"><div class="main" id="out_'+c.id+'_main"></div><div class="sub" id="out_'+c.id+'_sub"></div></div>';h+='<div class="formula">'+c.f+'</div>';card.innerHTML=h;g.appendChild(card);card.querySelectorAll('input,select,textarea').forEach(function(el){el.addEventListener('input',function(){runCalc(c)})});runCalc(c)})}
+var curCat='all';
+function applyFilter(){const q=(($('q').value)||'').toLowerCase();const cats=['finance','health','math','convert','time','everyday'];const showCalcs=curCat==='all'||cats.indexOf(curCat)>=0;$('sec-calcs').classList.toggle('on',showCalcs);$('sec-files').classList.toggle('on',curCat==='files');$('sec-dev').classList.toggle('on',curCat==='dev');document.querySelectorAll('#calcGrid .calc').forEach(function(card){const okCat=curCat==='all'||card.dataset.cat===curCat;const okQ=!q||card.dataset.name.indexOf(q)>=0;card.classList.toggle('hide',!(okCat&&okQ))});document.querySelectorAll('.tool').forEach(function(card){card.classList.toggle('hide',!!q&&((card.dataset.name+' '+card.textContent).toLowerCase().indexOf(q)<0))})}
+function filterAll(){applyFilter()}
+function popCalc(q){$('q').value=q;curCat='all';document.querySelectorAll('#cats button').forEach(function(x){x.classList.remove('on')});document.querySelectorAll('#cats button')[0].classList.add('on');applyFilter();const g=$('calcGrid');if(g)g.scrollIntoView()}
+if(typeof document!=='undefined'&&document.getElementById('calcGrid')){renderCalcs();document.querySelectorAll('#cats button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#cats button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');curCat=b.dataset.cat;applyFilter()})});if(location.hash&&location.hash.indexOf('#calc-')===0){const el=document.getElementById(location.hash.slice(1));if(el){curCat=el.dataset.cat;document.querySelectorAll('#cats button').forEach(function(x){x.classList.toggle('on',x.dataset.cat===curCat)});applyFilter();setTimeout(function(){el.scrollIntoView()},50)}}}
+
+/* ---- file converters & dev tools (from v2) ---- */
+function fmtJson(){try{out('jsonOut',JSON.stringify(JSON.parse($('jsonIn').value),null,2))}catch(e){out('jsonOut','Invalid JSON: '+e.message)}}
+function minJson(){try{out('jsonOut',JSON.stringify(JSON.parse($('jsonIn').value)))}catch(e){out('jsonOut','Invalid JSON: '+e.message)}}
+function b64(d){const v=$('b64In').value;try{out('b64Out',d==='en'?btoa(unescape(encodeURIComponent(v))):decodeURIComponent(escape(atob(v))))}catch(e){out('b64Out','Error: '+e.message)}}
+function urlC(d){const v=$('urlIn').value;try{out('urlOut',d==='en'?encodeURIComponent(v):decodeURIComponent(v))}catch(e){out('urlOut','Error: '+e.message)}}
+function reTest(){try{const re=new RegExp($('rePat').value,$('reFlags').value);const t=$('reText').value;const m=[...t.matchAll(re)];out('reOut',m.length?m.map(function(x){return JSON.stringify(x)}).join('\n'):'No matches')}catch(e){out('reOut','Error: '+e.message)}}
+function tsConv(){const v=Number($('tsIn').value);if(!v){out('tsOut','Enter Unix seconds');return}out('tsOut',new Date(v*1000).toISOString()+'\n'+new Date(v*1000).toLocaleString())}
+function tsNow(){const n=Math.floor(Date.now()/1000);$('tsIn').value=n;tsConv()}
 function genUuid(){out('hashOut',crypto.randomUUID())}
-async function hashIt(){const v=document.getElementById('hashIn').value;const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));out('hashOut',[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join(''))}
-function tokEst(){const v=document.getElementById('tokIn').value;const words=v.trim()?v.trim().split(/\s+/).length:0;out('tokOut','Characters: '+v.length+'\nWords: '+words+'\nEstimated tokens: ~'+Math.round(v.length/4)+' (chars/4) / ~'+Math.round(words/0.75)+' (words/0.75)')}
-function loadFile(inp,target){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{document.getElementById(target).value=r.result};r.readAsText(f)}
-function downloadOut(id,name){const blob=new Blob([document.getElementById(id).textContent],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click()}
-function parseCsv(t){const rows=[];let row=[],cur='',q=false;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){cur+='"';i++}else q=false}else cur+=c}else if(c==='"')q=true;else if(c===','){row.push(cur);cur=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(cur);rows.push(row);row=[];cur=''}else cur+=c}if(cur!==''||row.length){row.push(cur);rows.push(row)}return rows.filter(r=>r.length>1||r[0]!=='')}
-function csvToJson(){try{const rows=parseCsv(document.getElementById('cvIn').value);const h=rows[0];out('cvOut',JSON.stringify(rows.slice(1).map(r=>Object.fromEntries(h.map((k,i)=>[k,r[i]??'']))),null,2))}catch(e){out('cvOut','Error: '+e.message)}}
-function jsonToCsv(){try{const arr=JSON.parse(document.getElementById('cvIn').value);if(!Array.isArray(arr))throw new Error('Expected a JSON array of objects');const keys=[...new Set(arr.flatMap(o=>Object.keys(o)))];const esc=v=>{v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};out('cvOut',[keys.join(',')].concat(arr.map(o=>keys.map(k=>esc(o[k])).join(','))).join('\n'))}catch(e){out('cvOut','Error: '+e.message)}}
-let imgEl=null;
-function imgLoad(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{imgEl=new Image();imgEl.onload=()=>{document.getElementById('imgInfo').textContent=f.name+' — '+imgEl.naturalWidth+'x'+imgEl.naturalHeight};imgEl.src=r.result};r.readAsDataURL(f)}
-function imgConvert(){if(!imgEl){document.getElementById('imgInfo').textContent='Choose an image first';return}const c=document.createElement('canvas');c.width=imgEl.naturalWidth;c.height=imgEl.naturalHeight;c.getContext('2d').drawImage(imgEl,0,0);const fmt=document.getElementById('imgFmt').value;const q=parseFloat(document.getElementById('imgQ').value)||0.92;c.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='converted.'+fmt.split('/')[1];a.click()},fmt,q)}
-function caseConv(m){const v=document.getElementById('caseIn').value;let r=v;if(m==='upper')r=v.toUpperCase();if(m==='lower')r=v.toLowerCase();if(m==='title')r=v.replace(/\w\S*/g,w=>w[0].toUpperCase()+w.slice(1).toLowerCase());if(m==='snake')r=v.trim().replace(/[\s-]+/g,'_').replace(/([a-z])([A-Z])/g,'$1_$2').toLowerCase();if(m==='kebab')r=v.trim().replace(/[\s_]+/g,'-').replace(/([a-z])([A-Z])/g,'$1-$2').toLowerCase();out('caseOut',r)}
+function genPass(){const c='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*';let p='';const a=new Uint8Array(20);crypto.getRandomValues(a);a.forEach(function(n){p+=c[n%c.length]});out('hashOut',p)}
+async function hashIt(){const v=$('hashIn').value;const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));out('hashOut',[...new Uint8Array(buf)].map(function(b){return b.toString(16).padStart(2,'0')}).join(''))}
+function tokEst(){const v=$('tokIn').value;const words=v.trim()?v.trim().split(/\s+/).length:0;out('tokOut','Characters: '+v.length+'\nWords: '+words+'\nEstimated tokens: ~'+Math.round(v.length/4)+' (chars/4) / ~'+Math.round(words/0.75)+' (words/0.75)')}
+function loadFile(inp,target){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=function(){$(target).value=r.result;toast('Loaded '+f.name)};r.readAsText(f)}
+function dropFile(e,target){e.preventDefault();const f=e.dataTransfer.files[0];if(!f)return;const r=new FileReader();r.onload=function(){$(target).value=r.result;toast('Loaded '+f.name)};r.readAsText(f)}
+function dropImg(e){e.preventDefault();const f=e.dataTransfer.files[0];if(!f)return;const r=new FileReader();r.onload=function(){imgEl=new Image();imgEl.onload=function(){$('imgInfo').textContent=f.name+' — '+imgEl.naturalWidth+'x'+imgEl.naturalHeight};imgEl.src=r.result};r.readAsDataURL(f)}
+function downloadOut(id,name){const blob=new Blob([$(id).textContent],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();toast('Downloaded')}
+function parseCsv(t){const rows=[];let row=[],cur='',q=false;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){cur+='"';i++}else q=false}else cur+=c}else if(c==='"')q=true;else if(c===','){row.push(cur);cur=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(cur);rows.push(row);row=[];cur=''}else cur+=c}if(cur!==''||row.length){row.push(cur);rows.push(row)}return rows.filter(function(r){return r.length>1||r[0]!==''})}
+function csvToJson(){try{const rows=parseCsv($('cvIn').value);const h=rows[0];out('cvOut',JSON.stringify(rows.slice(1).map(function(r){return Object.fromEntries(h.map(function(k,i){return [k,r[i]||'']}))}),null,2))}catch(e){out('cvOut','Error: '+e.message)}}
+function jsonToCsv(){try{const arr=JSON.parse($('cvIn').value);if(!Array.isArray(arr))throw new Error('Expected a JSON array of objects');const keys=[...new Set(arr.flatMap(function(o){return Object.keys(o)}))];const esc=function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};out('cvOut',[keys.join(',')].concat(arr.map(function(o){return keys.map(function(k){return esc(o[k])}).join(',')})).join('\n'))}catch(e){out('cvOut','Error: '+e.message)}}
+function csvToMd(){try{const rows=parseCsv($('cmtIn').value);if(rows.length<1)throw new Error('No data');const h=rows[0];const lines=['| '+h.join(' | ')+' |','| '+h.map(function(){return '---'}).join(' | ')+' |'].concat(rows.slice(1).map(function(r){return '| '+r.join(' | ')+' |'}));out('cmtOut',lines.join('\n'))}catch(e){out('cmtOut','Error: '+e.message)}}
+function yamlScalar(v){if(v===null||v===undefined)return'null';if(typeof v==='number'||typeof v==='boolean')return String(v);return /[:#\n]/.test(v)?JSON.stringify(v):v}
+function toYaml(v,ind){const p='  '.repeat(ind);if(Array.isArray(v))return v.map(function(x){return typeof x==='object'&&x!==null?p+'- '+toYaml(x,ind+1).trimStart().replace(/\n/g,'\n'+p+'  '):p+'- '+yamlScalar(x)}).join('\n');if(typeof v==='object'&&v!==null)return Object.entries(v).map(function(entry){const k=entry[0],x=entry[1];return typeof x==='object'&&x!==null?p+k+':\n'+toYaml(x,ind+1):p+k+': '+yamlScalar(x)}).join('\n');return p+yamlScalar(v)}
+function jsonToYaml(){try{out('yjOut',toYaml(JSON.parse($('yjIn').value),0))}catch(e){out('yjOut','Error: '+e.message)}}
+function parseYamlLine(s){s=s.trim();if(s==='true')return true;if(s==='false')return false;if(s==='null'||s==='~')return null;if(/^-?\d+(\.\d+)?$/.test(s))return Number(s);if(/^["'].*["']$/.test(s))return s.slice(1,-1);return s}
+function yamlToJson(){try{const lines=$('yjIn').value.split('\n').filter(function(l){return l.trim()&&!l.trim().startsWith('#')});const root={};const stack=[{ind:-1,obj:root}];lines.forEach(function(l){const ind=(l.match(/^ */)[0].length)/2;const t=l.trim();while(stack.length&&stack[stack.length-1].ind>=ind)stack.pop();const parent=stack[stack.length-1].obj;if(t.startsWith('- ')){if(!Array.isArray(parent))return;const v=t.slice(2);if(v.includes(':')){const o={};parent.push(o);stack.push({ind:ind,obj:o});const parts=v.split(':');o[parts[0].trim()]=parseYamlLine(parts.slice(1).join(':'))}else parent.push(parseYamlLine(v))}else{const parts=t.split(':');const k=parts[0];const v=parts.slice(1).join(':').trim();if(v===''){const o={};if(Array.isArray(parent))parent.push(o);else parent[k.trim()]=o;stack.push({ind:ind,obj:o})}else{if(Array.isArray(parent)){const o={};o[k.trim()]=parseYamlLine(v);parent.push(o);stack.push({ind:ind,obj:o})}else parent[k.trim()]=parseYamlLine(v)}}});out('yjOut',JSON.stringify(root,null,2))}catch(e){out('yjOut','Error: '+e.message+' (simple YAML only — maps, lists, scalars)')}}
+function mdToHtml(){let t=$('mdIn').value;const esc=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')};let h=esc(t).split('\n').map(function(l){if(/^### /.test(l))return '<h3>'+l.slice(4)+'</h3>';if(/^## /.test(l))return '<h2>'+l.slice(3)+'</h2>';if(/^# /.test(l))return '<h1>'+l.slice(2)+'</h1>';if(/^- /.test(l))return '<li>'+l.slice(2)+'</li>';return l?'<p>'+l+'</p>':''}).join('\n');h=h.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/`(.+?)`/g,'<code>$1</code>').replace(/\[(.+?)\]\((.+?)\)/g,'<a href="$2">$1</a>');out('mdOut',h);$('mdPrev').innerHTML=h}
+var imgEl=null;
+function imgLoad(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=function(){imgEl=new Image();imgEl.onload=function(){$('imgInfo').textContent=f.name+' — '+imgEl.naturalWidth+'x'+imgEl.naturalHeight};imgEl.src=r.result};r.readAsDataURL(f)}
+function imgConvert(){if(!imgEl){$('imgInfo').textContent='Choose an image first';return}const maxW=parseInt($('imgW').value)||imgEl.naturalWidth;const scale=Math.min(1,maxW/imgEl.naturalWidth);const c=document.createElement('canvas');c.width=Math.round(imgEl.naturalWidth*scale);c.height=Math.round(imgEl.naturalHeight*scale);c.getContext('2d').drawImage(imgEl,0,0,c.width,c.height);const fmt2=$('imgFmt').value;const q=parseFloat($('imgQ').value)||0.85;c.toBlob(function(b){const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='converted.'+fmt2.split('/')[1];a.click();$('imgInfo').textContent='Saved '+c.width+'x'+c.height+' ('+(b.size/1024).toFixed(1)+' KB)';toast('Image converted')},fmt2,q)}
+function caseConv(m){const v=$('caseIn').value;let r=v;if(m==='upper')r=v.toUpperCase();if(m==='lower')r=v.toLowerCase();if(m==='title')r=v.replace(/\w\S*/g,function(w){return w[0].toUpperCase()+w.slice(1).toLowerCase()});if(m==='snake')r=v.trim().replace(/[\s-]+/g,'_').replace(/([a-z])([A-Z])/g,'$1_$2').toLowerCase();if(m==='kebab')r=v.trim().replace(/[\s_]+/g,'-').replace(/([a-z])([A-Z])/g,'$1-$2').toLowerCase();out('caseOut',r)}
+function colConv(){const v=$('colIn').value.trim();try{let r,g,b;if(v.startsWith('#')){const h=v.slice(1);r=parseInt(h.slice(0,2),16);g=parseInt(h.slice(2,4),16);b=parseInt(h.slice(4,6),16)}else if(v.startsWith('rgb')){const parts=v.match(/\d+/g).map(Number);r=parts[0];g=parts[1];b=parts[2]}else if(v.startsWith('hsl')){const parts=v.match(/[\d.]+/g).map(Number);const hh=parts[0],ss=parts[1],ll=parts[2];const s=ss/100,l=ll/100,c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((hh/60)%2-1)),mm=l-c/2;let rt,gt,bt;if(hh<60){rt=c;gt=x;bt=0}else if(hh<120){rt=x;gt=c;bt=0}else if(hh<180){rt=0;gt=c;bt=x}else if(hh<240){rt=0;gt=x;bt=c}else if(hh<300){rt=x;gt=0;bt=c}else{rt=c;gt=0;bt=x}r=Math.round((rt+mm)*255);g=Math.round((gt+mm)*255);b=Math.round((bt+mm)*255)}else throw new Error('Use #hex, rgb() or hsl()');const hex='#'+[r,g,b].map(function(n){return n.toString(16).padStart(2,'0')}).join('');const mx=Math.max(r,g,b)/255,mn=Math.min(r,g,b)/255,l=(mx+mn)/2;let h2=0,s2=0;if(mx!==mn){const d=mx-mn;s2=l>0.5?d/(2-mx-mn):d/(mx+mn);if(mx===r/255)h2=((g-b)/255/d)%6;else if(mx===g/255)h2=(b-r)/255/d+2;else h2=(r-g)/255/d+4;h2=Math.round(h2*60);if(h2<0)h2+=360}out('colOut','HEX: '+hex+'\nRGB: rgb('+r+', '+g+', '+b+')\nHSL: hsl('+h2+', '+Math.round(s2*100)+'%, '+Math.round(l*100)+'%)')}catch(e){out('colOut','Error: '+e.message)}}
+function diffText(){const a=$('diffA').value.split('\n');const b=$('diffB').value.split('\n');const setB=new Set(b),setA=new Set(a);const onlyA=a.filter(function(l){return !setB.has(l)}),onlyB=b.filter(function(l){return !setA.has(l)});out('diffOut','Only in first ('+onlyA.length+'):\n'+onlyA.map(function(l){return '- '+l}).join('\n')+'\n\nOnly in second ('+onlyB.length+'):\n'+onlyB.map(function(l){return '+ '+l}).join('\n'))}
 </script>
 </body>
 </html>
