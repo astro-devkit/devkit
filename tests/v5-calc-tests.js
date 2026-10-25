@@ -117,6 +117,39 @@ for (const id of converters) {
 }
 if (!swapBad) { pass++; console.log('  PASS all 9 converters have from/to inputs (swap button renders)'); }
 
+// ---- v5.2: unit symbols, swap gating, unit maps ----
+// Speed shows km/h, not the raw option value kmh
+o = run('speed', {value: 100, from: 'kmh', to: 'mph'});
+check('speed display km/h', o.main, '62.14 mph');
+check('speed display sub', o.sub, '100 km/h = 62.14 mph');
+
+// Area shows m², volume m³, time words
+o = run('areaunits', {value: 1, from: 'acre', to: 'm2'});
+check('area display m²', o.main, '4,046.8600 m²');
+o = run('volume', {value: 1, from: 'L', to: 'm3'});
+check('volume display m³', o.main, '0.0010 m³');
+o = run('timeunits', {value: 1, from: 'wk', to: 's'});
+check('time display sub', o.sub, '1 weeks = 604,800 s');
+
+// Swap button only renders when From/To are both selects:
+// recipe scaler (number from/to) must NOT get one; length (selects) must
+function hasSelectPair(id) {
+  const c = calc(id);
+  const fi = c.inputs.find(i => i.k === 'from'), ti = c.inputs.find(i => i.k === 'to');
+  return !!(fi && ti && fi.type === 'select' && ti.type === 'select');
+}
+check('recipe has no swap pair', hasSelectPair('recipe'), false);
+check('length has swap pair', hasSelectPair('length'), true);
+check('currency has swap pair', hasSelectPair('currency'), true);
+
+// BMI/BMR/body fat carry a unit map for live value conversion on unit switch
+for (const id of ['bmi', 'bmr', 'bodyfat']) {
+  const c = calc(id);
+  if (!c.unitMap) { fail++; console.log('  FAIL missing unitMap:', id); }
+  else { pass++; console.log('  PASS unitMap present:', id); }
+}
+check('bmi has imperial formula', !!calc('bmi').fImp, true);
+
 // ---- structure: every calculator runs on defaults ----
 let bad = 0;
 for (const c of CALCS) {

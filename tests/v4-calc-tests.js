@@ -101,7 +101,7 @@ o = run('volume', {value: 1, from: 'gal', to: 'L'});
 check('volume 1 gal -> L', o.main, '3.7854 L');
 
 o = run('areaunits', {value: 1, from: 'acre', to: 'm2'});
-check('area 1 acre -> m2', o.main, '4,046.8600 m2');
+check('area 1 acre -> m2', o.main, '4,046.8600 m²');
 
 o = run('timeunits', {value: 1, from: 'wk', to: 's'});
 check('time 1 week -> s', o.main, '604,800 s');
