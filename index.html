@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
 <link rel="canonical" href="https://astro-devkit.github.io/devkit/">
 <meta property="og:title" content="DevKit — free calculators, converters &amp; dev tools">
-<meta property="og:description" content="45 free calculators, file converters and dev tools. Everything runs in your browser — no uploads, no accounts, no tracking.">
+<meta property="og:description" content="47 free calculators, file converters and dev tools — including an LLM cost calculator and tokens/sec simulator. Everything runs in your browser — no uploads, no accounts, no tracking.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://astro-devkit.github.io/devkit/">
 <meta name="twitter:card" content="summary">
@@ -61,6 +61,16 @@ pre{white-space:pre-wrap;word-break:break-word;background:#f7f5f0;border:1px sol
 .row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:130px}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#052e16;color:#fff;padding:10px 18px;border-radius:999px;font-weight:600;display:none;z-index:9}
 footer{max-width:1060px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font-size:13px;text-align:center}
+#sec-files .card{border-top:3px solid var(--acc2)}
+#sec-dev .card{border-top:3px solid #8b5cf6}
+section h2{font-size:22px;margin:8px 0 2px}
+section .secsub{color:var(--mut);margin:0 0 14px;font-size:14px}
+button.btn{background:var(--acc);color:#fff;border:0;border-radius:9px;padding:9px 14px;font-weight:700;cursor:pointer}
+button.btn:hover{background:#4338ca}
+button.btn.ghost{background:#fff;color:var(--txt);border:1.5px solid #94a3b8}
+button.btn.ghost:hover{border-color:var(--acc);color:var(--acc)}
+.swap{background:#fff;border:1.5px solid var(--acc);color:var(--acc);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px}
+.swap:hover{background:var(--acc);color:#fff}
 .hide{display:none!important}
 section{display:none}section.on{display:block}
 @media(max-width:640px){.hero{font-size:28px}h1{font-size:24px}}
@@ -70,13 +80,13 @@ section{display:none}section.on{display:block}
 <header>
 <h1>Dev<span>Kit</span></h1>
 <p class="hero">What do you want to <span>calculate?</span></p>
-<p class="sub">21 free calculators, file converters and dev tools. No accounts, no uploads, no tracking.</p>
+<p class="sub">Mortgage, BMI, retirement, LLM costs, file converters and dev tools — 47 tools, all free, all in your browser.</p>
 <div class="pop">
 <button onclick="popCalc('mortgage')">Mortgage</button>
 <button onclick="popCalc('bmi')">BMI</button>
 <button onclick="popCalc('tip')">Tip</button>
 <button onclick="popCalc('compound')">Compound interest</button>
-<button onclick="popCalc('temperature')">Temperature</button>
+<button onclick="popCalc('llmcost')">LLM cost</button>
 <button onclick="popCalc('age')">Age</button>
 </div>
 </header>
@@ -89,6 +99,7 @@ section{display:none}section.on{display:block}
 <button data-cat="convert">Convert</button>
 <button data-cat="time">Time</button>
 <button data-cat="everyday">Everyday</button>
+<button data-cat="llm">LLM</button>
 <button data-cat="files">Files</button>
 <button data-cat="dev">Dev</button>
 </nav>
@@ -97,6 +108,8 @@ section{display:none}section.on{display:block}
 
 <!-- ============ FILE CONVERTERS ============ -->
 <section id="sec-files">
+<h2>File converters</h2>
+<p class="secsub">Change formats without uploading anything — your files never leave your browser.</p>
 <div class="grid">
 <div class="card tool" data-name="csv json data converter">
 <h3>CSV ↔ JSON</h3>
@@ -169,6 +182,8 @@ section{display:none}section.on{display:block}
 
 <!-- ============ DEV TOOLS ============ -->
 <section id="sec-dev">
+<h2>Dev tools</h2>
+<p class="secsub">JSON, encoders, diffs and text tools for daily dev work.</p>
 <div class="grid">
 <div class="card tool" data-name="json formatter validator">
 <h3>JSON formatter &amp; validator</h3>
@@ -251,6 +266,7 @@ function $(id){return document.getElementById(id)}
 function out(id,t){const e=$(id);if(e)e.textContent=t}
 function fmt(n,d){d=(d===undefined)?2:d;if(n===null||n===undefined||!isFinite(n))return '—';return n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d})}
 function money(n){return '$'+fmt(n)}
+function fmtT(s){if(!isFinite(s)||s<0)return '—';if(s<1)return fmt(s*1000,0)+' ms';if(s<60)return fmt(s,2)+' s';return fmt(s/60,2)+' min'}
 function toast(m){const t=$('toast');if(!t)return;t.textContent=m||'Copied';t.style.display='block';setTimeout(()=>t.style.display='none',1500)}
 function copyText(id){const v=$(id).textContent;if(navigator.clipboard)navigator.clipboard.writeText(v).then(()=>toast('Copied to clipboard'))}
 
@@ -278,14 +294,14 @@ var CALCS=[
  inputs:[{k:'mode',label:'Mode',type:'select',def:'of',opts:[['of','What is x% of y?'],['is','x is what % of y?']]},{k:'x',label:'x',type:'number',def:20},{k:'y',label:'y',type:'number',def:150}],
  compute:function(v){if(v.mode==='of')return{main:fmt(v.x/100*v.y),sub:v.x+'% of '+v.y};const r=v.y===0?0:v.x/v.y*100;return{main:fmt(r)+'%',sub:v.x+' is '+fmt(r)+'% of '+v.y}}},
 {id:'bmi',name:'BMI calculator',cat:'health',tags:'bmi body mass index weight',f:'BMI = kg ÷ m²',
- inputs:[{k:'kg',label:'Weight (kg)',type:'number',def:70},{k:'cm',label:'Height (cm)',type:'number',def:175}],
- compute:function(v){const h=v.cm/100,b=v.kg/(h*h);const c=b<18.5?'Underweight':b<25?'Normal':b<30?'Overweight':'Obese';return{main:fmt(b,1),sub:c+' · Healthy weight '+fmt(18.5*h*h,1)+'–'+fmt(24.9*h*h,1)+' kg'}}},
+ inputs:[{k:'units',label:'Units',type:'select',def:'metric',opts:[['metric','Metric (kg, cm)'],['imperial','Imperial (lb, in)']]},{k:'kg',label:'Weight',type:'number',def:70},{k:'cm',label:'Height',type:'number',def:175}],
+ compute:function(v){const kg=v.units==='imperial'?v.kg*0.45359237:v.kg,cm=v.units==='imperial'?v.cm*2.54:v.cm;const h=cm/100,b=kg/(h*h);const c=b<18.5?'Underweight':b<25?'Normal':b<30?'Overweight':'Obese';const u=v.units==='imperial'?2.20462:1,ul=v.units==='imperial'?' lb':' kg';return{main:fmt(b,1),sub:c+' · Healthy weight '+fmt(18.5*h*h*u,1)+'–'+fmt(24.9*h*h*u,1)+ul}}},
 {id:'bmr',name:'BMR & daily calories (TDEE)',cat:'health',tags:'bmr tdee calories metabolism',f:'Mifflin-St Jeor: men 10w+6.25h−5a+5 · women 10w+6.25h−5a−161 · TDEE = BMR × activity',
- inputs:[{k:'sex',label:'Sex',type:'select',def:'m',opts:[['m','Male'],['f','Female']]},{k:'age',label:'Age',type:'number',def:30},{k:'kg',label:'Weight (kg)',type:'number',def:80},{k:'cm',label:'Height (cm)',type:'number',def:180},{k:'act',label:'Activity',type:'select',def:'1.55',opts:[['1.2','Sedentary'],['1.375','Lightly active'],['1.55','Moderately active'],['1.725','Very active'],['1.9','Extremely active']]}],
- compute:function(v){const b=v.sex==='m'?10*v.kg+6.25*v.cm-5*v.age+5:10*v.kg+6.25*v.cm-5*v.age-161;const t=b*parseFloat(v.act);return{main:fmt(t,0)+' kcal/day',sub:'BMR '+fmt(b,0)+' kcal · Lose weight ≈ '+fmt(t-500,0)+' · Gain ≈ '+fmt(t+500,0)}}},
+ inputs:[{k:'sex',label:'Sex',type:'select',def:'m',opts:[['m','Male'],['f','Female']]},{k:'age',label:'Age',type:'number',def:30},{k:'units',label:'Units',type:'select',def:'metric',opts:[['metric','Metric (kg, cm)'],['imperial','Imperial (lb, in)']]},{k:'kg',label:'Weight',type:'number',def:80},{k:'cm',label:'Height',type:'number',def:180},{k:'act',label:'Activity',type:'select',def:'1.55',opts:[['1.2','Sedentary'],['1.375','Lightly active'],['1.55','Moderately active'],['1.725','Very active'],['1.9','Extremely active']]}],
+ compute:function(v){const kg=v.units==='imperial'?v.kg*0.45359237:v.kg,cm=v.units==='imperial'?v.cm*2.54:v.cm;const b=v.sex==='m'?10*kg+6.25*cm-5*v.age+5:10*kg+6.25*cm-5*v.age-161;const t=b*parseFloat(v.act);return{main:fmt(t,0)+' kcal/day',sub:'BMR '+fmt(b,0)+' kcal · Lose weight ≈ '+fmt(t-500,0)+' · Gain ≈ '+fmt(t+500,0)}}},
 {id:'bodyfat',name:'Body fat % (US Navy)',cat:'health',tags:'body fat navy waist',f:'Men: 495÷(1.0324−0.19077·log10(waist−neck)+0.15456·log10(height))−450 · Women: 495÷(1.29579−0.35004·log10(waist+hip−neck)+0.22100·log10(height))−450',
- inputs:[{k:'sex',label:'Sex',type:'select',def:'m',opts:[['m','Male'],['f','Female']]},{k:'waist',label:'Waist (cm)',type:'number',def:90},{k:'neck',label:'Neck (cm)',type:'number',def:40},{k:'hip',label:'Hip (cm, women)',type:'number',def:95},{k:'height',label:'Height (cm)',type:'number',def:180}],
- compute:function(v){const L=Math.log10,toIn=function(x){return x/2.54};let bf;if(v.sex==='m'){bf=495/(1.0324-0.19077*L(toIn(v.waist)-toIn(v.neck))+0.15456*L(toIn(v.height)))-450}else{bf=495/(1.29579-0.35004*L(toIn(v.waist)+toIn(v.hip)-toIn(v.neck))+0.22100*L(toIn(v.height)))-450}const lim=v.sex==='m'?[6,14,18,25]:[14,21,25,32];const c=bf<lim[0]?'Essential fat':bf<lim[1]?'Athletic':bf<lim[2]?'Fitness':bf<lim[3]?'Average':'Obese';return{main:fmt(bf,1)+'%',sub:c}}},
+ inputs:[{k:'sex',label:'Sex',type:'select',def:'m',opts:[['m','Male'],['f','Female']]},{k:'units',label:'Units',type:'select',def:'metric',opts:[['metric','Metric (cm)'],['imperial','Imperial (in)']]},{k:'waist',label:'Waist',type:'number',def:90},{k:'neck',label:'Neck',type:'number',def:40},{k:'hip',label:'Hip (women)',type:'number',def:95},{k:'height',label:'Height',type:'number',def:180}],
+ compute:function(v){const L=Math.log10,toIn=function(x){return v.units==='imperial'?x:x/2.54};let bf;if(v.sex==='m'){bf=495/(1.0324-0.19077*L(toIn(v.waist)-toIn(v.neck))+0.15456*L(toIn(v.height)))-450}else{bf=495/(1.29579-0.35004*L(toIn(v.waist)+toIn(v.hip)-toIn(v.neck))+0.22100*L(toIn(v.height)))-450}const lim=v.sex==='m'?[6,14,18,25]:[14,21,25,32];const c=bf<lim[0]?'Essential fat':bf<lim[1]?'Athletic':bf<lim[2]?'Fitness':bf<lim[3]?'Average':'Obese';return{main:fmt(bf,1)+'%',sub:c}}},
 {id:'meansd',name:'Mean & standard deviation',cat:'math',tags:'mean average standard deviation statistics',f:'Mean = Σx ÷ n · SD = √(Σ(x−mean)² ÷ n)',
  inputs:[{k:'nums',label:'Numbers (comma or space separated)',type:'textarea',def:'2, 4, 4, 4, 5, 5, 7, 9'}],
  compute:function(v){const xs=String(v.nums).split(/[\s,]+/).map(Number).filter(function(x){return isFinite(x)});if(!xs.length)return{main:'—',sub:'Enter numbers'};const m=xs.reduce(function(a,b){return a+b},0)/xs.length;const pop=Math.sqrt(xs.reduce(function(a,x){return a+(x-m)*(x-m)},0)/xs.length);const sam=xs.length>1?Math.sqrt(xs.reduce(function(a,x){return a+(x-m)*(x-m)},0)/(xs.length-1)):0;return{main:'Mean '+fmt(m),sub:'Population SD '+fmt(pop)+' · Sample SD '+fmt(sam)+' · n = '+xs.length}}},
@@ -399,12 +415,38 @@ CALCS.push(
  compute:function(v){if(!v.from)return{main:'—',sub:'Enter the original servings'};const n=v.amt*v.to/v.from;return{main:fmt(n,0)+' g',sub:'×'+fmt(v.to/v.from,2)+' the recipe'}}}
 );
 
+var MODELS={
+gpt61sol:{pin:2,pread:0.10,pwrite:0,pout:10},
+gpt6sol:{pin:2,pread:0.20,pwrite:0,pout:10},
+gpt56sol:{pin:4,pread:0.40,pwrite:0,pout:20},
+gpt56terra:{pin:2,pread:0.20,pwrite:0,pout:12},
+gpt56luna:{pin:0.20,pread:0.02,pwrite:0,pout:1.20},
+gpt5:{pin:1.25,pread:0.125,pwrite:0,pout:10},
+sonnet45:{pin:3,pread:0.30,pwrite:3.75,pout:15},
+sonnet46:{pin:3,pread:0.30,pwrite:3.75,pout:15},
+opus48:{pin:5,pread:0.50,pwrite:6.25,pout:25},
+haiku45:{pin:1,pread:0.10,pwrite:1.25,pout:5},
+gemini25pro:{pin:1.25,pread:0.125,pwrite:0,pout:10},
+gemini25flash:{pin:0.30,pread:0.03,pwrite:0,pout:2.50},
+grok43:{pin:1.25,pread:0.20,pwrite:0,pout:2.50},
+deepseekv32:{pin:0.28,pread:0.07,pwrite:0,pout:0.42}
+};
+CALCS.push(
+{id:'llmcost',name:'LLM cost calculator',cat:'llm',tags:'llm ai cost tokens gpt claude gemini grok deepseek pricing api',f:'Cost = (uncached ÷ 1M × input $) + (cached ÷ 1M × cache-read $) + (cache-write ÷ 1M × cache-write $) + (output ÷ 1M × output $) · Rates are published list prices, Oct 2026 — verify before big commits',
+ inputs:[{k:'model',label:'Model',type:'select',def:'gpt61sol',opts:[['gpt61sol','GPT-6.1 Sol — $2.00 in / $10.00 out'],['gpt6sol','GPT-6 Sol — $2.00 / $10.00'],['gpt56sol','GPT-5.6 Sol — $4.00 / $20.00'],['gpt56terra','GPT-5.6 Terra — $2.00 / $12.00'],['gpt56luna','GPT-5.6 Luna — $0.20 / $1.20'],['gpt5','GPT-5 — $1.25 / $10.00'],['sonnet45','Claude Sonnet 4.5 — $3.00 / $15.00'],['sonnet46','Claude Sonnet 4.6 — $3.00 / $15.00'],['opus48','Claude Opus 4.8 — $5.00 / $25.00'],['haiku45','Claude Haiku 4.5 — $1.00 / $5.00'],['gemini25pro','Gemini 2.5 Pro — $1.25 / $10.00'],['gemini25flash','Gemini 2.5 Flash — $0.30 / $2.50'],['grok43','Grok 4.3 — $1.25 / $2.50'],['deepseekv32','DeepSeek V3.2 — $0.28 / $0.42'],['custom','Custom — enter prices below']]},{k:'pin',label:'Custom input price ($/1M tokens)',type:'number',def:3},{k:'pread',label:'Custom cached-read price ($/1M)',type:'number',def:0.3},{k:'pwrite',label:'Custom cache-write price ($/1M)',type:'number',def:0},{k:'pout',label:'Custom output price ($/1M)',type:'number',def:15},{k:'tin',label:'Uncached input tokens / request',type:'number',def:100000},{k:'tcached',label:'Cached input tokens / request',type:'number',def:1000000},{k:'twrite',label:'Cache-write tokens / request',type:'number',def:0},{k:'tout',label:'Output tokens / request',type:'number',def:50000},{k:'reqs',label:'Requests',type:'number',def:1000}],
+ compute:function(v){const r=v.model==='custom'?{pin:v.pin,pread:v.pread,pwrite:v.pwrite,pout:v.pout}:MODELS[v.model];if(!r)return{main:'—',sub:'Pick a model'};const cin=v.tin/1e6*r.pin,cc=v.tcached/1e6*r.pread,cw=v.twrite/1e6*r.pwrite,co=v.tout/1e6*r.pout;const per=cin+cc+cw+co;return{main:money(per*v.reqs),sub:'$'+fmt(per,4)+' / request · input $'+fmt(cin,4)+' + cached $'+fmt(cc,4)+' + write $'+fmt(cw,4)+' + output $'+fmt(co,4)}}},
+{id:'toksec',name:'Tokens/sec simulator',cat:'llm',tags:'tokens per second latency ttft simulator llm speed throughput',f:'Time to first token = prompt ÷ prefill rate · Decode = output ÷ (decode rate ÷ concurrent requests)',
+ inputs:[{k:'prefill',label:'Prefill speed (tokens/sec)',type:'number',def:2000},{k:'decode',label:'Decode speed (tokens/sec)',type:'number',def:50},{k:'prompt',label:'Prompt tokens',type:'number',def:2000},{k:'out',label:'Output tokens',type:'number',def:500},{k:'conc',label:'Concurrent requests',type:'number',def:1}],
+ compute:function(v){if(!v.prefill||!v.decode)return{main:'—',sub:'Enter prefill and decode speeds'};const ttft=v.prompt/v.prefill;const dec=v.out/(v.decode/Math.max(1,v.conc));const tot=ttft+dec;const eff=(v.prompt+v.out)/tot;return{main:'Total '+fmtT(tot),sub:'First token '+fmtT(ttft)+' · decode '+fmtT(dec)+' · '+fmt(eff,0)+' tok/s effective'}}}
+);
+
 /* ---- render + filter ---- */
 function readVals(c){const v={};c.inputs.forEach(function(inp){const el=$('in_'+c.id+'_'+inp.k);if(!el){v[inp.k]=inp.def;return}v[inp.k]=inp.type==='number'?parseFloat(el.value):el.value});return v}
 function runCalc(c){try{const r=c.compute(readVals(c));$('out_'+c.id+'_main').textContent=r.main;$('out_'+c.id+'_sub').textContent=r.sub||''}catch(e){$('out_'+c.id+'_main').textContent='—';$('out_'+c.id+'_sub').textContent=''}}
-function renderCalcs(){const g=$('calcGrid');if(!g)return;g.innerHTML='';CALCS.forEach(function(c){const card=document.createElement('div');card.className='card calc';card.id='calc-'+c.id;card.dataset.cat=c.cat;card.dataset.name=(c.name+' '+c.tags).toLowerCase();let h='<h3>'+c.name+'</h3>';c.inputs.forEach(function(inp){h+='<div class="f">'+inp.label+'</div>';if(inp.type==='select'){h+='<select id="in_'+c.id+'_'+inp.k+'">'+inp.opts.map(function(o){return '<option value="'+o[0]+'"'+(String(o[0])===String(inp.def)?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'}else if(inp.type==='textarea'){h+='<textarea id="in_'+c.id+'_'+inp.k+'">'+inp.def+'</textarea>'}else if(inp.type==='date'||inp.type==='time'){h+='<input type="'+inp.type+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}else{h+='<input type="number" step="'+(inp.step||'any')+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}});h+='<div class="result"><div class="main" id="out_'+c.id+'_main"></div><div class="sub" id="out_'+c.id+'_sub"></div></div>';h+='<div class="formula">'+c.f+'</div>';card.innerHTML=h;g.appendChild(card);card.querySelectorAll('input,select,textarea').forEach(function(el){el.addEventListener('input',function(){runCalc(c)})});runCalc(c)})}
+function swapUnits(id){const c=CALCS.find(function(x){return x.id===id});if(!c)return;const a=document.getElementById('in_'+id+'_from'),b=document.getElementById('in_'+id+'_to');if(!a||!b)return;const t=a.value;a.value=b.value;b.value=t;runCalc(c)}
+function renderCalcs(){const g=$('calcGrid');if(!g)return;g.innerHTML='';CALCS.forEach(function(c){const card=document.createElement('div');card.className='card calc';card.id='calc-'+c.id;card.dataset.cat=c.cat;card.dataset.name=(c.name+' '+c.tags).toLowerCase();let h='<h3>'+c.name+'</h3>';c.inputs.forEach(function(inp){h+='<div class="f">'+inp.label+'</div>';if(inp.type==='select'){h+='<select id="in_'+c.id+'_'+inp.k+'">'+inp.opts.map(function(o){return '<option value="'+o[0]+'"'+(String(o[0])===String(inp.def)?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'}else if(inp.type==='textarea'){h+='<textarea id="in_'+c.id+'_'+inp.k+'">'+inp.def+'</textarea>'}else if(inp.type==='date'||inp.type==='time'){h+='<input type="'+inp.type+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}else{h+='<input type="number" step="'+(inp.step||'any')+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}});if(c.inputs.some(function(i){return i.k==='from'})&&c.inputs.some(function(i){return i.k==='to'})){h+='<button class="swap" onclick="swapUnits(\''+c.id+'\')">⇄ Swap units</button>'}h+='<div class="result"><div class="main" id="out_'+c.id+'_main"></div><div class="sub" id="out_'+c.id+'_sub"></div></div>';h+='<div class="formula">'+c.f+'</div>';card.innerHTML=h;g.appendChild(card);card.querySelectorAll('input,select,textarea').forEach(function(el){el.addEventListener('input',function(){runCalc(c)})});runCalc(c)})}
 var curCat='all';
-function applyFilter(){const q=(($('q').value)||'').toLowerCase();const cats=['finance','health','math','convert','time','everyday'];const showCalcs=curCat==='all'||cats.indexOf(curCat)>=0;$('sec-calcs').classList.toggle('on',showCalcs);$('sec-files').classList.toggle('on',curCat==='files');$('sec-dev').classList.toggle('on',curCat==='dev');document.querySelectorAll('#calcGrid .calc').forEach(function(card){const okCat=curCat==='all'||card.dataset.cat===curCat;const okQ=!q||card.dataset.name.indexOf(q)>=0;card.classList.toggle('hide',!(okCat&&okQ))});document.querySelectorAll('.tool').forEach(function(card){card.classList.toggle('hide',!!q&&((card.dataset.name+' '+card.textContent).toLowerCase().indexOf(q)<0))})}
+function applyFilter(){const q=(($('q').value)||'').toLowerCase();const cats=['finance','health','math','convert','time','everyday','llm'];const showCalcs=curCat==='all'||cats.indexOf(curCat)>=0;$('sec-calcs').classList.toggle('on',showCalcs);$('sec-files').classList.toggle('on',curCat==='files');$('sec-dev').classList.toggle('on',curCat==='dev');document.querySelectorAll('#calcGrid .calc').forEach(function(card){const okCat=curCat==='all'||card.dataset.cat===curCat;const okQ=!q||card.dataset.name.indexOf(q)>=0;card.classList.toggle('hide',!(okCat&&okQ))});document.querySelectorAll('.tool').forEach(function(card){card.classList.toggle('hide',!!q&&((card.dataset.name+' '+card.textContent).toLowerCase().indexOf(q)<0))})}
 function filterAll(){applyFilter()}
 function popCalc(q){$('q').value=q;curCat='all';document.querySelectorAll('#cats button').forEach(function(x){x.classList.remove('on')});document.querySelectorAll('#cats button')[0].classList.add('on');applyFilter();const g=$('calcGrid');if(g)g.scrollIntoView()}
 if(typeof document!=='undefined'&&document.getElementById('calcGrid')){renderCalcs();const qEl=$('q');if(qEl)qEl.addEventListener('input',filterAll);document.querySelectorAll('#cats button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#cats button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');curCat=b.dataset.cat;applyFilter()})});if(location.hash&&location.hash.indexOf('#calc-')===0){const el=document.getElementById(location.hash.slice(1));if(el){curCat=el.dataset.cat;document.querySelectorAll('#cats button').forEach(function(x){x.classList.toggle('on',x.dataset.cat===curCat)});applyFilter();setTimeout(function(){el.scrollIntoView()},50)}}}
