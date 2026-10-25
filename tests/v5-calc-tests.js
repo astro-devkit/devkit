@@ -62,6 +62,17 @@ check('llmcost custom model', o.main, '$14.00');
 o = run('llmcost', {model: 'gpt61sol', pin: 0, pread: 0, pwrite: 0, pout: 0, tin: 100000, tcached: 1000000, twrite: 0, tout: 50000, reqs: 1});
 check('llmcost gpt-6.1 sol preset', o.main, '$0.80');
 
+// currency loading / failed states (RATES_STATE drives the message)
+sandbox.RATES = {USD: 1};
+sandbox.RATES_STATE = 'loading';
+o = run('currency', {amount: 100, from: 'USD', to: 'EUR'});
+check('currency loading state', o.main, '…');
+check('currency loading sub', o.sub, 'Fetching live rates…');
+sandbox.RATES_STATE = 'fail';
+o = run('currency', {amount: 100, from: 'USD', to: 'EUR'});
+check('currency failed state', o.main, '—');
+check('currency failed sub', o.sub, 'Live rates unavailable — check your connection and reload');
+
 // ---- tokens/sec simulator ----
 // TTFT 2000/2000 = 1.00s, decode 500/50 = 10s, total 11s, effective 2500/11 = 227 tok/s
 o = run('toksec', {prefill: 2000, decode: 50, prompt: 2000, out: 500, conc: 1});
