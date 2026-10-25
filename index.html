@@ -70,7 +70,7 @@ section{display:none}section.on{display:block}
 <button onclick="popCalc('age')">Age</button>
 </div>
 </header>
-<div class="search"><input type="text" id="q" placeholder="Search — try “mortgage”, “bmi”, “json”, “image”…” oninput="filterAll()"></div>
+<div class="search"><input type="text" id="q" placeholder="Search calculators and tools"></div>
 <nav id="cats">
 <button class="on" data-cat="all">All</button>
 <button data-cat="finance">Finance</button>
@@ -314,7 +314,7 @@ var curCat='all';
 function applyFilter(){const q=(($('q').value)||'').toLowerCase();const cats=['finance','health','math','convert','time','everyday'];const showCalcs=curCat==='all'||cats.indexOf(curCat)>=0;$('sec-calcs').classList.toggle('on',showCalcs);$('sec-files').classList.toggle('on',curCat==='files');$('sec-dev').classList.toggle('on',curCat==='dev');document.querySelectorAll('#calcGrid .calc').forEach(function(card){const okCat=curCat==='all'||card.dataset.cat===curCat;const okQ=!q||card.dataset.name.indexOf(q)>=0;card.classList.toggle('hide',!(okCat&&okQ))});document.querySelectorAll('.tool').forEach(function(card){card.classList.toggle('hide',!!q&&((card.dataset.name+' '+card.textContent).toLowerCase().indexOf(q)<0))})}
 function filterAll(){applyFilter()}
 function popCalc(q){$('q').value=q;curCat='all';document.querySelectorAll('#cats button').forEach(function(x){x.classList.remove('on')});document.querySelectorAll('#cats button')[0].classList.add('on');applyFilter();const g=$('calcGrid');if(g)g.scrollIntoView()}
-if(typeof document!=='undefined'&&document.getElementById('calcGrid')){renderCalcs();document.querySelectorAll('#cats button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#cats button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');curCat=b.dataset.cat;applyFilter()})});if(location.hash&&location.hash.indexOf('#calc-')===0){const el=document.getElementById(location.hash.slice(1));if(el){curCat=el.dataset.cat;document.querySelectorAll('#cats button').forEach(function(x){x.classList.toggle('on',x.dataset.cat===curCat)});applyFilter();setTimeout(function(){el.scrollIntoView()},50)}}}
+if(typeof document!=='undefined'&&document.getElementById('calcGrid')){renderCalcs();const qEl=$('q');if(qEl)qEl.addEventListener('input',filterAll);document.querySelectorAll('#cats button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#cats button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');curCat=b.dataset.cat;applyFilter()})});if(location.hash&&location.hash.indexOf('#calc-')===0){const el=document.getElementById(location.hash.slice(1));if(el){curCat=el.dataset.cat;document.querySelectorAll('#cats button').forEach(function(x){x.classList.toggle('on',x.dataset.cat===curCat)});applyFilter();setTimeout(function(){el.scrollIntoView()},50)}}}
 
 /* ---- file converters & dev tools (from v2) ---- */
 function fmtJson(){try{out('jsonOut',JSON.stringify(JSON.parse($('jsonIn').value),null,2))}catch(e){out('jsonOut','Invalid JSON: '+e.message)}}
