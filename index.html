@@ -12,17 +12,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://astro-devkit.github.io/devkit/">
 <meta name="twitter:card" content="summary">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DevKit","applicationCategory":"CalculatorApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free calculators, file converters and dev tools. Everything runs in your browser — no uploads, no accounts, no tracking."}
-/* ---- v4 tools ---- */
-function xmlToJson(){const t=document.getElementById('xmlIn').value.trim();const out=document.getElementById('xmlOut');try{const doc=new DOMParser().parseFromString(t,'text/xml');if(doc.getElementsByTagName('parsererror').length)throw new Error('Not valid XML');function el(e){const o={};for(const a of e.attributes||[])o['@'+a.name]=a.value;const kids=[...e.children];if(!kids.length)return e.textContent;for(const k of kids){const v=el(k);if(o[k.tagName]!==undefined){if(!Array.isArray(o[k.tagName]))o[k.tagName]=[o[k.tagName]];o[k.tagName].push(v)}else o[k.tagName]=v}return o}const r={};r[doc.documentElement.tagName]=el(doc.documentElement);out.textContent=JSON.stringify(r,null,2)}catch(e){out.textContent='Error: '+e.message}}
-function jsonToXml(){const out=document.getElementById('xmlOut');try{const o=JSON.parse(document.getElementById('xmlIn').value);function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}function build(v,tag){if(v===null||typeof v!=='object')return '<'+tag+'>'+esc(v)+'</'+tag+'>';if(Array.isArray(v))return v.map(function(x){return build(x,tag)}).join('');let inner='';for(const k in v)inner+=build(v[k],k);return '<'+tag+'>'+inner+'</'+tag+'>'}const keys=Object.keys(o);out.textContent=keys.map(function(k){return build(o[k],k)}).join('')}catch(e){out.textContent='Error: '+e.message}}
-function csvToSql(){const out=document.getElementById('sqlOut');const table=(document.getElementById('sqlTable').value||'table').replace(/[^A-Za-z0-9_]/g,'')||'table';try{const rows=parseCsv(document.getElementById('sqlIn').value.trim());if(rows.length<2){out.textContent='Need a header row and at least one data row.';return}const cols=rows[0];const lines=rows.slice(1).map(function(r){return 'INSERT INTO '+table+' ('+cols.join(', ')+') VALUES ('+r.map(function(v){return isNaN(v)||v==='' ? "'"+String(v).replace(/'/g,"''")+"'" : v}).join(', ')+');'});out.textContent=lines.join('\n')}catch(e){out.textContent='Error: '+e.message}}
-function hashFileGo(f){const out=document.getElementById('hashOut');if(!f){out.textContent='Choose a file first.';return}out.textContent='Hashing '+f.name+' ('+fmtFileSize(f.size)+')…';f.arrayBuffer().then(function(buf){return crypto.subtle.digest('SHA-256',buf)}).then(function(h){out.textContent=[...new Uint8Array(h)].map(function(b){return b.toString(16).padStart(2,'0')}).join('')}).catch(function(e){out.textContent='Error: '+e.message})}
-function imgToB64(f){const out=document.getElementById('b64Out');if(!f){out.textContent='Choose an image first.';return}const r=new FileReader();r.onload=function(){out.textContent=r.result};r.onerror=function(){out.textContent='Could not read that file.'};r.readAsDataURL(f)}
-function wordCount(){const t=document.getElementById('wcIn').value;const words=t.trim()?t.trim().split(/\s+/).length:0;const chars=t.length,noSp=t.replace(/\s/g,'').length,lines=t?t.split(/\n/).length:0;document.getElementById('wcOut').textContent=words+' words · '+chars+' characters · '+noSp+' characters (no spaces) · '+lines+' lines · ~'+Math.max(1,Math.round(words/200))+' min read'}
-function sortLines(mode){const el=document.getElementById('sortIn');let lines=el.value.split('\n').filter(function(l){return l.trim()!==''});if(mode==='az')lines.sort(function(a,b){return a.localeCompare(b)});if(mode==='za')lines.sort(function(a,b){return b.localeCompare(a)});if(mode==='uniq')lines=[...new Set(lines)];document.getElementById('sortOut').textContent=lines.join('\n')}
-function jsonToTs(){const out=document.getElementById('tsOut');try{const o=JSON.parse(document.getElementById('tsIn').value);function ty(v,n){if(v===null)return 'null';if(Array.isArray(v))return v.length?ty(v[0],n)+'[]':'any[]';if(typeof v==='object'){let s='interface '+n+' {\n';for(const k in v)s+='  '+k+': '+ty(v[k],k.charAt(0).toUpperCase()+k.slice(1))+';\n';return s+'}'}return typeof v}out.textContent=ty(o,'Root')}catch(e){out.textContent='Error: '+e.message}}
-</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DevKit","applicationCategory":"CalculatorApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free calculators, file converters and dev tools. Everything runs in your browser — no uploads, no accounts, no tracking."}</script>
 <style>
 :root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -41,6 +31,8 @@ p.sub{color:var(--mut);margin:10px auto 0;max-width:560px;font-size:16px}
 nav{max-width:1060px;margin:18px auto 0;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 nav button{background:#fff;color:var(--txt);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:14px;cursor:pointer}
 nav button.on{background:var(--acc);color:#fff;border-color:transparent;font-weight:700}
+nav a{display:inline-block;background:#fff;color:var(--txt);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:14px;cursor:pointer;text-decoration:none}
+nav a:hover{border-color:var(--acc);color:var(--acc)}
 main{max-width:1060px;margin:0 auto;padding:20px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 4px rgba(35,42,61,.05)}
@@ -89,7 +81,7 @@ section{display:none}section.on{display:block}
 .tile h3{margin:0 0 4px;font-size:17px}
 .tile h3 span{float:right;color:var(--acc);font-size:14px;font-weight:700}
 .tile p{margin:0;color:var(--mut);font-size:14px}
-@media(max-width:640px){.hero{font-size:28px}h1{font-size:24px}}
+@media(max-width:640px){.hero{font-size:28px}h1{font-size:24px}.topbar{padding:8px 0;gap:8px}nav button,nav a{padding:6px 11px;font-size:13px}.search input{padding:11px 16px}}
 </style>
 </head>
 <body>
@@ -118,6 +110,7 @@ section{display:none}section.on{display:block}
 <button data-cat="everyday">Everyday</button>
 <button data-cat="files">Files</button>
 <button data-cat="dev">Dev</button>
+<a href="devtools.html">DevTools guide</a>
 </nav></div>
 <main>
 <div id="homeView">
@@ -143,7 +136,7 @@ section{display:none}section.on{display:block}
 <h2>File converters</h2>
 <p class="secsub">Change formats without uploading anything — your files never leave your browser.</p>
 <div class="grid">
-<div class="card tool" data-name="csv json data converter">
+<div class="card tool" id="tool-csvjson" data-name="csv json data converter">
 <h3>CSV ↔ JSON</h3>
 <div class="drop" onclick="document.getElementById('cvFile').click()" ondrop="dropFile(event,'cvIn')" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')">Drop a .csv or .json file here, or click to choose</div>
 <input type="file" id="cvFile" accept=".csv,.json,.txt" class="hide" onchange="loadFile(this,'cvIn')">
@@ -153,9 +146,10 @@ section{display:none}section.on{display:block}
 <button class="ghost" onclick="copyText('cvOut')">Copy</button>
 <button class="ghost" onclick="downloadOut('cvOut','converted.txt')">Download</button>
 <pre id="cvOut">Result appears here.</pre>
+<div id="cvInfo" style="color:var(--mut);font-size:13px;margin-top:8px"></div>
 </div>
 
-<div class="card tool" data-name="json yaml converter">
+<div class="card tool" id="tool-jsonyaml" data-name="json yaml converter">
 <h3>JSON ↔ YAML</h3>
 <textarea id="yjIn" placeholder="Paste JSON or YAML here"></textarea>
 <button class="act" onclick="jsonToYaml()">JSON → YAML</button>
@@ -164,7 +158,7 @@ section{display:none}section.on{display:block}
 <pre id="yjOut">Result appears here.</pre>
 </div>
 
-<div class="card tool" data-name="markdown html preview converter">
+<div class="card tool" id="tool-mdhtml" data-name="markdown html preview converter">
 <h3>Markdown → HTML</h3>
 <textarea id="mdIn" placeholder="# Hello&#10;&#10;Some **bold** text and a [link](https://example.com)"></textarea>
 <button class="act" onclick="mdToHtml()">Convert &amp; preview</button>
@@ -173,7 +167,7 @@ section{display:none}section.on{display:block}
 <div id="mdPrev" style="background:#f7f5f0;border:1px solid var(--line);border-radius:9px;padding:10px;margin-top:8px">Preview appears here.</div>
 </div>
 
-<div class="card tool" data-name="csv markdown table converter">
+<div class="card tool" id="tool-csvmd" data-name="csv markdown table converter">
 <h3>CSV → Markdown table</h3>
 <textarea id="cmtIn" placeholder="name,age&#10;Ada,36&#10;Grace,28"></textarea>
 <button class="act" onclick="csvToMd()">Convert</button>
@@ -181,7 +175,7 @@ section{display:none}section.on{display:block}
 <pre id="cmtOut">Result appears here.</pre>
 </div>
 
-<div class="card tool" data-name="image converter resize compress png jpg webp">
+<div class="card tool" id="tool-imgconv" data-name="image converter resize compress png jpg webp">
 <h3>Image converter, resize &amp; compress</h3>
 <div class="drop" onclick="document.getElementById('imgFile').click()" ondrop="dropImg(event)" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')">Drop an image here, or click to choose</div>
 <input type="file" id="imgFile" accept="image/*" class="hide" onchange="imgLoad(this)">
@@ -194,7 +188,7 @@ section{display:none}section.on{display:block}
 <div id="imgInfo" style="color:var(--mut);font-size:13px;margin-top:8px"></div>
 </div>
 
-<div class="card tool" data-name="text case converter upper lower snake kebab">
+<div class="card tool" id="tool-case" data-name="text case converter upper lower snake kebab">
 <h3>Text case converter</h3>
 <textarea id="caseIn" placeholder="Paste text"></textarea>
 <button class="act" onclick="caseConv('upper')">UPPER</button>
@@ -217,7 +211,7 @@ section{display:none}section.on{display:block}
 <h2>Dev tools</h2>
 <p class="secsub">JSON, encoders, diffs and text tools for daily dev work.</p>
 <div class="grid">
-<div class="card tool" data-name="json formatter validator">
+<div class="card tool" id="tool-jsonfmt" data-name="json formatter validator">
 <h3>JSON formatter &amp; validator</h3>
 <textarea id="jsonIn" placeholder='Paste JSON here, e.g. {"a":1}'></textarea>
 <button class="act" onclick="fmtJson()">Format</button>
@@ -225,15 +219,15 @@ section{display:none}section.on{display:block}
 <button class="ghost" onclick="copyText('jsonOut')">Copy</button>
 <pre id="jsonOut">Output appears here.</pre>
 </div>
-<div class="card tool" data-name="base64 encode decode">
+<div class="card tool" id="tool-b64enc" data-name="base64 encode decode">
 <h3>Base64</h3>
 <textarea id="b64In" placeholder="Text to encode or decode"></textarea>
 <button class="act" onclick="b64('en')">Encode</button>
 <button class="ghost" onclick="b64('de')">Decode</button>
-<button class="ghost" onclick="copyText('b64Out')">Copy</button>
-<pre id="b64Out"></pre>
+<button class="ghost" onclick="copyText('b64TextOut')">Copy</button>
+<pre id="b64TextOut"></pre>
 </div>
-<div class="card tool" data-name="url encode decode">
+<div class="card tool" id="tool-urlenc" data-name="url encode decode">
 <h3>URL encode / decode</h3>
 <textarea id="urlIn" placeholder="https://example.com/a b?x=1&amp;y=2"></textarea>
 <button class="act" onclick="urlC('en')">Encode</button>
@@ -241,7 +235,7 @@ section{display:none}section.on{display:block}
 <button class="ghost" onclick="copyText('urlOut')">Copy</button>
 <pre id="urlOut"></pre>
 </div>
-<div class="card tool" data-name="regex tester">
+<div class="card tool" id="tool-regex" data-name="regex tester">
 <h3>Regex tester</h3>
 <input type="text" id="rePat" placeholder="Pattern, e.g. \d{3}-\d{4}">
 <input type="text" id="reFlags" placeholder="Flags, e.g. gi" style="margin-top:6px">
@@ -249,34 +243,34 @@ section{display:none}section.on{display:block}
 <button class="act" onclick="reTest()">Test</button>
 <pre id="reOut"></pre>
 </div>
-<div class="card tool" data-name="unix timestamp date converter">
+<div class="card tool" id="tool-timestamp" data-name="unix timestamp date converter">
 <h3>Unix timestamp</h3>
 <input type="text" id="tsIn" placeholder="Unix seconds, e.g. 1792883317">
 <button class="act" onclick="tsConv()">Convert</button>
 <button class="ghost" onclick="tsNow()">Now</button>
 <pre id="tsOut"></pre>
 </div>
-<div class="card tool" data-name="uuid password generator sha256 hash">
+<div class="card tool" id="tool-uuid" data-name="uuid password generator sha256 hash">
 <h3>UUID, password &amp; SHA-256</h3>
 <button class="act" onclick="genUuid()">New UUID</button>
 <button class="ghost" onclick="genPass()">New password</button>
 <input type="text" id="hashIn" placeholder="Text to hash (SHA-256)" style="margin-top:6px">
 <button class="act" onclick="hashIt()">Hash</button>
-<pre id="hashOut"></pre>
+<pre id="hashTextOut"></pre>
 </div>
-<div class="card tool" data-name="token estimator llm prompt">
+<div class="card tool" id="tool-tokenest" data-name="token estimator llm prompt">
 <h3>Token estimator</h3>
 <textarea id="tokIn" placeholder="Paste text to estimate tokens"></textarea>
 <button class="act" onclick="tokEst()">Estimate</button>
 <pre id="tokOut"></pre>
 </div>
-<div class="card tool" data-name="color converter hex rgb hsl">
+<div class="card tool" id="tool-color" data-name="color converter hex rgb hsl">
 <h3>Color converter</h3>
 <input type="text" id="colIn" placeholder="#38bdf8 or rgb(56, 189, 248) or hsl(199, 92%, 56%)">
 <button class="act" onclick="colConv()">Convert</button>
 <pre id="colOut"></pre>
 </div>
-<div class="card tool" data-name="text diff compare">
+<div class="card tool" id="tool-diff" data-name="text diff compare">
 <h3>Text diff</h3>
 <textarea id="diffA" placeholder="Original text"></textarea>
 <textarea id="diffB" placeholder="Changed text" style="margin-top:6px"></textarea>
@@ -285,13 +279,13 @@ section{display:none}section.on{display:block}
 </div>
 <div class="card" id="tool-wc"><h3>Word counter</h3><textarea id="wcIn" rows="3" placeholder="Paste text to count words, characters and reading time"></textarea><div class="row"><button class="btn" onclick="wordCount()">Count</button></div><pre id="wcOut"></pre></div>
 <div class="card" id="tool-sort"><h3>Sort &amp; dedupe lines</h3><textarea id="sortIn" rows="3" placeholder="one line per item"></textarea><div class="row"><button class="btn" onclick="sortLines('az')">Sort A–Z</button><button class="btn" onclick="sortLines('za')">Sort Z–A</button><button class="btn" onclick="sortLines('uniq')">Remove duplicates</button></div><pre id="sortOut"></pre></div>
-<div class="card" id="tool-ts"><h3>JSON → TypeScript</h3><textarea id="tsIn" rows="3" placeholder='{"name":"Ada","age":36,"admin":true}'></textarea><div class="row"><button class="btn" onclick="jsonToTs()">Generate types</button><button class="btn ghost" onclick="copyOut('tsOut')">Copy</button></div><pre id="tsOut"></pre></div>
+<div class="card" id="tool-ts"><h3>JSON → TypeScript</h3><textarea id="tsJsonIn" rows="3" placeholder='{"name":"Ada","age":36,"admin":true}'></textarea><div class="row"><button class="btn" onclick="jsonToTs()">Generate types</button><button class="btn ghost" onclick="copyOut('tsJsonOut')">Copy</button></div><pre id="tsJsonOut"></pre></div>
 </div>
 </section>
 <p id="noResults" class="hide">No tools match &ldquo;<span id="noResultsQ"></span>&rdquo; — try a different word.</p>
 </main>
 <footer>
-DevKit — calculators, converters and dev tools. All client-side, no cookies, no tracking, no uploads. Built by Astro.
+DevKit — calculators, converters and dev tools. All client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. <a href="devtools.html">DevTools guide — what every tool does</a>.
 </footer>
 <div class="toast" id="toast">Copied</div>
 <script>
@@ -301,13 +295,25 @@ function fmt(n,d){d=(d===undefined)?2:d;if(n===null||n===undefined||!isFinite(n)
 function money(n){return '$'+fmt(n)}
 function fmtT(s){if(!isFinite(s)||s<0)return '—';if(s<1)return fmt(s*1000,0)+' ms';if(s<60)return fmt(s,2)+' s';return fmt(s/60,2)+' min'}
 function toast(m){const t=$('toast');if(!t)return;t.textContent=m||'Copied';t.style.display='block';setTimeout(()=>t.style.display='none',1500)}
-function copyText(id){const v=$(id).textContent;if(navigator.clipboard)navigator.clipboard.writeText(v).then(()=>toast('Copied to clipboard'))}
+function copyText(id){const e=$(id);if(!e)return;const v=e.textContent;if(!v||!v.trim()||v.indexOf('appears here')>=0||v.indexOf('Error:')===0||v.indexOf('Invalid JSON:')===0||v.indexOf('Choose a')===0||v.indexOf('Paste some')===0){toast('Nothing to copy yet');return}if(!navigator.clipboard){toast('Copy not available — select the text and press Ctrl+C');return}navigator.clipboard.writeText(v).then(function(){toast('Copied to clipboard')}).catch(function(){toast('Copy failed — select the text and press Ctrl+C')})}
+function copyOut(id){copyText(id)}
+function fmtFileSize(b){if(b<1024)return b+' B';if(b<1048576)return (b/1024).toFixed(1)+' KB';if(b<1073741824)return (b/1048576).toFixed(1)+' MB';return (b/1073741824).toFixed(1)+' GB'}
+
+/* ---- v4 tools ---- */
+function xmlToJson(){const t=document.getElementById('xmlIn').value.trim();const out=document.getElementById('xmlOut');try{const doc=new DOMParser().parseFromString(t,'text/xml');if(doc.getElementsByTagName('parsererror').length)throw new Error('Not valid XML');function el(e){const o={};for(const a of e.attributes||[])o['@'+a.name]=a.value;const kids=[...e.children];if(!kids.length)return e.textContent;for(const k of kids){const v=el(k);if(o[k.tagName]!==undefined){if(!Array.isArray(o[k.tagName]))o[k.tagName]=[o[k.tagName]];o[k.tagName].push(v)}else o[k.tagName]=v}return o}const r={};r[doc.documentElement.tagName]=el(doc.documentElement);out.textContent=JSON.stringify(r,null,2)}catch(e){out.textContent='Error: '+e.message}}
+function jsonToXml(){const out=document.getElementById('xmlOut');try{const o=JSON.parse(document.getElementById('xmlIn').value);function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}function build(v,tag){if(v===null||typeof v!=='object')return '<'+tag+'>'+esc(v)+'</'+tag+'>';if(Array.isArray(v))return v.map(function(x){return build(x,tag)}).join('');let inner='';for(const k in v)inner+=build(v[k],k);return '<'+tag+'>'+inner+'</'+tag+'>'}const keys=Object.keys(o);out.textContent=keys.map(function(k){return build(o[k],k)}).join('')}catch(e){out.textContent='Error: '+e.message}}
+function csvToSql(){const out=document.getElementById('sqlOut');const table=(document.getElementById('sqlTable').value||'table').replace(/[^A-Za-z0-9_]/g,'')||'table';try{const rows=parseCsv(document.getElementById('sqlIn').value.trim());if(rows.length<2){out.textContent='Need a header row and at least one data row.';return}const cols=rows[0];const lines=rows.slice(1).map(function(r){return 'INSERT INTO '+table+' ('+cols.join(', ')+') VALUES ('+r.map(function(v){return isNaN(v)||v==='' ? "'"+String(v).replace(/'/g,"''")+"'" : v}).join(', ')+');'});out.textContent=lines.join('\n')}catch(e){out.textContent='Error: '+e.message}}
+function hashFileGo(f){const out=document.getElementById('hashOut');if(!f){out.textContent='Choose a file first.';return}out.textContent='Hashing '+f.name+' ('+fmtFileSize(f.size)+')…';f.arrayBuffer().then(function(buf){return crypto.subtle.digest('SHA-256',buf)}).then(function(h){out.textContent=[...new Uint8Array(h)].map(function(b){return b.toString(16).padStart(2,'0')}).join('')}).catch(function(e){out.textContent='Error: '+e.message})}
+function imgToB64(f){const out=document.getElementById('b64Out');if(!f){out.textContent='Choose an image first.';return}const r=new FileReader();r.onload=function(){out.textContent=r.result};r.onerror=function(){out.textContent='Could not read that file.'};r.readAsDataURL(f)}
+function wordCount(){const t=document.getElementById('wcIn').value;const words=t.trim()?t.trim().split(/\s+/).length:0;const chars=t.length,noSp=t.replace(/\s/g,'').length,lines=t?t.split(/\n/).length:0;document.getElementById('wcOut').textContent=words+' words · '+chars+' characters · '+noSp+' characters (no spaces) · '+lines+' lines · ~'+Math.max(1,Math.round(words/200))+' min read'}
+function sortLines(mode){const el=document.getElementById('sortIn');let lines=el.value.split('\n').filter(function(l){return l.trim()!==''});if(mode==='az')lines.sort(function(a,b){return a.localeCompare(b)});if(mode==='za')lines.sort(function(a,b){return b.localeCompare(a)});if(mode==='uniq')lines=[...new Set(lines)];document.getElementById('sortOut').textContent=lines.join('\n')}
+function jsonToTs(){const out=document.getElementById('tsJsonOut');try{const o=JSON.parse(document.getElementById('tsJsonIn').value);function ty(v,n){if(v===null)return 'null';if(Array.isArray(v))return v.length?ty(v[0],n)+'[]':'any[]';if(typeof v==='object'){let s='interface '+n+' {\n';for(const k in v)s+='  '+k+': '+ty(v[k],k.charAt(0).toUpperCase()+k.slice(1))+';\n';return s+'}'}return typeof v}out.textContent=ty(o,'Root')}catch(e){out.textContent='Error: '+e.message}}
 
 /* ---- Calculator library: every formula is a pure function, tested in tests/v3-calc-tests.js ---- */
 var CALCS=[
 {id:'mortgage',name:'Mortgage / loan payment',cat:'finance',tags:'mortgage loan house payment interest',f:'M = P·r(1+r)ⁿ ÷ ((1+r)ⁿ − 1), r = annual rate ÷ 12, n = years × 12',
  inputs:[{k:'p',label:'Loan amount ($)',type:'number',def:300000},{k:'rate',label:'Annual interest rate (%)',type:'number',def:6},{k:'years',label:'Term (years)',type:'number',def:30}],
- compute:function(v){const r=v.rate/100/12,n=v.years*12;const m=r===0?v.p/n:v.p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);const tot=m*n;return{main:money(m)+'/mo',sub:'Total '+money(tot)+' · Interest '+money(tot-v.p)}}},
+ compute:function(v){const r=v.rate/100/12,n=v.years*12;const m=r===0?v.p/n:v.p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);const tot=m*n;return{main:money(m)+'/mo',sub:'Total '+money(tot)+' · Interest '+money(tot-v.p)+' · Principal + interest only'}}},
 {id:'compound',name:'Compound interest',cat:'finance',tags:'compound interest savings growth invest',f:'A = P(1 + r/n)^(nt)',
  inputs:[{k:'p',label:'Principal ($)',type:'number',def:10000},{k:'rate',label:'Annual rate (%)',type:'number',def:5},{k:'years',label:'Years',type:'number',def:10},{k:'freq',label:'Compounds per year',type:'select',def:12,opts:[[1,'Yearly'],[2,'Half-yearly'],[4,'Quarterly'],[12,'Monthly'],[365,'Daily']]}],
  compute:function(v){const a=v.p*Math.pow(1+v.rate/100/v.freq,v.freq*v.years);return{main:money(a),sub:'Interest earned '+money(a-v.p)}}},
@@ -316,7 +322,7 @@ var CALCS=[
  compute:function(v){const i=v.p*v.rate/100*v.years;return{main:money(v.p+i),sub:'Interest '+money(i)}}},
 {id:'tip',name:'Tip calculator',cat:'finance',tags:'tip restaurant bill split',f:'Tip = bill × % · Total = bill + tip',
  inputs:[{k:'bill',label:'Bill ($)',type:'number',def:100},{k:'pct',label:'Tip (%)',type:'number',def:15},{k:'people',label:'People',type:'number',def:1}],
- compute:function(v){const tip=v.bill*v.pct/100,tot=v.bill+tip;return{main:money(tot),sub:'Tip '+money(tip)+' · '+money(tot/Math.max(1,v.people))+' each'}}},
+ compute:function(v){const tip=v.bill*v.pct/100,tot=v.bill+tip,each=tot/Math.max(1,v.people);if(v.people>1)return{main:money(each)+' each',sub:'Total '+money(tot)+' · Tip '+money(tip)};return{main:money(tot),sub:'Tip '+money(tip)}}},
 {id:'discount',name:'Discount / sale price',cat:'finance',tags:'discount sale percent off',f:'Sale = price × (1 − %)',
  inputs:[{k:'price',label:'Original price ($)',type:'number',def:80},{k:'off',label:'Discount (%)',type:'number',def:25}],
  compute:function(v){const s=v.price*v.off/100;return{main:money(v.price-s),sub:'You save '+money(s)}}},
@@ -326,7 +332,7 @@ var CALCS=[
 {id:'percent',name:'Percentage calculator',cat:'finance',tags:'percent percentage',f:'x% of y = x/100 × y · x is (x/y × 100)% of y',
  inputs:[{k:'mode',label:'Mode',type:'select',def:'of',opts:[['of','What is x% of y?'],['is','x is what % of y?']]},{k:'x',label:'x',type:'number',def:20},{k:'y',label:'y',type:'number',def:150}],
  compute:function(v){if(v.mode==='of')return{main:fmt(v.x/100*v.y),sub:v.x+'% of '+v.y};const r=v.y===0?0:v.x/v.y*100;return{main:fmt(r)+'%',sub:v.x+' is '+fmt(r)+'% of '+v.y}}},
-{id:'bmi',name:'BMI calculator',cat:'health',tags:'bmi body mass index weight',f:'BMI = kg ÷ m²',fImp:'BMI = lb ÷ in² × 703',unitMap:{kg:'w',cm:'l'},
+{id:'bmi',name:'BMI calculator',cat:'health',tags:'bmi body mass index weight',f:'BMI = kg ÷ m² · A screening tool, not a diagnosis — talk to your doctor',fImp:'BMI = lb ÷ in² × 703 · A screening tool, not a diagnosis — talk to your doctor',unitMap:{kg:'w',cm:'l'},
  inputs:[{k:'units',label:'Units',type:'select',def:'metric',opts:[['metric','Metric (kg, cm)'],['imperial','Imperial (lb, in)']]},{k:'kg',label:'Weight (kg)',type:'number',def:70},{k:'cm',label:'Height (cm)',type:'number',def:175}],
  compute:function(v){const kg=v.units==='imperial'?v.kg*0.45359237:v.kg,cm=v.units==='imperial'?v.cm*2.54:v.cm;const h=cm/100,b=kg/(h*h);const c=b<18.5?'Underweight':b<25?'Normal':b<30?'Overweight':'Obese';const u=v.units==='imperial'?2.20462:1,ul=v.units==='imperial'?' lb':' kg';return{main:fmt(b,1),sub:c+' · Healthy weight '+fmt(18.5*h*h*u,1)+'–'+fmt(24.9*h*h*u,1)+ul}}},
 {id:'bmr',name:'BMR & daily calories (TDEE)',cat:'health',tags:'bmr tdee calories metabolism',f:'Mifflin-St Jeor: men 10w+6.25h−5a+5 · women 10w+6.25h−5a−161 · TDEE = BMR × activity',unitMap:{kg:'w',cm:'l'},
@@ -376,7 +382,7 @@ var RATES={USD:1},RATES_STATE='loading';
 CALCS.push(
 {id:'loan',name:'Loan payment',cat:'finance',tags:'loan auto car personal payment',f:'M = P·r(1+r)ⁿ ÷ ((1+r)ⁿ − 1), r = annual rate ÷ 12',
  inputs:[{k:'p',label:'Loan amount ($)',type:'number',def:20000},{k:'rate',label:'Annual interest rate (%)',type:'number',def:5},{k:'years',label:'Term (years)',type:'number',def:5}],
- compute:function(v){const r=v.rate/100/12,n=v.years*12;const m=r===0?v.p/n:v.p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);const tot=m*n;return{main:money(m)+'/mo',sub:'Total '+money(tot)+' · Interest '+money(tot-v.p)}}},
+ compute:function(v){const r=v.rate/100/12,n=v.years*12;const m=r===0?v.p/n:v.p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);const tot=m*n;return{main:money(m)+'/mo',sub:'Total '+money(tot)+' · Interest '+money(tot-v.p)+' · Principal + interest only'}}},
 {id:'retirement',name:'Retirement savings',cat:'finance',tags:'retirement 401k savings future value invest',f:'FV = P(1+r)ⁿ + PMT·((1+r)ⁿ − 1)/r, r = annual rate ÷ 12, n = years × 12',
  inputs:[{k:'p',label:'Current savings ($)',type:'number',def:0},{k:'pmt',label:'Monthly contribution ($)',type:'number',def:500},{k:'rate',label:'Annual return (%)',type:'number',def:7},{k:'years',label:'Years',type:'number',def:30}],
  compute:function(v){const r=v.rate/100/12,n=v.years*12;const fv=v.p*Math.pow(1+r,n)+(r===0?v.pmt*n:v.pmt*((Math.pow(1+r,n)-1)/r));const inn=v.p+v.pmt*n;return{main:money(fv),sub:'You put in '+money(inn)+' · Growth '+money(fv-inn)}}},
@@ -407,9 +413,9 @@ CALCS.push(
 {id:'sleep',name:'Sleep cycle bedtimes',cat:'health',tags:'sleep bedtime cycles wake alarm',f:'Each cycle is 90 min + ~15 min to fall asleep',
  inputs:[{k:'wake',label:'Wake-up time',type:'time',def:'07:00'}],
  compute:function(v){const parts=String(v.wake||'07:00').split(':');const wh=parseInt(parts[0])||0,wm=parseInt(parts[1])||0;const tot=wh*60+wm;function bed(c){let m=(tot-(c*90+15))%1440;if(m<0)m+=1440;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')}return{main:bed(6)+' · 6 cycles',sub:'5 cycles '+bed(5)+' · 4 cycles '+bed(4)+' · 3 cycles '+bed(3)}}},
-{id:'gpa',name:'GPA calculator',cat:'math',tags:'gpa grades school college credits',f:'GPA = Σ(grade points × credits) ÷ Σcredits · A=4, B=3, C=2, D=1, F=0',
+{id:'gpa',name:'GPA calculator',cat:'math',tags:'gpa grades school college credits',f:'GPA = Σ(grade points × credits) ÷ Σcredits · A=4, A-=3.7, B+=3.3, B=3, B-=2.7, C+=2.3, C=2, C-=1.7, D=1, F=0',
  inputs:[{k:'grades',label:'Grades as Letter:credits, e.g. A:3, B:3',type:'textarea',def:'A:3, B:3'}],
- compute:function(v){const map={A:4,'A-':3.7,'B+':3.3,B:3,'B-':2.7,'C+':2.3,C:2,'C-':1.7,D:1,F:0};let pts=0,cr=0;String(v.grades).split(',').forEach(function(pair){const p=pair.trim().split(':');if(p.length<2)return;const g=(p[0]||'').trim().toUpperCase(),c=parseFloat(p[1]);if(map[g]===undefined||!isFinite(c))return;pts+=map[g]*c;cr+=c});if(!cr)return{main:'—',sub:'Enter grades like A:3, B:3'};return{main:'GPA '+fmt(pts/cr,2),sub:fmt(cr,0)+' credits'}}},
+ compute:function(v){const map={A:4,'A-':3.7,'B+':3.3,B:3,'B-':2.7,'C+':2.3,C:2,'C-':1.7,D:1,F:0};let pts=0,cr=0,skip=0;String(v.grades).split(',').forEach(function(pair){const p=pair.trim().split(':');if(p.length<2){if(pair.trim())skip++;return}const g=(p[0]||'').trim().toUpperCase(),c=parseFloat(p[1]);if(map[g]===undefined||!isFinite(c)){skip++;return}pts+=map[g]*c;cr+=c});if(!cr)return{main:'—',sub:'Enter grades like A:3, B:3'};return{main:'GPA '+fmt(pts/cr,2),sub:fmt(cr,0)+' credits'+(skip?' · Skipped '+skip+' entr'+(skip===1?'y':'ies'):'')}}},
 {id:'quadratic',name:'Quadratic solver',cat:'math',tags:'quadratic equation roots algebra',f:'x = (−b ± √(b²−4ac)) ÷ 2a',
  inputs:[{k:'a',label:'a',type:'number',def:1},{k:'b',label:'b',type:'number',def:-3},{k:'c',label:'c',type:'number',def:2}],
  compute:function(v){if(v.a===0)return{main:'—',sub:'a cannot be 0'};const d=v.b*v.b-4*v.a*v.c;if(d<0)return{main:'No real roots',sub:'Discriminant '+fmt(d)+' < 0'};const r1=(-v.b+Math.sqrt(d))/(2*v.a),r2=(-v.b-Math.sqrt(d))/(2*v.a);return{main:'x = '+fmt(r1)+' or '+fmt(r2),sub:'Discriminant '+fmt(d)}}},
@@ -462,11 +468,11 @@ haiku45:{pin:1,pread:0.10,pwrite:1.25,pout:5},
 gemini25pro:{pin:1.25,pread:0.125,pwrite:0,pout:10},
 gemini25flash:{pin:0.30,pread:0.03,pwrite:0,pout:2.50},
 grok43:{pin:1.25,pread:0.20,pwrite:0,pout:2.50},
-deepseekv32:{pin:0.28,pread:0.07,pwrite:0,pout:0.42}
+deepseekv32:{pin:0.28,pread:0.028,pwrite:0,pout:0.42}
 };
 CALCS.push(
 {id:'llmcost',name:'LLM cost calculator',cat:'llm',tags:'llm ai cost tokens gpt claude gemini grok deepseek pricing api',f:'Cost = (uncached ÷ 1M × input $) + (cached ÷ 1M × cache-read $) + (cache-write ÷ 1M × cache-write $) + (output ÷ 1M × output $) · Prices: provider list prices, checked Oct 2026 — verify before big commits',
- inputs:[{k:'model',label:'Model',type:'select',def:'gpt61sol',opts:[['gpt61sol','GPT-6.1 Sol — $2.00 in / $10.00 out'],['gpt6sol','GPT-6 Sol — $2.00 / $10.00'],['gpt56sol','GPT-5.6 Sol — $4.00 / $20.00'],['gpt56terra','GPT-5.6 Terra — $2.00 / $12.00'],['gpt56luna','GPT-5.6 Luna — $0.20 / $1.20'],['gpt5','GPT-5 — $1.25 / $10.00'],['sonnet45','Claude Sonnet 4.5 — $3.00 / $15.00'],['sonnet46','Claude Sonnet 4.6 — $3.00 / $15.00'],['opus48','Claude Opus 4.8 — $5.00 / $25.00'],['haiku45','Claude Haiku 4.5 — $1.00 / $5.00'],['gemini25pro','Gemini 2.5 Pro — $1.25 / $10.00'],['gemini25flash','Gemini 2.5 Flash — $0.30 / $2.50'],['grok43','Grok 4.3 — $1.25 / $2.50'],['deepseekv32','DeepSeek V3.2 — $0.28 / $0.42'],['custom','Custom — enter prices below']]},{k:'pin',label:'Custom input price ($/1M tokens)',type:'number',def:3},{k:'pread',label:'Custom cached-read price ($/1M)',type:'number',def:0.3},{k:'pwrite',label:'Custom cache-write price ($/1M)',type:'number',def:0},{k:'pout',label:'Custom output price ($/1M)',type:'number',def:15},{k:'tin',label:'Uncached input tokens / request',type:'number',def:100000},{k:'tcached',label:'Cached input tokens / request',type:'number',def:1000000},{k:'twrite',label:'Cache-write tokens / request',type:'number',def:0},{k:'tout',label:'Output tokens / request',type:'number',def:50000},{k:'reqs',label:'Requests',type:'number',def:1000}],
+ inputs:[{k:'model',label:'Model',type:'select',def:'gpt5',opts:[['gpt5','GPT-5 — $1.25 / $10.00'],['gpt61sol','GPT-6.1 Sol — $2.00 in / $10.00 out'],['gpt6sol','GPT-6 Sol — $2.00 / $10.00'],['gpt56sol','GPT-5.6 Sol — $4.00 / $20.00'],['gpt56terra','GPT-5.6 Terra — $2.00 / $12.00'],['gpt56luna','GPT-5.6 Luna — $0.20 / $1.20'],['sonnet45','Claude Sonnet 4.5 — $3.00 / $15.00'],['sonnet46','Claude Sonnet 4.6 — $3.00 / $15.00'],['opus48','Claude Opus 4.8 — $5.00 / $25.00'],['haiku45','Claude Haiku 4.5 — $1.00 / $5.00'],['gemini25pro','Gemini 2.5 Pro — $1.25 / $10.00'],['gemini25flash','Gemini 2.5 Flash — $0.30 / $2.50'],['grok43','Grok 4.3 — $1.25 / $2.50'],['deepseekv32','DeepSeek V3.2 — $0.28 / $0.42'],['custom','Custom — enter prices below']]},{k:'pin',label:'Custom input price ($/1M tokens)',type:'number',def:3},{k:'pread',label:'Custom cached-read price ($/1M)',type:'number',def:0.3},{k:'pwrite',label:'Custom cache-write price ($/1M)',type:'number',def:0},{k:'pout',label:'Custom output price ($/1M)',type:'number',def:15},{k:'tin',label:'Uncached input tokens / request',type:'number',def:100000},{k:'tcached',label:'Cached input tokens / request',type:'number',def:1000000},{k:'twrite',label:'Cache-write tokens / request',type:'number',def:0},{k:'tout',label:'Output tokens / request',type:'number',def:50000},{k:'reqs',label:'Requests',type:'number',def:1000}],
  compute:function(v){const r=v.model==='custom'?{pin:v.pin,pread:v.pread,pwrite:v.pwrite,pout:v.pout}:MODELS[v.model];if(!r)return{main:'—',sub:'Pick a model'};const cin=v.tin/1e6*r.pin,cc=v.tcached/1e6*r.pread,cw=v.twrite/1e6*r.pwrite,co=v.tout/1e6*r.pout;const per=cin+cc+cw+co;return{main:money(per*v.reqs),sub:'$'+fmt(per,4)+' / request · input $'+fmt(cin,4)+' + cached $'+fmt(cc,4)+' + write $'+fmt(cw,4)+' + output $'+fmt(co,4)}}},
 {id:'toksec',name:'Tokens/sec simulator',cat:'llm',tags:'tokens per second latency ttft simulator llm speed throughput',f:'Time to first token = prompt ÷ prefill rate · Decode = output ÷ (decode rate ÷ concurrent requests)',
  inputs:[{k:'prefill',label:'Prefill speed (tokens/sec)',type:'number',def:2000},{k:'decode',label:'Decode speed (tokens/sec)',type:'number',def:50},{k:'prompt',label:'Prompt tokens',type:'number',def:2000},{k:'out',label:'Output tokens',type:'number',def:500},{k:'conc',label:'Concurrent requests',type:'number',def:1}],
@@ -477,8 +483,9 @@ CALCS.push(
 function readVals(c){const v={};c.inputs.forEach(function(inp){const el=$('in_'+c.id+'_'+inp.k);if(!el){v[inp.k]=inp.def;return}v[inp.k]=inp.type==='number'?parseFloat(el.value):el.value});return v}
 function runCalc(c){try{const r=c.compute(readVals(c));$('out_'+c.id+'_main').textContent=r.main;$('out_'+c.id+'_sub').textContent=r.sub||''}catch(e){$('out_'+c.id+'_main').textContent='—';$('out_'+c.id+'_sub').textContent=''}}
 function swapUnits(id){const c=CALCS.find(function(x){return x.id===id});if(!c)return;const a=document.getElementById('in_'+id+'_from'),b=document.getElementById('in_'+id+'_to');if(!a||!b)return;const t=a.value;a.value=b.value;b.value=t;runCalc(c)}
+function setTip(p){const el=document.getElementById('in_tip_pct');if(!el)return;el.value=p;el.dispatchEvent(new Event('input'))}
 function convertCardUnits(c,sel){const to=sel.value,from=sel.dataset.prev||'metric';if(from===to||!c.unitMap)return;sel.dataset.prev=to;function num(x){return parseFloat(x.toFixed(1))}for(const k in c.unitMap){const el=document.getElementById('in_'+c.id+'_'+k);if(!el)continue;const v=parseFloat(el.value);if(!isFinite(v))continue;const kind=c.unitMap[k];let nv;if(kind==='w')nv=to==='imperial'?v*2.20462:v*0.45359237;else nv=to==='imperial'?v/2.54:v*2.54;el.value=num(nv);const lab=el.previousElementSibling;if(lab){const base=lab.textContent.replace(/ \([^)]*\)$/,'');lab.textContent=base+(to==='imperial'?(kind==='w'?' (lb)':' (in)'):(kind==='w'?' (kg)':' (cm)'))}}if(c.fImp){const card=document.getElementById('calc-'+c.id);if(card){const fEl=card.querySelector('.formula');if(fEl)fEl.textContent=to==='imperial'?c.fImp:c.f}}}
-function renderCalcs(){const g=$('calcGrid');if(!g)return;g.innerHTML='';CALCS.slice().sort(function(a,b){return (a.cat==='llm'?0:1)-(b.cat==='llm'?0:1)}).forEach(function(c){const card=document.createElement('div');card.className='card calc';card.id='calc-'+c.id;card.dataset.cat=c.cat;card.dataset.name=(c.id+' '+c.name+' '+c.tags).toLowerCase();let h='<h3>'+c.name+'</h3>';c.inputs.forEach(function(inp){h+='<div class="f">'+inp.label+'</div>';if(inp.type==='select'){h+='<select id="in_'+c.id+'_'+inp.k+'">'+inp.opts.map(function(o){return '<option value="'+o[0]+'"'+(String(o[0])===String(inp.def)?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'}else if(inp.type==='textarea'){h+='<textarea id="in_'+c.id+'_'+inp.k+'">'+inp.def+'</textarea>'}else if(inp.type==='date'||inp.type==='time'){h+='<input type="'+inp.type+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}else{h+='<input type="number" step="'+(inp.step||'any')+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}});const fi=c.inputs.find(function(i){return i.k==='from'}),ti=c.inputs.find(function(i){return i.k==='to'});if(fi&&ti&&fi.type==='select'&&ti.type==='select'){h+='<button class="swap" onclick="swapUnits(\''+c.id+'\')">⇄ Swap units</button>'}h+='<div class="result"><div class="main" id="out_'+c.id+'_main"></div><div class="sub" id="out_'+c.id+'_sub"></div></div>';h+='<div class="formula">'+c.f+'</div>';card.innerHTML=h;g.appendChild(card);const uSel=card.querySelector('#in_'+c.id+'_units');if(uSel){uSel.dataset.prev=uSel.value;uSel.addEventListener('input',function(){convertCardUnits(c,uSel);runCalc(c)})}const mSel=c.id==='llmcost'?card.querySelector('#in_llmcost_model'):null;if(mSel){const tog=function(){const isC=mSel.value==='custom';['pin','pread','pwrite','pout'].forEach(function(k){const el=document.getElementById('in_llmcost_'+k);if(!el)return;const lab=el.previousElementSibling;el.style.display=isC?'':'none';if(lab)lab.style.display=isC?'':'none'})};mSel.addEventListener('input',tog);tog()}card.querySelectorAll('input,select,textarea').forEach(function(el){el.addEventListener('input',function(){runCalc(c)})});runCalc(c)})}
+function renderCalcs(){const g=$('calcGrid');if(!g)return;g.innerHTML='';CALCS.slice().sort(function(a,b){return (a.cat==='llm'?0:1)-(b.cat==='llm'?0:1)}).forEach(function(c){const card=document.createElement('div');card.className='card calc';card.id='calc-'+c.id;card.dataset.cat=c.cat;card.dataset.name=(c.id+' '+c.name+' '+c.tags).toLowerCase();let h='<h3>'+c.name+'</h3>';c.inputs.forEach(function(inp){h+='<div class="f">'+inp.label+'</div>';if(inp.type==='select'){h+='<select id="in_'+c.id+'_'+inp.k+'">'+inp.opts.map(function(o){return '<option value="'+o[0]+'"'+(String(o[0])===String(inp.def)?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'}else if(inp.type==='textarea'){h+='<textarea id="in_'+c.id+'_'+inp.k+'">'+inp.def+'</textarea>'}else if(inp.type==='date'||inp.type==='time'){h+='<input type="'+inp.type+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}else{h+='<input type="number" step="'+(inp.step||'any')+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}});const fi=c.inputs.find(function(i){return i.k==='from'}),ti=c.inputs.find(function(i){return i.k==='to'});if(fi&&ti&&fi.type==='select'&&ti.type==='select'){h+='<button class="swap" onclick="swapUnits(\''+c.id+'\')">⇄ Swap units</button>'}if(c.id==='tip'){h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">'+[10,15,18,20,25].map(function(p){return '<button class="swap" onclick="setTip('+p+')">'+p+'%</button>'}).join('')+'</div>'}h+='<div class="result"><div class="main" id="out_'+c.id+'_main"></div><div class="sub" id="out_'+c.id+'_sub"></div></div>';h+='<div class="formula">'+c.f+'</div>';card.innerHTML=h;g.appendChild(card);const uSel=card.querySelector('#in_'+c.id+'_units');if(uSel){uSel.dataset.prev=uSel.value;uSel.addEventListener('input',function(){convertCardUnits(c,uSel);runCalc(c)})}const mSel=c.id==='llmcost'?card.querySelector('#in_llmcost_model'):null;if(mSel){const tog=function(){const isC=mSel.value==='custom';['pin','pread','pwrite','pout'].forEach(function(k){const el=document.getElementById('in_llmcost_'+k);if(!el)return;const lab=el.previousElementSibling;el.style.display=isC?'':'none';if(lab)lab.style.display=isC?'':'none'})};mSel.addEventListener('input',tog);tog()}card.querySelectorAll('input,select,textarea').forEach(function(el){el.addEventListener('input',function(){runCalc(c)})});runCalc(c)})}
 var curCat='all';
 var TABS={
  all:{title:'All tools',desc:'Pick a category, or search above.'},
@@ -506,6 +513,7 @@ function setTab(cat,scroll,keepHash){
 }
 function applyFilter(){
  var q=(($('q').value)||'').toLowerCase();
+ var qw=q?q.split(/\s+/).filter(function(w){return w}):[];
  var home=curCat==='all'&&!q;
  var hv=$('homeView');if(hv)hv.classList.toggle('hide',!home);
  var cats=['finance','health','math','convert','time','everyday','llm'];
@@ -517,11 +525,11 @@ function applyFilter(){
  $('sec-dev').classList.toggle('on',showDev&&!home);
  document.querySelectorAll('#calcGrid .calc').forEach(function(card){
   var okCat=!!q||curCat==='all'||card.dataset.cat===curCat;
-  var okQ=!q||card.dataset.name.indexOf(q)>=0;
+  var okQ=!q||qw.every(function(w){return card.dataset.name.indexOf(w)>=0});
   card.classList.toggle('hide',!(okCat&&okQ));
  });
  document.querySelectorAll('#sec-files .card, #sec-dev .card').forEach(function(card){
-  card.classList.toggle('hide',!!q&&((card.dataset.name+' '+card.textContent).toLowerCase().indexOf(q)<0));
+  card.classList.toggle('hide',!!q&&!qw.every(function(w){return (card.dataset.name+' '+card.textContent).toLowerCase().indexOf(w)>=0}));
  });
  if(q){
   [['sec-calcs','#calcGrid .calc'],['sec-files','#sec-files .card'],['sec-dev','#sec-dev .card']].forEach(function(pair){
@@ -553,28 +561,29 @@ function applyFilter(){
 }
 function filterAll(){applyFilter()}
 function popCalc(q){$('q').value=q;curCat='all';document.querySelectorAll('#cats button').forEach(function(x){x.classList.remove('on')});document.querySelectorAll('#cats button')[0].classList.add('on');applyFilter();const g=$('calcGrid');if(g)g.scrollIntoView()}
-if(typeof document!=='undefined'&&document.getElementById('calcGrid')){renderCalcs();var qEl=$('q');if(qEl)qEl.addEventListener('input',filterAll);document.querySelectorAll('#cats button').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.cat,true)})});function tabFromHash(){var h=location.hash||'';if(h.indexOf('#calc-')===0){var el=document.getElementById(h.slice(1));if(el){setTab(el.dataset.cat,false,true);setTimeout(function(){el.scrollIntoView()},50);return}}if(h.indexOf('#tab-')===0){var c=h.slice(5);if(TABS[c]){if(c!==curCat)setTab(c,false);else applyFilter()}return}if(!h)setTab('all',false)}window.addEventListener('hashchange',tabFromHash);tabFromHash();applyFilter()}
+if(typeof document!=='undefined'&&document.getElementById('calcGrid')){renderCalcs();var ji=document.getElementById('jsonIn');if(ji)ji.addEventListener('paste',function(){setTimeout(fmtJson,0)});var qEl=$('q');if(qEl)qEl.addEventListener('input',filterAll);document.querySelectorAll('#cats button').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.cat,true)})});function tabFromHash(){var h=location.hash||'';if(h.indexOf('#calc-')===0){var el=document.getElementById(h.slice(1));if(el){setTab(el.dataset.cat,false,true);setTimeout(function(){el.scrollIntoView()},50);return}}if(h.indexOf('#tool-')===0){var el=document.getElementById(h.slice(1));if(el){var sec=el.closest('section');setTab(sec&&sec.id==='sec-dev'?'dev':'files',false,true);setTimeout(function(){el.scrollIntoView()},50);return}}if(h.indexOf('#tab-')===0){var c=h.slice(5);if(TABS[c]){if(c!==curCat)setTab(c,false);else applyFilter()}return}if(!h)setTab('all',false)}window.addEventListener('hashchange',tabFromHash);tabFromHash();applyFilter()}
 
 if(typeof fetch!=='undefined'){fetch('https://api.frankfurter.dev/v1/latest?from=USD').then(function(r){return r.json()}).then(function(d){RATES=d.rates||{};RATES.USD=1;RATES_STATE='ok';const c=CALCS.find(function(x){return x.id==='currency'});if(c)runCalc(c)}).catch(function(){RATES_STATE='fail';const c=CALCS.find(function(x){return x.id==='currency'});if(c)runCalc(c)})}
 /* ---- file converters & dev tools (from v2) ---- */
-function fmtJson(){try{out('jsonOut',JSON.stringify(JSON.parse($('jsonIn').value),null,2))}catch(e){out('jsonOut','Invalid JSON: '+e.message)}}
+function jsonErrPos(t){var i=0,ln=1,cl=1,n=t.length;function P(){return{line:ln,col:cl}}function A(){if(t[i]==='\n'){ln++;cl=1}else cl++;i++}function W(){while(i<n&&' \t\r\n'.indexOf(t[i])>=0)A()}function S(){if(t[i]!=='"')return P();A();while(i<n){var c=t[i];if(c==='"'){A();return null}if(c==='\\'){A();if(i>=n)return P();var e=t[i];if('"\\/bfnrt'.indexOf(e)>=0)A();else if(e==='u'){A();for(var k=0;k<4;k++){if(i>=n||'0123456789abcdefABCDEF'.indexOf(t[i])<0)return P();A()}}else return P()}else if(c<' ')return P();else A()}return P()}function N(){if(t[i]==='-')A();if(t[i]==='0')A();else if(t[i]>='1'&&t[i]<='9'){while(t[i]>='0'&&t[i]<='9')A()}else return P();if(t[i]==='.'){A();if(!(t[i]>='0'&&t[i]<='9'))return P();while(t[i]>='0'&&t[i]<='9')A()}if(t[i]==='e'||t[i]==='E'){A();if(t[i]==='+'||t[i]==='-')A();if(!(t[i]>='0'&&t[i]<='9'))return P();while(t[i]>='0'&&t[i]<='9')A()}return null}function L(w){for(var k=0;k<w.length;k++){if(t[i]!==w[k])return P();A()}return null}function V(){W();if(i>=n)return P();var c=t[i];if(c==='{')return O();if(c==='[')return R();if(c==='"')return S();if(c==='t')return L('true');if(c==='f')return L('false');if(c==='n')return L('null');if(c==='-'||(c>='0'&&c<='9'))return N();return P()}function O(){A();W();if(t[i]==='}'){A();return null}while(1){W();var e=S();if(e)return e;W();if(t[i]!==':')return P();A();e=V();if(e)return e;W();if(t[i]===','){A();continue}if(t[i]==='}'){A();return null}return P()}}function R(){A();W();if(t[i]===']'){A();return null}while(1){var e=V();if(e)return e;W();if(t[i]===','){A();continue}if(t[i]===']'){A();return null}return P()}}var e=V();if(e)return e;W();return i<n?P():null}
+function fmtJson(){try{out('jsonOut',JSON.stringify(JSON.parse($('jsonIn').value),null,2))}catch(e){var msg='Invalid JSON: '+e.message;var m=/position (\d+)/.exec(e.message);if(m){var pos=+m[1],txt=$('jsonIn').value,before=txt.slice(0,pos);msg+=' (line '+before.split('\n').length+', column '+(pos-before.lastIndexOf('\n'))+')'}else{var p=jsonErrPos($('jsonIn').value);if(p)msg+=' (line '+p.line+', column '+p.col+')'}out('jsonOut',msg)}}
 function minJson(){try{out('jsonOut',JSON.stringify(JSON.parse($('jsonIn').value)))}catch(e){out('jsonOut','Invalid JSON: '+e.message)}}
-function b64(d){const v=$('b64In').value;try{out('b64Out',d==='en'?btoa(unescape(encodeURIComponent(v))):decodeURIComponent(escape(atob(v))))}catch(e){out('b64Out','Error: '+e.message)}}
+function b64(d){const v=$('b64In').value;try{out('b64TextOut',d==='en'?btoa(unescape(encodeURIComponent(v))):decodeURIComponent(escape(atob(v))))}catch(e){out('b64TextOut','Error: '+e.message)}}
 function urlC(d){const v=$('urlIn').value;try{out('urlOut',d==='en'?encodeURIComponent(v):decodeURIComponent(v))}catch(e){out('urlOut','Error: '+e.message)}}
 function reTest(){try{const re=new RegExp($('rePat').value,$('reFlags').value);const t=$('reText').value;const m=[...t.matchAll(re)];out('reOut',m.length?m.map(function(x){return JSON.stringify(x)}).join('\n'):'No matches')}catch(e){out('reOut','Error: '+e.message)}}
 function tsConv(){const v=Number($('tsIn').value);if(!v){out('tsOut','Enter Unix seconds');return}out('tsOut',new Date(v*1000).toISOString()+'\n'+new Date(v*1000).toLocaleString())}
 function tsNow(){const n=Math.floor(Date.now()/1000);$('tsIn').value=n;tsConv()}
-function genUuid(){out('hashOut',crypto.randomUUID())}
-function genPass(){const c='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*';let p='';const a=new Uint8Array(20);crypto.getRandomValues(a);a.forEach(function(n){p+=c[n%c.length]});out('hashOut',p)}
-async function hashIt(){const v=$('hashIn').value;const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));out('hashOut',[...new Uint8Array(buf)].map(function(b){return b.toString(16).padStart(2,'0')}).join(''))}
+function genUuid(){out('hashTextOut',crypto.randomUUID())}
+function genPass(){const c='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*';let p='';const a=new Uint8Array(20);crypto.getRandomValues(a);a.forEach(function(n){p+=c[n%c.length]});out('hashTextOut',p)}
+async function hashIt(){const v=$('hashIn').value;const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));out('hashTextOut',[...new Uint8Array(buf)].map(function(b){return b.toString(16).padStart(2,'0')}).join(''))}
 function tokEst(){const v=$('tokIn').value;const words=v.trim()?v.trim().split(/\s+/).length:0;out('tokOut','Characters: '+v.length+'\nWords: '+words+'\nEstimated tokens: ~'+Math.round(v.length/4)+' (chars/4) / ~'+Math.round(words/0.75)+' (words/0.75)')}
 function loadFile(inp,target){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=function(){$(target).value=r.result;toast('Loaded '+f.name)};r.readAsText(f)}
 function dropFile(e,target){e.preventDefault();const f=e.dataTransfer.files[0];if(!f)return;const r=new FileReader();r.onload=function(){$(target).value=r.result;toast('Loaded '+f.name)};r.readAsText(f)}
 function dropImg(e){e.preventDefault();const f=e.dataTransfer.files[0];if(!f)return;const r=new FileReader();r.onload=function(){imgEl=new Image();imgEl.onload=function(){$('imgInfo').textContent=f.name+' — '+imgEl.naturalWidth+'x'+imgEl.naturalHeight};imgEl.src=r.result};r.readAsDataURL(f)}
-function downloadOut(id,name){const blob=new Blob([$(id).textContent],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();toast('Downloaded')}
+function downloadOut(id,name){const e=$(id);if(!e)return;const v=e.textContent;if(!v||!v.trim()||v.indexOf('appears here')>=0||v.indexOf('Error:')===0||v.indexOf('Invalid JSON:')===0){toast('Nothing to download yet');return}const blob=new Blob([v],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();toast('Downloaded')}
 function parseCsv(t){const rows=[];let row=[],cur='',q=false;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){cur+='"';i++}else q=false}else cur+=c}else if(c==='"')q=true;else if(c===','){row.push(cur);cur=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(cur);rows.push(row);row=[];cur=''}else cur+=c}if(cur!==''||row.length){row.push(cur);rows.push(row)}return rows.filter(function(r){return r.length>1||r[0]!==''})}
-function csvToJson(){try{const rows=parseCsv($('cvIn').value);const h=rows[0];out('cvOut',JSON.stringify(rows.slice(1).map(function(r){return Object.fromEntries(h.map(function(k,i){return [k,r[i]||'']}))}),null,2))}catch(e){out('cvOut','Error: '+e.message)}}
-function jsonToCsv(){try{const arr=JSON.parse($('cvIn').value);if(!Array.isArray(arr))throw new Error('Expected a JSON array of objects');const keys=[...new Set(arr.flatMap(function(o){return Object.keys(o)}))];const esc=function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};out('cvOut',[keys.join(',')].concat(arr.map(function(o){return keys.map(function(k){return esc(o[k])}).join(',')})).join('\n'))}catch(e){out('cvOut','Error: '+e.message)}}
+function csvToJson(){try{var t=$('cvIn').value;if(!t||!t.trim()){out('cvOut','Paste some CSV first.');return}if(t.charCodeAt(0)===0xFEFF)t=t.slice(1);const rows=parseCsv(t);const h=rows[0].map(function(k){return String(k).trim()});var warns=[];if(new Set(h).size!==h.length)warns.push('duplicate column names — later columns overwrite earlier ones');var ragged=0;rows.slice(1).forEach(function(r){if(r.length!==h.length)ragged++});if(ragged)warns.push(ragged+' row(s) have a different column count than the header');out('cvOut',JSON.stringify(rows.slice(1).map(function(r){return Object.fromEntries(h.map(function(k,i){return [k,r[i]||'']}))}),null,2));var el=$('cvInfo');if(el)el.textContent=(rows.length-1)+' rows converted'+(warns.length?' · Warning: '+warns.join('; '):'')}catch(e){out('cvOut','Error: '+e.message)}}
+function jsonToCsv(){try{if(!$('cvIn').value.trim()){out('cvOut','Paste some JSON first.');return}const arr=JSON.parse($('cvIn').value);if(!Array.isArray(arr))throw new Error('Expected a JSON array of objects');const keys=[...new Set(arr.flatMap(function(o){return Object.keys(o)}))];const esc=function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};out('cvOut',[keys.join(',')].concat(arr.map(function(o){return keys.map(function(k){return esc(o[k])}).join(',')})).join('\n'))}catch(e){out('cvOut','Error: '+e.message)}}
 function csvToMd(){try{const rows=parseCsv($('cmtIn').value);if(rows.length<1)throw new Error('No data');const h=rows[0];const lines=['| '+h.join(' | ')+' |','| '+h.map(function(){return '---'}).join(' | ')+' |'].concat(rows.slice(1).map(function(r){return '| '+r.join(' | ')+' |'}));out('cmtOut',lines.join('\n'))}catch(e){out('cmtOut','Error: '+e.message)}}
 function yamlScalar(v){if(v===null||v===undefined)return'null';if(typeof v==='number'||typeof v==='boolean')return String(v);return /[:#\n]/.test(v)?JSON.stringify(v):v}
 function toYaml(v,ind){const p='  '.repeat(ind);if(Array.isArray(v))return v.map(function(x){return typeof x==='object'&&x!==null?p+'- '+toYaml(x,ind+1).trimStart().replace(/\n/g,'\n'+p+'  '):p+'- '+yamlScalar(x)}).join('\n');if(typeof v==='object'&&v!==null)return Object.entries(v).map(function(entry){const k=entry[0],x=entry[1];return typeof x==='object'&&x!==null?p+k+':\n'+toYaml(x,ind+1):p+k+': '+yamlScalar(x)}).join('\n');return p+yamlScalar(v)}

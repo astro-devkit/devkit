@@ -50,9 +50,13 @@ console.log('structural checks done for ' + CALCS.length + ' calculators');
 
 // reference values (independently computed)
 eq('mortgage $300k 6% 30y', calc('mortgage').compute({ p: 300000, rate: 6, years: 30 }).main, '$1,798.65/mo');
+eq('mortgage sub notes P&I only', calc('mortgage').compute({ p: 300000, rate: 6, years: 30 }).sub, 'Total $647,514.57 · Interest $347,514.57 · Principal + interest only');
 eq('compound $10k 5% 10y monthly', calc('compound').compute({ p: 10000, rate: 5, years: 10, freq: 12 }).main, '$16,470.09');
 eq('simple $5k 4% 3y', calc('simple').compute({ p: 5000, rate: 4, years: 3 }).main, '$5,600.00');
 eq('tip $100 15%', calc('tip').compute({ bill: 100, pct: 15, people: 1 }).main, '$115.00');
+eq('tip $100 15% solo sub', calc('tip').compute({ bill: 100, pct: 15, people: 1 }).sub, 'Tip $15.00');
+eq('tip $120 20% split 3', calc('tip').compute({ bill: 120, pct: 20, people: 3 }).main, '$48.00 each');
+eq('tip $120 20% split 3 sub', calc('tip').compute({ bill: 120, pct: 20, people: 3 }).sub, 'Total $144.00 · Tip $24.00');
 eq('discount $80 -25%', calc('discount').compute({ price: 80, off: 25 }).main, '$60.00');
 eq('salary $25/hr 40h', calc('salary').compute({ hourly: 25, hrs: 40 }).main, '$52,000.00/yr');
 eq('percent 20% of 150', calc('percent').compute({ mode: 'of', x: 20, y: 150 }).main, '30.00');

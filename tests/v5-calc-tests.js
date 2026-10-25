@@ -62,6 +62,16 @@ check('llmcost custom model', o.main, '$14.00');
 o = run('llmcost', {model: 'gpt61sol', pin: 0, pread: 0, pwrite: 0, pout: 0, tin: 100000, tcached: 1000000, twrite: 0, tout: 50000, reqs: 1});
 check('llmcost gpt-6.1 sol preset', o.main, '$0.80');
 
+// GPT-5 is now the default model: per request 100k in @ $1.25 + 1M cached @ $0.125 + 50k out @ $10 = $0.75; x1000 reqs = $750.00
+o = run('llmcost', {model: 'gpt5', pin: 0, pread: 0, pwrite: 0, pout: 0, tin: 100000, tcached: 1000000, twrite: 0, tout: 50000, reqs: 1000});
+check('llmcost gpt-5 default total', o.main, '$750.00');
+check('llmcost gpt-5 breakdown', o.sub, '$0.7500 / request · input $0.1250 + cached $0.1250 + write $0.0000 + output $0.5000');
+
+// DeepSeek V3.2 cache-read is $0.028/M (verified Oct 2026, was stale $0.07): 1M cached = $0.028
+o = run('llmcost', {model: 'deepseekv32', pin: 0, pread: 0, pwrite: 0, pout: 0, tin: 0, tcached: 1000000, twrite: 0, tout: 0, reqs: 1});
+check('llmcost deepseek v3.2 cache-read', o.main, '$0.03');
+check('llmcost deepseek v3.2 cache breakdown', o.sub, '$0.0280 / request · input $0.0000 + cached $0.0280 + write $0.0000 + output $0.0000');
+
 // currency loading / failed states (RATES_STATE drives the message)
 sandbox.RATES = {USD: 1};
 sandbox.RATES_STATE = 'loading';

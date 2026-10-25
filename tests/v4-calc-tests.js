@@ -46,7 +46,7 @@ console.log('Total calculators:', CALCS.length);
 // ---- finance ----
 let o = run('loan', {p: 20000, rate: 5, years: 5});
 check('loan 20000 @5% 5y', o.main, '$377.42/mo');
-check('loan total', o.sub, 'Total $22,645.48 · Interest $2,645.48');
+check('loan total', o.sub, 'Total $22,645.48 · Interest $2,645.48 · Principal + interest only');
 
 o = run('retirement', {p: 0, pmt: 500, rate: 7, years: 30});
 check('retirement FV', o.main, '$609,985.50');
@@ -86,6 +86,10 @@ check('sleep other cycles', o.sub, '5 cycles 23:15 · 4 cycles 00:45 · 3 cycles
 // ---- math ----
 o = run('gpa', {grades: 'A:3, B:3'});
 check('gpa A:3 B:3', o.main, 'GPA 3.50');
+
+o = run('gpa', {grades: 'A:3, XX:3, B:3'});
+check('gpa skips invalid grade', o.main, 'GPA 3.50');
+check('gpa skipped sub', o.sub, '6 credits · Skipped 1 entry');
 
 o = run('quadratic', {a: 1, b: -3, c: 2});
 check('quadratic x^2-3x+2', o.main, 'x = 2.00 or 1.00');

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DevTools guide — DevKit</title>
+<meta name="description" content="What every DevKit developer tool and file converter does, how to use it, and the official docs to learn more. All free, all client-side.">
+<link rel="canonical" href="https://astro-devkit.github.io/devkit/devtools.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"DevTools guide — DevKit","description":"What every DevKit developer tool and file converter does, how to use it, and the official docs to learn more.","url":"https://astro-devkit.github.io/devkit/devtools.html","isPartOf":{"@type":"WebApplication","name":"DevKit","url":"https://astro-devkit.github.io/devkit/"}}</script>
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}
+.topbar{position:sticky;top:0;z-index:50;background:var(--bg);padding:12px 20px;border-bottom:1px solid var(--line)}
+.topbar .in{max-width:1060px;margin:0 auto;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.topbar a{font-size:14px;text-decoration:none;color:var(--txt)}
+.topbar a:hover{color:var(--acc)}
+.topbar a.back{font-weight:700;color:var(--acc)}
+header{max-width:1060px;margin:0 auto;padding:36px 20px 4px}
+h1{margin:0;font-size:30px;letter-spacing:-.5px}h1 span{color:var(--acc)}
+p.sub{color:var(--mut);margin:10px 0 0;max-width:640px;font-size:16px}
+main{max-width:1060px;margin:0 auto;padding:20px}
+section{margin-bottom:36px}
+section>h2{font-size:22px;margin:8px 0 2px}
+.secsub{color:var(--mut);margin:0 0 14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 4px rgba(35,42,61,.05)}
+.card h3{margin:0 0 10px;font-size:16px}
+.card p{margin:8px 0}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.toc a{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--txt);font-size:15px}
+.toc a:hover{border-color:var(--acc);color:var(--acc)}
+.toc a span{float:right;color:var(--mut);font-size:13px}
+.tool-doc{margin-bottom:14px}
+.tool-doc h3 .open{float:right;font-size:13px;font-weight:700}
+.tool-doc .gotcha{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px}
+.tool-doc .src{font-size:13px;color:var(--mut)}
+.tool-doc code{background:#f7f5f0;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+ol,ul{margin:8px 0;padding-left:22px}
+li{margin:3px 0}
+footer{max-width:1060px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font-size:13px;text-align:center}
+@media(max-width:640px){h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="in">
+<a class="back" href="index.html">← Back to DevKit</a>
+<a href="#how">How to use DevKit</a>
+<a href="#files">File converters</a>
+<a href="#dev">Dev tools</a>
+</div></div>
+<header>
+<h1>Dev<span>Kit</span> DevTools guide</h1>
+<p class="sub">Every developer tool and file converter on DevKit, explained: what it is, when to use it, how to use it here, what to watch out for — and the official docs if you want to go deeper. Everything on this page runs in your browser. Nothing is uploaded.</p>
+</header>
+<main>
+
+<section id="how">
+<h2>How to use DevKit</h2>
+<p class="secsub">First time here? The whole site works the same way.</p>
+<div class="card">
+<p><strong>Nothing leaves your browser.</strong> Every tool on DevKit runs locally in the page — there is no server, no upload, no account and no tracking. You can paste API responses, config files and data freely; close the tab and it is gone. That is the whole privacy model, and it is why the tools are fast.</p>
+<p><strong>Find a tool three ways.</strong> Use the search box at the top of <a href="index.html">the main site</a> (try <code>csv</code>, <code>json</code> or <code>base64</code>), pick a tab — <a href="index.html#tab-files">Files</a> for converters, <a href="index.html#tab-dev">Dev</a> for developer tools — or follow the “Open in DevKit” link on any entry below, which jumps straight to that tool.</p>
+<p><strong>Every tool is one card.</strong> Paste or drop your input, press the button, read the result on the card. Most tools have a <strong>Copy</strong> button; file converters also have <strong>Download</strong>. If a tool shows an error, the message says what is wrong — usually a formatting problem in the input.</p>
+<p><strong>Share any tool.</strong> Every tab has a link (<code>#tab-files</code>, <code>#tab-dev</code>) and every tool on this page links to its own anchor (for example <code>index.html#tool-csvjson</code>). Send the link, not a screenshot.</p>
+</div>
+</section>
+
+<section>
+<h2>Contents</h2>
+<p class="secsub">22 tools — 10 file converters, 12 dev tools. Click any entry to jump to its explanation.</p>
+<div class="toc">
+<a href="#doc-csvjson">CSV ↔ JSON <span>convert</span></a>
+<a href="#doc-jsonyaml">JSON ↔ YAML <span>convert</span></a>
+<a href="#doc-mdhtml">Markdown → HTML <span>convert</span></a>
+<a href="#doc-csvmd">CSV → Markdown table <span>convert</span></a>
+<a href="#doc-imgconv">Image converter <span>convert</span></a>
+<a href="#doc-case">Text case converter <span>convert</span></a>
+<a href="#doc-xml">XML ↔ JSON <span>convert</span></a>
+<a href="#doc-csvsql">CSV → SQL INSERT <span>convert</span></a>
+<a href="#doc-hash">File SHA-256 hash <span>convert</span></a>
+<a href="#doc-b64img">Image → Base64 <span>convert</span></a>
+<a href="#doc-jsonfmt">JSON formatter &amp; validator <span>dev</span></a>
+<a href="#doc-b64enc">Base64 <span>dev</span></a>
+<a href="#doc-urlenc">URL encode / decode <span>dev</span></a>
+<a href="#doc-regex">Regex tester <span>dev</span></a>
+<a href="#doc-timestamp">Unix timestamp <span>dev</span></a>
+<a href="#doc-uuid">UUID, password &amp; SHA-256 <span>dev</span></a>
+<a href="#doc-tokenest">Token estimator <span>dev</span></a>
+<a href="#doc-color">Color converter <span>dev</span></a>
+<a href="#doc-diff">Text diff <span>dev</span></a>
+<a href="#doc-wc">Word counter <span>dev</span></a>
+<a href="#doc-sort">Sort &amp; dedupe lines <span>dev</span></a>
+<a href="#doc-ts">JSON → TypeScript <span>dev</span></a>
+</div>
+</section>
+
+<section id="files">
+<h2>File converters</h2>
+<p class="secsub">Change formats without uploading anything — your files never leave your browser. <a href="index.html#tab-files">Open the Files tab →</a></p>
+
+<article class="card tool-doc" id="doc-csvjson">
+<h3>CSV ↔ JSON <a class="open" href="index.html#tool-csvjson">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Converts a CSV spreadsheet (rows and columns) into a JSON array of objects, and back. The first CSV row becomes the field names.</p>
+<p><strong>When to use it.</strong> Feeding a spreadsheet export into a script or API; turning an API's JSON response into a spreadsheet you can open in Excel or Sheets.</p>
+<p><strong>How to use it.</strong> Drop a <code>.csv</code> or <code>.json</code> file on the drop zone, or paste the text into the box. Press <strong>CSV → JSON</strong> or <strong>JSON → CSV</strong>, then <strong>Copy</strong> or <strong>Download</strong> the result.</p>
+<p class="gotcha"><strong>Gotchas.</strong> The first row must be the header row. Values containing commas must be wrapped in double quotes (the parser handles quoted fields, including quotes escaped as <code>""</code>). For JSON → CSV, the input must be an array of objects with the same keys; missing values come out as empty strings.</p>
+<p class="src">Learn more: <a href="https://www.rfc-editor.org/info/rfc4180/">RFC 4180 — the CSV format</a> · <a href="https://www.json.org/">json.org — JSON, the data format</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-jsonyaml">
+<h3>JSON ↔ YAML <a class="open" href="index.html#tool-jsonyaml">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Converts JSON to YAML and back. YAML is the human-friendly format used by most config files.</p>
+<p><strong>When to use it.</strong> Editing CI configs, Kubernetes manifests, docker-compose files or any YAML config; turning an API response into something you can read and edit by hand.</p>
+<p><strong>How to use it.</strong> Paste JSON or YAML into the box, press <strong>JSON → YAML</strong> or <strong>YAML → JSON</strong>, then <strong>Copy</strong>.</p>
+<p class="gotcha"><strong>Gotchas.</strong> YAML is whitespace-sensitive — indentation must be spaces, never tabs. Duplicate keys are an error. Very deeply nested structures convert fine but get hard to read; that is a property of YAML, not the tool.</p>
+<p class="src">Learn more: <a href="https://yaml.org/spec/1.2.2/">YAML 1.2 specification</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-mdhtml">
+<h3>Markdown → HTML <a class="open" href="index.html#tool-mdhtml">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Turns Markdown into HTML, with a live rendered preview underneath so you can see the result before you copy it.</p>
+<p><strong>When to use it.</strong> Writing READMEs, blog posts, documentation or emails that need HTML; checking how Markdown will render.</p>
+<p><strong>How to use it.</strong> Paste Markdown into the box, press <strong>Convert &amp; preview</strong>. The HTML appears in the output box and the rendered version appears in the preview below it. Press <strong>Copy HTML</strong> to take the code.</p>
+<p class="gotcha"><strong>Gotchas.</strong> The converter covers the common subset — headings, lists, bold, italic, code and links. It does not support tables, footnotes or embedded HTML, and it will not sanitise the output, so do not paste untrusted Markdown into a page that other people will view.</p>
+<p class="src">Learn more: <a href="https://spec.commonmark.org/">CommonMark spec — the Markdown standard</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-csvmd">
+<h3>CSV → Markdown table <a class="open" href="index.html#tool-csvmd">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Turns CSV rows into a Markdown table (<code>| col | col |</code> with a separator row), ready to paste into a README, GitHub issue or docs page.</p>
+<p><strong>When to use it.</strong> Sharing a small table of data in a Markdown document; turning a spreadsheet export into documentation.</p>
+<p><strong>How to use it.</strong> Paste CSV with a header row, press <strong>Convert</strong>, then <strong>Copy</strong>.</p>
+<p class="gotcha"><strong>Gotchas.</strong> A <code>|</code> character inside a cell breaks the table — keep cell text free of pipes. Numbers are not aligned; Markdown tables are left-aligned by default.</p>
+<p class="src">Learn more: <a href="https://github.github.com/gfm/#tables-extension-">GitHub Flavored Markdown — tables</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-imgconv">
+<h3>Image converter, resize &amp; compress <a class="open" href="index.html#tool-imgconv">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Converts an image between PNG, JPEG and WebP, resizes it to a maximum width, and sets the output quality — then downloads the result.</p>
+<p><strong>When to use it.</strong> Shrinking a screenshot for a README, converting a PNG to WebP for a faster website, making a large photo email-friendly.</p>
+<p><strong>How to use it.</strong> Drop an image on the zone (or click to choose one), pick the output format, set a max width in pixels and a quality from 0 to 1, then press <strong>Convert &amp; download</strong>.</p>
+<p class="gotcha"><strong>Gotchas.</strong> JPEG has no transparency — transparent areas of a PNG become solid (usually white) when converted to JPEG. Quality only affects JPEG and WebP, not PNG. Resizing keeps the aspect ratio; the height is scaled to match.</p>
+<p class="src">Learn more: <a href="https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Image_types">MDN — image file types and formats</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-case">
+<h3>Text case converter <a class="open" href="index.html#tool-case">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Rewrites text in UPPER CASE, lower case, Title Case, snake_case or kebab-case.</p>
+<p><strong>When to use it.</strong> Renaming variables and identifiers, normalising headings, converting a phrase into a CSS class name or a database column name.</p>
+<p><strong>How to use it.</strong> Paste text, press the case you want (<strong>UPPER</strong>, <strong>lower</strong>, <strong>Title Case</strong>, <strong>snake_case</strong>, <strong>kebab-case</strong>), then <strong>Copy</strong>.</p>
+<p class="gotcha"><strong>Gotchas.</strong> snake_case and kebab-case split on spaces and on case boundaries (<code>myVariable</code> → <code>my_variable</code>). Punctuation is left as-is, so clean it first if you need a strict identifier.</p>
+<p class="src">Learn more: <a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)">Wikipedia — naming conventions in programming</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-xml">
+<h3>XML ↔ JSON <a class="open" href="index.html#tool-xml">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Converts XML documents to JSON and back.</p>
+<p><strong>When to use it.</strong> Reading a response from an older XML API as JSON; converting config or data between the two formats.</p>
+<p><strong>How to use it.</strong> Paste XML or JSON into the box, press <strong>XML → JSON</strong> or <strong>JSON → XML</strong>.</p>
+<p class="gotcha"><strong>Gotchas.</strong> XML attributes become keys prefixed with <code>@</code> (for example <code>@id</code>). Repeated elements become JSON arrays. XML comments and processing instructions are dropped in conversion — the output keeps the data, not the document's annotations.</p>
+<p class="src">Learn more: <a href="https://developer.mozilla.org/en-US/docs/Web/XML">MDN — XML introduction</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-csvsql">
+<h3>CSV → SQL INSERT <a class="open" href="index.html#tool-csvsql">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Turns CSV rows into SQL <code>INSERT INTO</code> statements for a table you name.</p>
+<p><strong>When to use it.</strong> Loading a spreadsheet into a database, seeding a table with test data, moving data between systems.</p>
+<p><strong>How to use it.</strong> Set the table name (it defaults to <code>users</code>), paste CSV with a header row, press <strong>Convert</strong>, then <strong>Copy</strong> the statements.</p>
+<p class="gotcha"><strong>Gotchas.</strong> Numbers are inserted bare, text is single-quoted (quotes inside text are doubled, the SQL way). The first row must be the header. Dialects differ — check the output against your database before running it on real data, and never run generated SQL you have not read.</p>
+<p class="src">Learn more: <a href="https://www.postgresql.org/docs/current/sql-insert.html">PostgreSQL docs — INSERT</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-hash">
+<h3>File SHA-256 hash <a class="open" href="index.html#tool-hash">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Computes the SHA-256 fingerprint of any file — a 64-character hex string that uniquely identifies the file's exact bytes.</p>
+<p><strong>When to use it.</strong> Verifying a download against a published checksum; proving a file has not changed; fingerprinting a build artifact.</p>
+<p><strong>How to use it.</strong> Drop a file on the zone (or click to choose one). The hash appears below. Compare it character for character with the checksum you were given.</p>
+<p class="gotcha"><strong>Gotchas.</strong> The hash covers the file's exact bytes — re-saving, re-encoding or even re-zipping changes it. Compare the whole string, not just the first few characters. A matching hash proves the bytes are identical; it says nothing about whether the file is safe to run.</p>
+<p class="src">Learn more: <a href="https://csrc.nist.gov/pubs/fips/180-4/upd1/final">FIPS 180-4 — Secure Hash Standard (SHA-256)</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-b64img">
+<h3>Image → Base64 <a class="open" href="index.html#tool-b64">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Turns an image into a Base64 data URI (<code>data:image/png;base64,...</code>) that you can paste directly into HTML or CSS.</p>
+<p><strong>When to use it.</strong> Embedding a small icon or logo in a single self-contained HTML file or stylesheet, without a separate image file or server.</p>
+<p><strong>How to use it.</strong> Drop an image on the zone (or click to choose one), then press <strong>Copy data URI</strong> and paste it where the image goes.</p>
+<p class="gotcha"><strong>Gotchas.</strong> Base64 makes the data about 33% bigger than the original file, so this only makes sense for small images. A large photo embedded this way bloats the page and slows it down — link to the file instead.</p>
+<p class="src">Learn more: <a href="https://www.rfc-editor.org/info/rfc4648/">RFC 4648 — Base64 encoding</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data">MDN — data URLs</a></p>
+</article>
+</section>
+
+<section id="dev">
+<h2>Dev tools</h2>
+<p class="secsub">JSON, encoders, diffs and text tools for daily dev work. <a href="index.html#tab-dev">Open the Dev tab →</a></p>
+
+<article class="card tool-doc" id="doc-jsonfmt">
+<h3>JSON formatter &amp; validator <a class="open" href="index.html#tool-jsonfmt">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Pretty-prints JSON so you can read it, or minifies it to a single line. If the JSON is invalid, it tells you why instead of failing silently.</p>
+<p><strong>When to use it.</strong> Reading an API response, finding a missing comma in a config file, shrinking JSON before pasting it somewhere size matters.</p>
+<p><strong>How to use it.</strong> Paste JSON into the box, press <strong>Format</strong> or <strong>Minify</strong>, then <strong>Copy</strong>.</p>
+<p class="gotcha"><strong>Gotchas.</strong> JSON is strict: keys and strings need double quotes (single quotes are invalid), and trailing commas are not allowed. If the formatter reports an error, fix the first error it names — later errors are usually knock-on effects.</p>
+<p class="src">Learn more: <a href="https://www.json.org/">json.org — JSON, the data format</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-b64enc">
+<h3>Base64 <a class="open" href="index.html#tool-b64enc">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Encodes text into Base64 and decodes Base64 back into text.</p>
+<p><strong>When to use it.</strong> Putting binary-ish data into a header or a JSON field, decoding the payload of a token, moving text through a channel that only accepts plain ASCII.</p>
+<p><strong>How to use it.</strong> Paste text, press <strong>Encode</strong> or <strong>Decode</strong>, then <strong>Copy</strong>.</p>
+<p class="gotcha"><strong>Gotchas.</strong> Base64 is an encoding, not encryption — anyone can decode it, so never put a password or secret in Base64 and call it protected. The tool handles UTF-8 text, including non-English characters.</p>
+<p class="src">Learn more: <a href="https://www.rfc-editor.org/info/rfc4648/">RFC 4648 — Base64 encoding</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-urlenc">
+<h3>URL encode / decode <a class="open" href="index.html#tool-urlenc">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Percent-encodes text so it is safe inside a URL, and decodes percent-encoded text back to readable form.</p>
+<p><strong>When to use it.</strong> Putting a search term or a value with spaces, <code>&amp;</code> or <code>=</code> into a link; reading a messy URL you were handed.</p>
+<p><strong>How to use it.</strong> Paste the text or URL, press <strong>Encode</strong> or <strong>Decode</strong>, then <strong>Copy</strong>.</p>
+<p class="gotcha"><strong>Gotchas.</strong> A space becomes <code>%20</code>. An <code>&amp;</code> or <code>=</code> inside a query value must be encoded, or the server will read it as a separator and split your value in two.</p>
+<p class="src">Learn more: <a href="https://url.spec.whatwg.org/">WHATWG URL Standard</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-regex">
+<h3>Regex tester <a class="open" href="index.html#tool-regex">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Tests a JavaScript regular expression against sample text and shows the matches.</p>
+<p><strong>When to use it.</strong> Building a pattern to validate an email or phone number, extracting pieces from a log line, checking a pattern before putting it in code.</p>
+<p><strong>How to use it.</strong> Enter the pattern (for example <code>\d{3}-\d{4}</code>), add flags if you need them (for example <code>gi</code> for global, case-insensitive), paste the test text, press <strong>Test</strong>.</p>
+<p class="gotcha"><strong>Gotchas.</strong> This uses JavaScript regex syntax — other languages differ in small ways (lookbehind, named groups, flag letters). An unescaped special character like <code>.</code> or <code>+</code> changes what the pattern means; escape it with a backslash when you want the literal character.</p>
+<p class="src">Learn more: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions">MDN — regular expressions</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-timestamp">
+<h3>Unix timestamp <a class="open" href="index.html#tool-timestamp">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Converts a Unix timestamp — seconds since 1 January 1970, UTC — into a readable date and time, and gives you the current timestamp with one click.</p>
+<p><strong>When to use it.</strong> Reading a timestamp out of a log file or database row; checking when an event actually happened; getting “now” in seconds for code.</p>
+<p><strong>How to use it.</strong> Paste the seconds value and press <strong>Convert</strong>, or press <strong>Now</strong> to fill in the current timestamp.</p>
+<p class="gotcha"><strong>Gotchas.</strong> Unix time counts <em>seconds</em>. Some systems use milliseconds (13 digits instead of 10) — divide by 1,000 first, or you will land in the year 50,000. The converted time is shown in your browser's local timezone as well as UTC.</p>
+<p class="src">Learn more: <a href="https://en.wikipedia.org/wiki/Unix_time">Wikipedia — Unix time</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-uuid">
+<h3>UUID, password &amp; SHA-256 <a class="open" href="index.html#tool-uuid">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Three small generators in one card: random UUIDs, random passwords, and SHA-256 hashes of text you type.</p>
+<p><strong>When to use it.</strong> Needing a unique id for a record or request, a strong throwaway password, or a fingerprint of a string to compare later.</p>
+<p><strong>How to use it.</strong> Press <strong>New UUID</strong> or <strong>New password</strong> for a fresh value; or type text in the hash box and press <strong>Hash</strong>. Copy the output from the box below.</p>
+<p class="gotcha"><strong>Gotchas.</strong> The password is random — store it in a password manager, because there is no way to recover it. A hash is one-way: it cannot be reversed to get the original text back, which is the point. For hashing a <em>file</em> rather than typed text, use the <a href="#doc-hash">File SHA-256 hash</a> converter instead.</p>
+<p class="src">Learn more: <a href="https://www.rfc-editor.org/info/rfc9562/">RFC 9562 — UUIDs</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-tokenest">
+<h3>Token estimator <a class="open" href="index.html#tool-tokenest">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Estimates how many LLM tokens a piece of text is — roughly characters ÷ 4 and words ÷ 0.75 — plus the character and word counts.</p>
+<p><strong>When to use it.</strong> Roughly sizing a prompt before sending it to an API, sanity-checking whether a document fits in a model's context window, estimating cost.</p>
+<p><strong>How to use it.</strong> Paste text, press <strong>Estimate</strong>. The output shows characters, words and the estimated token count.</p>
+<p class="gotcha"><strong>Gotchas.</strong> This is an estimate, not an exact count — real tokenization depends on the model, and code, non-English text and unusual punctuation all tokenize differently. For exact counts, use the model's own tokenizer; for cost, use the <a href="index.html#calc-llmcost">LLM cost calculator</a> on DevKit.</p>
+<p class="src">Learn more: <a href="https://github.com/openai/tiktoken">tiktoken — OpenAI's tokenizer</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-color">
+<h3>Color converter <a class="open" href="index.html#tool-color">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Converts a color between hex (<code>#38bdf8</code>), <code>rgb()</code> and <code>hsl()</code> notations.</p>
+<p><strong>When to use it.</strong> Moving a color from a design tool into CSS, matching a brand color across formats, converting a value for a colleague.</p>
+<p><strong>How to use it.</strong> Paste a color — <code>#38bdf8</code>, <code>rgb(56, 189, 248)</code> or <code>hsl(199, 92%, 56%)</code> — and press <strong>Convert</strong>.</p>
+<p class="gotcha"><strong>Gotchas.</strong> Hex values need 6 digits (3-digit shorthand like <code>#38f</code> is not accepted here — write it out in full). Alpha/transparency channels are not covered; convert the opaque color and add the alpha yourself.</p>
+<p class="src">Learn more: <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value">MDN — &lt;color&gt; values</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-diff">
+<h3>Text diff <a class="open" href="index.html#tool-diff">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Compares two texts, line by line, and shows which lines are only in the first, only in the second, or in both.</p>
+<p><strong>When to use it.</strong> Checking what changed between two versions of a config file, a document or a code snippet; spotting an accidental edit.</p>
+<p><strong>How to use it.</strong> Paste the original text in the first box and the changed text in the second, press <strong>Compare</strong>.</p>
+<p class="gotcha"><strong>Gotchas.</strong> The comparison is line-based: a changed word makes the whole line show as different. Whitespace-only changes (a trailing space, a different indent) count as differences, so a noisy result often means invisible whitespace changed.</p>
+<p class="src">Learn more: <a href="https://en.wikipedia.org/wiki/Diff">Wikipedia — diff</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-wc">
+<h3>Word counter <a class="open" href="index.html#tool-wc">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Counts words, characters (with and without spaces), lines, and the estimated reading time of a piece of text.</p>
+<p><strong>When to use it.</strong> Checking an essay, post or document against a length limit; estimating how long something takes to read.</p>
+<p><strong>How to use it.</strong> Paste text, press <strong>Count</strong>.</p>
+<p class="gotcha"><strong>Gotchas.</strong> Reading time assumes about 200 words per minute — dense or technical text takes longer in practice. Words are split on whitespace, so hyphenated words count as one and numbers count as words.</p>
+<p class="src">Learn more: <a href="https://en.wikipedia.org/wiki/Word_count">Wikipedia — word count</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-sort">
+<h3>Sort &amp; dedupe lines <a class="open" href="index.html#tool-sort">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Sorts a list of lines A–Z or Z–A, or removes duplicate lines.</p>
+<p><strong>When to use it.</strong> Cleaning up a list of emails, ids or names; deduping a list before pasting it somewhere.</p>
+<p><strong>How to use it.</strong> Paste one item per line, press <strong>Sort A–Z</strong>, <strong>Sort Z–A</strong> or <strong>Remove duplicates</strong>.</p>
+<p class="gotcha"><strong>Gotchas.</strong> Sorting is alphabetical and locale-aware, so numbers sort as text (<code>10</code> before <code>2</code>) unless you zero-pad them. “Remove duplicates” keeps the first occurrence of each line and drops the rest, in order.</p>
+<p class="src">Learn more: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort">MDN — Array.prototype.sort</a></p>
+</article>
+
+<article class="card tool-doc" id="doc-ts">
+<h3>JSON → TypeScript <a class="open" href="index.html#tool-ts">Open in DevKit →</a></h3>
+<p><strong>What it is.</strong> Generates TypeScript interfaces from a JSON sample — paste an API response, get the types.</p>
+<p><strong>When to use it.</strong> Typing an API response quickly, scaffolding types for a new endpoint, documenting a JSON shape.</p>
+<p><strong>How to use it.</strong> Paste JSON, press <strong>Generate types</strong>, then <strong>Copy</strong>.</p>
+<p class="gotcha"><strong>Gotchas.</strong> Types are inferred from a single sample: a field that is <code>null</code> or missing in your sample will be typed as <code>null</code> or left out entirely, and a field that is sometimes a string and sometimes a number will only show the type it had in the sample. Review the generated types before shipping them — they are a starting point, not a contract.</p>
+<p class="src">Learn more: <a href="https://www.typescriptlang.org/docs/handbook/2/objects.html">TypeScript handbook — object types</a></p>
+</article>
+</section>
+
+</main>
+<footer>
+DevKit — calculators, converters and dev tools. All client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. <a href="index.html">Back to DevKit</a>.
+</footer>
+</body>
+</html>
