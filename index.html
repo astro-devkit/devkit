@@ -75,6 +75,20 @@ button.btn.ghost:hover{border-color:var(--acc);color:var(--acc);background:#e0e7
 .hidden{display:none!important}
 .hide{display:none!important}
 section{display:none}section.on{display:block}
+.topbar{position:sticky;top:0;z-index:50;background:var(--bg);padding:12px 0;border-bottom:1px solid var(--line)}
+.topbar .search{margin:0 auto}
+.topbar nav{margin:10px auto 0}
+#pageHead{margin:6px 0 16px}
+#pageHead h2{font-size:24px;margin:0}
+#pageHead p{color:var(--mut);margin:4px 0 0;font-size:14px}
+#homeView h2{font-size:22px;margin:8px 0 2px}
+#homeView .secsub{color:var(--mut);margin:0 0 14px;font-size:14px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.tile{display:block;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;text-decoration:none;color:var(--txt)}
+.tile:hover{border-color:var(--acc);box-shadow:0 2px 10px rgba(35,42,61,.08)}
+.tile h3{margin:0 0 4px;font-size:17px}
+.tile h3 span{float:right;color:var(--acc);font-size:14px;font-weight:700}
+.tile p{margin:0;color:var(--mut);font-size:14px}
 @media(max-width:640px){.hero{font-size:28px}h1{font-size:24px}}
 </style>
 </head>
@@ -92,9 +106,9 @@ section{display:none}section.on{display:block}
 <button onclick="popCalc('age')">Age</button>
 </div>
 </header>
-<div class="search"><input type="text" id="q" placeholder="Search calculators and tools"></div>
+<div class="topbar"><div class="search"><input type="text" id="q" placeholder="Search calculators and tools"></div>
 <nav id="cats">
-<button class="on" data-cat="all">All</button>
+<button class="on" data-cat="all">Home</button>
 <button data-cat="llm">LLM</button>
 <button data-cat="finance">Finance</button>
 <button data-cat="health">Health</button>
@@ -104,8 +118,24 @@ section{display:none}section.on{display:block}
 <button data-cat="everyday">Everyday</button>
 <button data-cat="files">Files</button>
 <button data-cat="dev">Dev</button>
-</nav>
+</nav></div>
 <main>
+<div id="homeView">
+<h2>Browse by category</h2>
+<p class="secsub">69 tools, all free, all in your browser. Pick a category, or search above.</p>
+<div class="tiles">
+<a class="tile" href="#tab-llm"><h3>LLM <span>2 tools</span></h3><p>LLM cost calculator · Tokens/sec simulator</p></a>
+<a class="tile" href="#tab-finance"><h3>Finance <span>13 tools</span></h3><p>Mortgage · Compound interest · Retirement</p></a>
+<a class="tile" href="#tab-health"><h3>Health <span>8 tools</span></h3><p>BMI · BMR &amp; calories · Macros</p></a>
+<a class="tile" href="#tab-math"><h3>Math <span>7 tools</span></h3><p>GPA · Quadratic solver · Mean &amp; SD</p></a>
+<a class="tile" href="#tab-convert"><h3>Convert <span>10 tools</span></h3><p>Length · Currency · Cups ↔ grams</p></a>
+<a class="tile" href="#tab-time"><h3>Time <span>2 tools</span></h3><p>Age · Days between dates</p></a>
+<a class="tile" href="#tab-everyday"><h3>Everyday <span>5 tools</span></h3><p>Recipe scaler · Paint · Concrete</p></a>
+<a class="tile" href="#tab-files"><h3>File converters <span>10 tools</span></h3><p>CSV ↔ JSON · Markdown → HTML · Image converter</p></a>
+<a class="tile" href="#tab-dev"><h3>Dev tools <span>12 tools</span></h3><p>JSON formatter · Base64 · Text diff</p></a>
+</div>
+</div>
+<div id="pageHead" class="hide"><h2 id="pageTitle"></h2><p id="pageDesc"></p></div>
 <section id="sec-calcs" class="on"><div class="grid" id="calcGrid"></div></section>
 
 <!-- ============ FILE CONVERTERS ============ -->
@@ -450,10 +480,72 @@ function swapUnits(id){const c=CALCS.find(function(x){return x.id===id});if(!c)r
 function convertCardUnits(c,sel){const to=sel.value,from=sel.dataset.prev||'metric';if(from===to||!c.unitMap)return;sel.dataset.prev=to;function num(x){return parseFloat(x.toFixed(1))}for(const k in c.unitMap){const el=document.getElementById('in_'+c.id+'_'+k);if(!el)continue;const v=parseFloat(el.value);if(!isFinite(v))continue;const kind=c.unitMap[k];let nv;if(kind==='w')nv=to==='imperial'?v*2.20462:v*0.45359237;else nv=to==='imperial'?v/2.54:v*2.54;el.value=num(nv);const lab=el.previousElementSibling;if(lab){const base=lab.textContent.replace(/ \([^)]*\)$/,'');lab.textContent=base+(to==='imperial'?(kind==='w'?' (lb)':' (in)'):(kind==='w'?' (kg)':' (cm)'))}}if(c.fImp){const card=document.getElementById('calc-'+c.id);if(card){const fEl=card.querySelector('.formula');if(fEl)fEl.textContent=to==='imperial'?c.fImp:c.f}}}
 function renderCalcs(){const g=$('calcGrid');if(!g)return;g.innerHTML='';CALCS.slice().sort(function(a,b){return (a.cat==='llm'?0:1)-(b.cat==='llm'?0:1)}).forEach(function(c){const card=document.createElement('div');card.className='card calc';card.id='calc-'+c.id;card.dataset.cat=c.cat;card.dataset.name=(c.id+' '+c.name+' '+c.tags).toLowerCase();let h='<h3>'+c.name+'</h3>';c.inputs.forEach(function(inp){h+='<div class="f">'+inp.label+'</div>';if(inp.type==='select'){h+='<select id="in_'+c.id+'_'+inp.k+'">'+inp.opts.map(function(o){return '<option value="'+o[0]+'"'+(String(o[0])===String(inp.def)?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'}else if(inp.type==='textarea'){h+='<textarea id="in_'+c.id+'_'+inp.k+'">'+inp.def+'</textarea>'}else if(inp.type==='date'||inp.type==='time'){h+='<input type="'+inp.type+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}else{h+='<input type="number" step="'+(inp.step||'any')+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'">'}});const fi=c.inputs.find(function(i){return i.k==='from'}),ti=c.inputs.find(function(i){return i.k==='to'});if(fi&&ti&&fi.type==='select'&&ti.type==='select'){h+='<button class="swap" onclick="swapUnits(\''+c.id+'\')">⇄ Swap units</button>'}h+='<div class="result"><div class="main" id="out_'+c.id+'_main"></div><div class="sub" id="out_'+c.id+'_sub"></div></div>';h+='<div class="formula">'+c.f+'</div>';card.innerHTML=h;g.appendChild(card);const uSel=card.querySelector('#in_'+c.id+'_units');if(uSel){uSel.dataset.prev=uSel.value;uSel.addEventListener('input',function(){convertCardUnits(c,uSel);runCalc(c)})}const mSel=c.id==='llmcost'?card.querySelector('#in_llmcost_model'):null;if(mSel){const tog=function(){const isC=mSel.value==='custom';['pin','pread','pwrite','pout'].forEach(function(k){const el=document.getElementById('in_llmcost_'+k);if(!el)return;const lab=el.previousElementSibling;el.style.display=isC?'':'none';if(lab)lab.style.display=isC?'':'none'})};mSel.addEventListener('input',tog);tog()}card.querySelectorAll('input,select,textarea').forEach(function(el){el.addEventListener('input',function(){runCalc(c)})});runCalc(c)})}
 var curCat='all';
-function applyFilter(){const q=(($('q').value)||'').toLowerCase();const cats=['finance','health','math','convert','time','everyday','llm'];const showCalcs=curCat==='all'||cats.indexOf(curCat)>=0;const showFiles=curCat==='all'||curCat==='files'||!!q;const showDev=curCat==='all'||curCat==='dev'||!!q;$('sec-calcs').classList.toggle('on',showCalcs);$('sec-files').classList.toggle('on',showFiles);$('sec-dev').classList.toggle('on',showDev);document.querySelectorAll('#calcGrid .calc').forEach(function(card){const okCat=!!q||curCat==='all'||card.dataset.cat===curCat;const okQ=!q||card.dataset.name.indexOf(q)>=0;card.classList.toggle('hide',!(okCat&&okQ))});document.querySelectorAll('#sec-files .card, #sec-dev .card').forEach(function(card){card.classList.toggle('hide',!!q&&((card.dataset.name+' '+card.textContent).toLowerCase().indexOf(q)<0))});if(q){[['sec-calcs','#calcGrid .calc'],['sec-files','#sec-files .card'],['sec-dev','#sec-dev .card']].forEach(function(pair){const sec=$(pair[0]);let vis=false;document.querySelectorAll(pair[1]).forEach(function(card){if(!card.classList.contains('hide'))vis=true});sec.classList.toggle('on',vis)})}let any=false;document.querySelectorAll('#calcGrid .calc').forEach(function(card){if(!card.classList.contains('hide')&&$('sec-calcs').classList.contains('on'))any=true});document.querySelectorAll('#sec-files .card, #sec-dev .card').forEach(function(card){const sec=card.closest('section');if(!card.classList.contains('hide')&&sec&&sec.classList.contains('on'))any=true});const nr=$('noResults');if(nr){nr.classList.toggle('hide',any||!q);const nq=$('noResultsQ');if(nq)nq.textContent=q}}
+var TABS={
+ all:{title:'All tools',desc:'Pick a category, or search above.'},
+ llm:{title:'LLM tools',desc:'Price your AI work.'},
+ finance:{title:'Finance calculators',desc:'Mortgages, loans, interest, retirement and ROI.'},
+ health:{title:'Health calculators',desc:'BMI, BMR, macros, water, heart-rate and more.'},
+ math:{title:'Math calculators',desc:'GPA, quadratics, GCD/LCM, powers, mean and standard deviation.'},
+ convert:{title:'Unit converters',desc:'Length, weight, temperature, volume, area, speed and cooking.'},
+ time:{title:'Time calculators',desc:'Age, dates and time conversions.'},
+ everyday:{title:'Everyday tools',desc:'Recipes, paint, concrete, sleep and more.'},
+ files:{title:'File converters',desc:'Change formats without uploading anything — your files never leave your browser.'},
+ dev:{title:'Dev tools',desc:'JSON, encoders, diffs and text tools for daily dev work.'}
+};
+function setTab(cat,scroll){
+ if(!TABS[cat])cat='all';
+ curCat=cat;
+ document.querySelectorAll('#cats button').forEach(function(x){x.classList.toggle('on',x.dataset.cat===cat)});
+ var qEl=$('q');if(qEl&&qEl.value)qEl.value='';
+ if(cat==='all'){history.replaceState(null,'',location.pathname+location.search)}
+ else if(location.hash!=='#tab-'+cat){location.hash='#tab-'+cat}
+ applyFilter();
+ if(scroll)window.scrollTo(0,0);
+}
+function applyFilter(){
+ var q=(($('q').value)||'').toLowerCase();
+ var home=curCat==='all'&&!q;
+ var hv=$('homeView');if(hv)hv.classList.toggle('hide',!home);
+ var cats=['finance','health','math','convert','time','everyday','llm'];
+ var showCalcs=curCat==='all'||cats.indexOf(curCat)>=0;
+ var showFiles=curCat==='all'||curCat==='files'||!!q;
+ var showDev=curCat==='all'||curCat==='dev'||!!q;
+ $('sec-calcs').classList.toggle('on',showCalcs&&!home);
+ $('sec-files').classList.toggle('on',showFiles&&!home);
+ $('sec-dev').classList.toggle('on',showDev&&!home);
+ document.querySelectorAll('#calcGrid .calc').forEach(function(card){
+  var okCat=!!q||curCat==='all'||card.dataset.cat===curCat;
+  var okQ=!q||card.dataset.name.indexOf(q)>=0;
+  card.classList.toggle('hide',!(okCat&&okQ));
+ });
+ document.querySelectorAll('#sec-files .card, #sec-dev .card').forEach(function(card){
+  card.classList.toggle('hide',!!q&&((card.dataset.name+' '+card.textContent).toLowerCase().indexOf(q)<0));
+ });
+ if(q){
+  [['sec-calcs','#calcGrid .calc'],['sec-files','#sec-files .card'],['sec-dev','#sec-dev .card']].forEach(function(pair){
+   var sec=$(pair[0]),vis=false;
+   document.querySelectorAll(pair[1]).forEach(function(card){if(!card.classList.contains('hide'))vis=true});
+   sec.classList.toggle('on',vis);
+  });
+ }
+ var any=false;
+ document.querySelectorAll('#calcGrid .calc').forEach(function(card){if(!card.classList.contains('hide')&&$('sec-calcs').classList.contains('on'))any=true});
+ document.querySelectorAll('#sec-files .card, #sec-dev .card').forEach(function(card){var sec=card.closest('section');if(!card.classList.contains('hide')&&sec&&sec.classList.contains('on'))any=true});
+ var nr=$('noResults');
+ if(nr){nr.classList.toggle('hide',any||!q);var nq=$('noResultsQ');if(nq)nq.textContent=q}
+ var ph=$('pageHead'),pt=$('pageTitle'),pd=$('pageDesc');
+ if(ph&&pt&&pd){
+  ph.classList.toggle('hide',home);
+  var n=0;
+  document.querySelectorAll('#calcGrid .calc:not(.hide)').forEach(function(){n++});
+  document.querySelectorAll('#sec-files .card:not(.hide), #sec-dev .card:not(.hide)').forEach(function(){n++});
+  if(q){pt.textContent='Results for \u201c'+q+'\u201d';pd.textContent=n===1?'1 tool matches':n+' tools match'}
+  else{var t=TABS[curCat]||TABS.all;pt.textContent=t.title;pd.textContent=t.desc+' \u2014 '+n+' tools'}
+ }
+}
 function filterAll(){applyFilter()}
 function popCalc(q){$('q').value=q;curCat='all';document.querySelectorAll('#cats button').forEach(function(x){x.classList.remove('on')});document.querySelectorAll('#cats button')[0].classList.add('on');applyFilter();const g=$('calcGrid');if(g)g.scrollIntoView()}
-if(typeof document!=='undefined'&&document.getElementById('calcGrid')){renderCalcs();const qEl=$('q');if(qEl)qEl.addEventListener('input',filterAll);document.querySelectorAll('#cats button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#cats button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');curCat=b.dataset.cat;applyFilter()})});if(location.hash&&location.hash.indexOf('#calc-')===0){const el=document.getElementById(location.hash.slice(1));if(el){curCat=el.dataset.cat;document.querySelectorAll('#cats button').forEach(function(x){x.classList.toggle('on',x.dataset.cat===curCat)});applyFilter();setTimeout(function(){el.scrollIntoView()},50)}}applyFilter();}
+if(typeof document!=='undefined'&&document.getElementById('calcGrid')){renderCalcs();var qEl=$('q');if(qEl)qEl.addEventListener('input',filterAll);document.querySelectorAll('#cats button').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.cat,true)})});function tabFromHash(){var h=location.hash||'';if(h.indexOf('#calc-')===0){var el=document.getElementById(h.slice(1));if(el){setTab(el.dataset.cat,false);setTimeout(function(){el.scrollIntoView()},50);return}}if(h.indexOf('#tab-')===0){var c=h.slice(5);if(TABS[c]){if(c!==curCat)setTab(c,false);else applyFilter()}return}if(!h)setTab('all',false)}window.addEventListener('hashchange',tabFromHash);tabFromHash();applyFilter()}
 
 if(typeof fetch!=='undefined'){fetch('https://api.frankfurter.dev/v1/latest?from=USD').then(function(r){return r.json()}).then(function(d){RATES=d.rates||{};RATES.USD=1;RATES_STATE='ok';const c=CALCS.find(function(x){return x.id==='currency'});if(c)runCalc(c)}).catch(function(){RATES_STATE='fail';const c=CALCS.find(function(x){return x.id==='currency'});if(c)runCalc(c)})}
 /* ---- file converters & dev tools (from v2) ---- */
