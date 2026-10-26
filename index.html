@@ -152,7 +152,7 @@ section{display:none}section.on{display:block}
 <div id="llmExplain" class="hide">
 <h2>Understand LLM pricing</h2>
 <p class="secsub">How input, cached, and output tokens are priced — and what actually makes a request fast or slow.</p>
-<section id="exp-pricing" class="llm-explainer">
+<div id="exp-pricing" class="llm-explainer">
   <h3>How LLM pricing works</h3>
   <p>Every request is billed in four parts: the new prompt tokens you send, the prompt tokens reused from cache, the new tokens written into the cache, and the tokens the model generates back.</p>
 
@@ -205,8 +205,8 @@ section{display:none}section.on{display:block}
     <a href="https://docs.x.ai/docs/models" target="_blank" rel="noopener">xAI</a> ·
     <a href="https://api-docs.deepseek.com/quick_start/pricing/" target="_blank" rel="noopener">DeepSeek</a>
   </p>
-</section>
-<section id="exp-cache" class="llm-explainer">
+</div>
+<div id="exp-cache" class="llm-explainer">
   <h3>Cached vs uncached: why the cache is cheap</h3>
   <p>When a prompt (or part of it) repeats, the provider can reuse work it already did — so reusing cached tokens costs far less than processing new ones.</p>
 
@@ -240,8 +240,8 @@ section{display:none}section.on{display:block}
     <li>Rule of thumb: writing a block to cache costs roughly 1.3–1.4× the saving from one reuse, so <strong>reuse the same cached tokens about twice and the write cost is covered</strong> (e.g. Sonnet 4.5: $3.75 write vs $2.70 saved per reuse).</li>
     <li>Not every model charges a cache-write in this calculator: GPT-5's write price isn't published (counted as $0), and Gemini, Grok and DeepSeek show $0 — Gemini instead charges context-caching storage of $4.50/1M tokens/hour, which the calculator doesn't model.</li>
   </ul>
-</section>
-<section id="exp-tiering" class="llm-explainer">
+</div>
+<div id="exp-tiering" class="llm-explainer">
   <h3>Long-context tiering: prices jump above 200k tokens</h3>
   <p>Gemini 2.5 Pro and Grok 4.3 charge higher rates once a request's total input (uncached + cached) goes above 200,000 tokens. The calculator applies the higher tier automatically.</p>
 
@@ -280,8 +280,8 @@ section{display:none}section.on{display:block}
     <li>Only these two models in the calculator have a long-context tier; the others charge one flat rate at any length.</li>
     <li>Side notes the calculator doesn't model: Grok's 20% batch discount, and Gemini's $4.50/1M tokens/hour cache-storage charge.</li>
   </ul>
-</section>
-<section id="exp-speed" class="llm-explainer">
+</div>
+<div id="exp-speed" class="llm-explainer">
   <h3>Speed: time to first token vs decode vs tokens/sec</h3>
   <p>A request has two phases: <strong>prefill</strong> (the model reads your whole prompt at once) and <strong>decode</strong> (it writes the answer one token at a time). Prefill is fast; decode is the slow part.</p>
 
@@ -312,8 +312,8 @@ section{display:none}section.on{display:block}
     <li><strong>Concurrency</strong> splits the decode speed between simultaneous requests: at 2 concurrent requests each one decodes at 25 tok/s, so each takes twice as long to finish.</li>
     <li>What affects each: prompt length drives TTFT; output length drives decode; concurrency and server load slow decode for everyone sharing it.</li>
   </ul>
-</section>
-<section id="exp-compare" class="llm-explainer">
+</div>
+<div id="exp-compare" class="llm-explainer">
   <h3>Model prices at a glance</h3>
   <p>All 14 presets in the calculator, base rates per 1M tokens. Output is almost always the bigger number — and the bigger cost driver.</p>
 
@@ -360,15 +360,15 @@ section{display:none}section.on{display:block}
     <li><strong>Base rates shown.</strong> Gemini 2.5 Pro and Grok 4.3 charge more above 200k input tokens (see the tiering section above), and GPT-5.6 Sol is on promotional pricing through Nov 21, 2026.</li>
     <li>DeepSeek V4 Pro shows peak-hour prices; off-peak is half. Try the calculator above with your own token counts to compare models on your workload.</li>
   </ul>
-</section>
-<section id="exp-tokens" class="llm-explainer">
+</div>
+<div id="exp-tokens" class="llm-explainer">
   <h3>How to estimate tokens</h3>
   <p>As a rough rule, <strong>1 token ≈ 4 characters</strong> of English text, or about <strong>0.75 words per token</strong> — so 100 words is roughly 133 tokens. Code, non-English text and unusual formatting can tokenize differently, so treat this as an estimate, not an exact count.</p>
   <ul>
     <li>Paste your actual text into the <a href="#tool-tokenest">token estimator</a> on the Dev tab for a quick estimate before you price a request.</li>
     <li>Remember: the prompt you send counts as input tokens, and everything the model writes back counts as output tokens — usually the pricier kind.</li>
   </ul>
-</section>
+</div>
 </div>
 </section>
 
