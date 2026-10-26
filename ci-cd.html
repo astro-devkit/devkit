@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CI/CD — DevKit guides</title>
+<meta name="description" content="CI/CD is the pipeline between a commit and production: it builds, tests, and deploys your code automatically. Pick based on where your code lives, whether you want a hosted service or self-hosted control, and how much of the pipeline you want to own.">
+<link rel="canonical" href="https://astro-devkit.github.io/devkit/ci-cd.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"CI/CD \u2014 DevKit guides","description":"CI/CD is the pipeline between a commit and production: it builds, tests, and deploys your code automatically. Pick based on where your code lives, whether you want a hosted service or self-hosted control, and how much of the pipeline you want to own.","url":"https://astro-devkit.github.io/devkit/ci-cd.html","isPartOf":{"@type":"WebApplication","name":"DevKit","url":"https://astro-devkit.github.io/devkit/"}}</script>
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}
+.topbar{position:sticky;top:0;z-index:50;background:var(--bg);padding:12px 20px;border-bottom:1px solid var(--line)}
+.topbar .in{max-width:1060px;margin:0 auto;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.topbar a{font-size:14px;text-decoration:none;color:var(--txt)}
+.topbar a:hover{color:var(--acc)}
+.topbar a.back{font-weight:700;color:var(--acc)}
+header{max-width:1060px;margin:0 auto;padding:36px 20px 4px}
+h1{margin:0;font-size:30px;letter-spacing:-.5px}h1 span{color:var(--acc)}
+p.sub{color:var(--mut);margin:10px 0 0;max-width:640px;font-size:16px}
+main{max-width:1060px;margin:0 auto;padding:20px}
+section{margin-bottom:36px}
+section>h2{font-size:22px;margin:8px 0 2px}
+.secsub{color:var(--mut);margin:0 0 14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 4px rgba(35,42,61,.05)}
+.card h3{margin:0 0 10px;font-size:16px}
+.card p{margin:8px 0}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.toc a{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--txt);font-size:15px}
+.toc a:hover{border-color:var(--acc);color:var(--acc)}
+.toc a span{float:right;color:var(--mut);font-size:13px}
+.tool-doc{margin-bottom:14px}
+.tool-doc h3 .open{float:right;font-size:13px;font-weight:700}
+.tool-doc .gotcha{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px}
+.tool-doc .src{font-size:13px;color:var(--mut)}
+.tool-doc code{background:#f7f5f0;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+ol,ul{margin:8px 0;padding-left:22px}
+li{margin:3px 0}
+footer{max-width:1060px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font-size:13px;text-align:center}
+@media(max-width:640px){h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="in">
+<a class="back" href="index.html">← Back to DevKit</a>
+<a href="guides.html">Guides</a>
+<a href="llm-harnesses.html">LLM harnesses</a>
+<a href="code-editors.html">Code editors</a>
+<a href="terminals.html">Terminals</a>
+<a href="api-clients.html">API clients</a>
+<a href="git-clients.html">Git clients</a>
+<a href="database-tools.html">Database tools</a>
+<a href="note-taking.html">Note-taking</a>
+<a href="ci-cd.html" style="font-weight:700;color:var(--acc)">CI/CD</a>
+<a href="container-tools.html">Container tools</a>
+<a href="monitoring.html">Monitoring</a>
+<a href="devtools.html">DevKit tools</a>
+</div></div>
+<header>
+<h1>CI/CD</h1>
+<p class="sub">CI/CD is the pipeline between a commit and production: it builds, tests, and deploys your code automatically. Pick based on where your code lives, whether you want a hosted service or self-hosted control, and how much of the pipeline you want to own. Each entry gives a verdict, what it is good at, what it is bad at, and who it is best for. Checked Oct 2026.</p>
+</header>
+<main>
+
+<section>
+<h2>Contents</h2>
+<p class="secsub">8 tools. Click any entry to jump to its verdict.</p>
+<div class="toc">
+<a href="#tool-github-actions">GitHub Actions <span>CI/CD</span></a>
+<a href="#tool-gitlab-ci">GitLab CI <span>CI/CD</span></a>
+<a href="#tool-jenkins">Jenkins <span>CI/CD</span></a>
+<a href="#tool-circleci">CircleCI <span>CI/CD</span></a>
+<a href="#tool-buildkite">Buildkite <span>CI/CD</span></a>
+<a href="#tool-drone">Drone <span>CI/CD</span></a>
+<a href="#tool-teamcity">TeamCity <span>CI/CD</span></a>
+<a href="#tool-argo-cd">Argo CD <span>CI/CD</span></a>
+</div>
+</section>
+<section id="sec-ci-cd">
+<h2>CI/CD</h2>
+<article class="card tool-doc" id="tool-github-actions">
+<h3>GitHub Actions <a class="open" href="https://github.com/features/actions">Official site →</a></h3>
+<p><strong>Verdict.</strong> The zero-friction default for anything on GitHub — the marketplace and PR integration make it the first CI to try.</p>
+<p><strong>What it is.</strong> GitHub&#x27;s built-in CI/CD: YAML workflows in .github/workflows run on GitHub-hosted or self-hosted runners, triggered by pushes, pull requests, issues, and schedules, with a marketplace of 15,000+ reusable actions.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Lives where your code lives — checks appear directly in pull requests, no separate dashboard</li>
+<li>Huge marketplace of reusable actions; matrix builds, reusable workflows, and OIDC cloud auth</li>
+<li>Free for public repos; 2,000 free minutes/mo for private repos on the Free plan</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Per-minute costs add up on large private repos; macOS runners are far pricier than Linux</li>
+<li>YAML can get sprawling for complex pipelines; debugging failed runs means reading logs, not a visual editor</li>
+<li>Tied to GitHub — migrating away means rewriting workflows</li>
+</ul></div>
+<p><strong>Best for.</strong> Any team whose code is already on GitHub, and open-source projects</p>
+<p class="src">Price: Free for public repos; private repos 2,000 min/mo free (Free plan), 3,000 (Pro/Team), 50,000 (Enterprise); usage-based beyond · <a href="https://github.com/features/actions">Official site</a> · <a href="https://docs.github.com/en/actions">Docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-gitlab-ci">
+<h3>GitLab CI <a class="open" href="https://about.gitlab.com/solutions/continuous-integration/">Official site →</a></h3>
+<p><strong>Verdict.</strong> CI as one piece of a complete DevOps platform — the best pick when you want issues, registry, and security scanning in one app.</p>
+<p><strong>What it is.</strong> GitLab&#x27;s built-in CI/CD, configured in .gitlab-ci.yml, with stages, DAG pipelines, Auto DevOps, a container registry, and built-in security scanning — all inside GitLab.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>One app for repo, issues, CI, registry, and security scanning — no stitching tools together</li>
+<li>DAG pipelines, Auto DevOps, and environments with review apps built in</li>
+<li>Free self-hosted Community Edition; runners you host cost nothing extra</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Free tier on GitLab.com is only 400 CI minutes/mo — the thinnest of the major clouds</li>
+<li>Interface feels slower and busier than GitHub Actions</li>
+<li>Self-hosted GitLab needs real infrastructure (4 GB RAM minimum) and maintenance</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams that want an all-in-one DevOps platform, especially self-hosted or compliance-heavy orgs</p>
+<p class="src">Price: Free (400 CI min/mo on GitLab.com); Premium $29/user/mo (10,000 min); Ultimate $99/user/mo (50,000 min); self-hosted CE free · <a href="https://about.gitlab.com/solutions/continuous-integration/">Official site</a> · <a href="https://docs.gitlab.com/ee/ci/">Docs</a> · <a href="https://about.gitlab.com/pricing/">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-jenkins">
+<h3>Jenkins <a class="open" href="https://www.jenkins.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The veteran self-hosted automation server — limitless and free, but you pay for it in maintenance.</p>
+<p><strong>What it is.</strong> The long-running open-source automation server: pipelines as code (Groovy/Jenkinsfile), 1,800+ plugins, and agents on any machine, cloud, or container — the original self-hosted CI.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Free and open source with no usage limits — run anything, anywhere, including air-gapped networks</li>
+<li>Massive plugin ecosystem covers nearly every tool and workflow</li>
+<li>Pipelines as code with shared libraries for reuse across teams</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>You own the maintenance: upgrades, plugins, security patches, and agent fleets</li>
+<li>Dated UI and Groovy-based pipelines have a learning curve; plugin quality varies</li>
+<li>No hosted option — you always run and secure the server yourself</li>
+</ul></div>
+<p><strong>Best for.</strong> Enterprises and teams that need full control, air-gapped builds, or heavily custom pipelines</p>
+<p class="src">Price: Free / open source (MIT) · <a href="https://www.jenkins.io/">Official site</a> · <a href="https://www.jenkins.io/doc/">Docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-circleci">
+<h3>CircleCI <a class="open" href="https://circleci.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The speed-focused cloud CI — fastest cold starts and best test splitting, with credit pricing that is hard to forecast.</p>
+<p><strong>What it is.</strong> A cloud CI/CD platform built around Docker-native jobs, orbs (reusable config packages), resource classes, and test splitting, with runners on Linux, macOS, Windows, and Arm.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Fast builds with strong caching, Docker layer caching, and automatic test splitting across parallel jobs</li>
+<li>Orbs make complex setups (Node, AWS, Docker) one-liners; works with GitHub, GitLab, and Bitbucket</li>
+<li>Generous free tier: 30,000 credits/mo (about 6,000 Linux build minutes)</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Credit-based pricing is hard to forecast — bigger machines and macOS burn credits much faster</li>
+<li>Docker layer caching and some features are paid-tier only</li>
+<li>YAML config has a steeper learning curve than GitHub Actions</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams with Docker-heavy pipelines where build speed and parallelism matter</p>
+<p class="src">Price: Free (30,000 credits/mo); Performance from $15/mo + usage; Scale custom · <a href="https://circleci.com/">Official site</a> · <a href="https://circleci.com/docs/">Docs</a> · <a href="https://circleci.com/pricing/">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-buildkite">
+<h3>Buildkite <a class="open" href="https://buildkite.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The hybrid CI: a managed control plane on your own compute — the pick for teams with infrastructure to spare and strict security needs.</p>
+<p><strong>What it is.</strong> A CI platform where the web UI and orchestration are managed by Buildkite but builds run on agents you host (or on Buildkite-hosted agents) — bring your own compute, keep your code inside your network.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Builds run on your infrastructure, so secrets and source never leave your network; great for compliance</li>
+<li>Unlimited self-hosted agents on the free Personal plan; agents run anywhere (VMs, Kubernetes, bare metal)</li>
+<li>Fast, focused UI with good test analytics and flaky-test detection</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>You still manage the agents — patching, scaling, and capacity are yours</li>
+<li>Pro is $30 per active user/mo, so the subscription adds up before you count your own compute</li>
+<li>Smaller plugin ecosystem than GitHub Actions or Jenkins</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams with existing compute and strict security/compliance needs who want a managed control plane</p>
+<p class="src">Price: Free Personal plan (1 user, unlimited self-hosted agents); Pro $30/active user/mo; Enterprise custom · <a href="https://buildkite.com/">Official site</a> · <a href="https://buildkite.com/docs">Docs</a> · <a href="https://buildkite.com/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-drone">
+<h3>Drone <a class="open" href="https://www.drone.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The lightweight, container-native CI for self-hosters — simple YAML, Docker-first, and nearly invisible when it works.</p>
+<p><strong>What it is.</strong> A lightweight, open-source CI/CD platform where every pipeline step runs as a Docker container, configured in a simple .drone.yml, self-hosted or via Drone Cloud.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Every step is a container, so builds are reproducible and easy to reason about</li>
+<li>Simple, readable YAML; tiny resource footprint — runs on a single small server</li>
+<li>Free and open source; Drone Cloud is free for open-source projects</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Smaller community and plugin ecosystem than Jenkins or GitHub Actions</li>
+<li>Fewer built-in features (no native test analytics or hosted runners at scale)</li>
+<li>Commercial support and the hosted offering are limited compared with the big clouds</li>
+</ul></div>
+<p><strong>Best for.</strong> Small teams and self-hosters who want a simple, container-native CI with minimal moving parts</p>
+<p class="src">Price: Free / open source (Apache 2.0) self-hosted; Drone Cloud free for open-source projects · <a href="https://www.drone.io/">Official site</a> · <a href="https://docs.drone.io/">Docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-teamcity">
+<h3>TeamCity <a class="open" href="https://www.jetbrains.com/teamcity/">Official site →</a></h3>
+<p><strong>Verdict.</strong> JetBrains&#x27; polished CI server — the most capable self-hosted option for complex builds, with a generous free tier.</p>
+<p><strong>What it is.</strong> JetBrains&#x27; CI/CD server with a rich web UI, Kotlin DSL configuration, smart test intelligence, and deep IDE integration — self-hosted or as TeamCity Cloud.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Best-in-class UI for build chains, test history, and flaky-test detection</li>
+<li>Kotlin DSL and versioned settings give you config as code with IDE autocompletion</li>
+<li>Free Professional tier: 3 build agents and 100 build configurations, including for commercial use</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>100-configuration cap on the free tier bites as you grow; Enterprise licensing is pricey</li>
+<li>Running it well takes a real server and a database — not a weekend setup</li>
+<li>Smaller community and plugin ecosystem than Jenkins</li>
+</ul></div>
+<p><strong>Best for.</strong> JetBrains shops and teams with complex build chains who want a polished self-hosted CI</p>
+<p class="src">Price: Free Professional tier (3 agents, 100 configs); TeamCity Cloud from $45/mo; Enterprise on-prem from $2,399 · <a href="https://www.jetbrains.com/teamcity/">Official site</a> · <a href="https://www.jetbrains.com/help/teamcity/teamcity-documentation.html">Docs</a> · <a href="https://www.jetbrains.com/teamcity/buy/">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-argo-cd">
+<h3>Argo CD <a class="open" href="https://argo-cd.readthedocs.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The GitOps standard for Kubernetes — declarative, auditable deployments, with a learning curve to match.</p>
+<p><strong>What it is.</strong> A declarative, GitOps continuous-delivery tool for Kubernetes: the desired state of every cluster lives in Git, Argo CD syncs it, shows drift, and rolls back with a click.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Git as the single source of truth — every deployment is a commit, auditable and reversible</li>
+<li>Excellent drift detection, health checks, and a visual app-of-apps view for many clusters</li>
+<li>Free and open source (CNCF graduated project) with a large community</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Kubernetes-only — not a general CI or deployment tool</li>
+<li>Learning curve: GitOps concepts, ApplicationSets, and multi-cluster setups take time</li>
+<li>You still need a CI tool to build images; Argo CD only deploys them</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams running Kubernetes who want Git-driven, auditable deployments</p>
+<p class="src">Price: Free / open source (Apache 2.0, CNCF) · <a href="https://argo-cd.readthedocs.io/">Official site</a> · <a href="https://argo-cd.readthedocs.io/en/stable/">Docs</a> · <a href="https://github.com/argoproj/argo-cd">GitHub</a></p>
+</article>
+</section>
+</main>
+<footer>
+DevKit guides — honest overviews of developer tools, checked Oct 2026. Links verified before publishing. All DevKit tools are client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. <a href="index.html">Back to DevKit</a> · <a href="guides.html">All guides</a>.
+</footer>
+</body>
+</html>

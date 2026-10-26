@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monitoring &amp; observability — DevKit guides</title>
+<meta name="description" content="Monitoring and observability are how you know your software is working — and how you find out why it isn&#x27;t. Pick based on what you need to see: uptime, errors, metrics, traces, or all of it, and whether you want to self-host or pay a vendor.">
+<link rel="canonical" href="https://astro-devkit.github.io/devkit/monitoring.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Monitoring & observability \u2014 DevKit guides","description":"Monitoring and observability are how you know your software is working \u2014 and how you find out why it isn't. Pick based on what you need to see: uptime, errors, metrics, traces, or all of it, and whether you want to self-host or pay a vendor.","url":"https://astro-devkit.github.io/devkit/monitoring.html","isPartOf":{"@type":"WebApplication","name":"DevKit","url":"https://astro-devkit.github.io/devkit/"}}</script>
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}
+.topbar{position:sticky;top:0;z-index:50;background:var(--bg);padding:12px 20px;border-bottom:1px solid var(--line)}
+.topbar .in{max-width:1060px;margin:0 auto;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.topbar a{font-size:14px;text-decoration:none;color:var(--txt)}
+.topbar a:hover{color:var(--acc)}
+.topbar a.back{font-weight:700;color:var(--acc)}
+header{max-width:1060px;margin:0 auto;padding:36px 20px 4px}
+h1{margin:0;font-size:30px;letter-spacing:-.5px}h1 span{color:var(--acc)}
+p.sub{color:var(--mut);margin:10px 0 0;max-width:640px;font-size:16px}
+main{max-width:1060px;margin:0 auto;padding:20px}
+section{margin-bottom:36px}
+section>h2{font-size:22px;margin:8px 0 2px}
+.secsub{color:var(--mut);margin:0 0 14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 4px rgba(35,42,61,.05)}
+.card h3{margin:0 0 10px;font-size:16px}
+.card p{margin:8px 0}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.toc a{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--txt);font-size:15px}
+.toc a:hover{border-color:var(--acc);color:var(--acc)}
+.toc a span{float:right;color:var(--mut);font-size:13px}
+.tool-doc{margin-bottom:14px}
+.tool-doc h3 .open{float:right;font-size:13px;font-weight:700}
+.tool-doc .gotcha{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px}
+.tool-doc .src{font-size:13px;color:var(--mut)}
+.tool-doc code{background:#f7f5f0;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+ol,ul{margin:8px 0;padding-left:22px}
+li{margin:3px 0}
+footer{max-width:1060px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font-size:13px;text-align:center}
+@media(max-width:640px){h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="in">
+<a class="back" href="index.html">← Back to DevKit</a>
+<a href="guides.html">Guides</a>
+<a href="llm-harnesses.html">LLM harnesses</a>
+<a href="code-editors.html">Code editors</a>
+<a href="terminals.html">Terminals</a>
+<a href="api-clients.html">API clients</a>
+<a href="git-clients.html">Git clients</a>
+<a href="database-tools.html">Database tools</a>
+<a href="note-taking.html">Note-taking</a>
+<a href="ci-cd.html">CI/CD</a>
+<a href="container-tools.html">Container tools</a>
+<a href="monitoring.html" style="font-weight:700;color:var(--acc)">Monitoring</a>
+<a href="devtools.html">DevKit tools</a>
+</div></div>
+<header>
+<h1>Monitoring &amp; observability</h1>
+<p class="sub">Monitoring and observability are how you know your software is working — and how you find out why it isn&#x27;t. Pick based on what you need to see: uptime, errors, metrics, traces, or all of it, and whether you want to self-host or pay a vendor. Each entry gives a verdict, what it is good at, what it is bad at, and who it is best for. Checked Oct 2026.</p>
+</header>
+<main>
+
+<section>
+<h2>Contents</h2>
+<p class="secsub">8 tools. Click any entry to jump to its verdict.</p>
+<div class="toc">
+<a href="#tool-grafana">Grafana <span>Monitoring</span></a>
+<a href="#tool-prometheus">Prometheus <span>Monitoring</span></a>
+<a href="#tool-datadog">Datadog <span>Monitoring</span></a>
+<a href="#tool-sentry">Sentry <span>Monitoring</span></a>
+<a href="#tool-new-relic">New Relic <span>Monitoring</span></a>
+<a href="#tool-honeycomb">Honeycomb <span>Monitoring</span></a>
+<a href="#tool-opentelemetry">OpenTelemetry <span>Monitoring</span></a>
+<a href="#tool-uptime-kuma">Uptime Kuma <span>Monitoring</span></a>
+</div>
+</section>
+<section id="sec-monitoring">
+<h2>Monitoring</h2>
+<article class="card tool-doc" id="tool-grafana">
+<h3>Grafana <a class="open" href="https://grafana.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The dashboard layer of the open-source observability stack — the best way to see Prometheus, Loki, and Tempo data in one place.</p>
+<p><strong>What it is.</strong> The open-source visualization and dashboarding platform: query metrics, logs, and traces from Prometheus, Loki, Tempo, and dozens of other sources, with alerting and a huge plugin library.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Best-in-class dashboards with a huge plugin and panel library; the de facto standard</li>
+<li>Queries any source — Prometheus, Loki, Tempo, Elasticsearch, CloudWatch, and more</li>
+<li>Free and open source (AGPL-3.0); Grafana Cloud has a generous free tier</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Grafana is the visualization layer, not the data store — you still need Prometheus/Loki underneath</li>
+<li>Alerting and dashboard-as-code take setup; the UI has a learning curve</li>
+<li>Grafana Cloud usage pricing (per series, per GB) needs watching as you scale</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams who already run Prometheus/Loki and want the standard dashboarding and alerting layer</p>
+<p class="src">Price: Free / open source (AGPL-3.0); Grafana Cloud free tier; Pro from $19/mo platform fee + usage · <a href="https://grafana.com/">Official site</a> · <a href="https://grafana.com/docs/grafana/latest/">Docs</a> · <a href="https://grafana.com/pricing/">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-prometheus">
+<h3>Prometheus <a class="open" href="https://prometheus.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The metrics standard for cloud-native systems — the engine behind most Kubernetes monitoring, and deliberately narrow in scope.</p>
+<p><strong>What it is.</strong> An open-source monitoring and alerting toolkit built around a time-series database and the PromQL query language, with a pull-based scrape model and exporters for nearly everything.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>The de facto metrics standard — native to Kubernetes and supported by every observability tool</li>
+<li>Powerful PromQL queries and a simple pull model that scales with federation</li>
+<li>Free and open source (Apache 2.0, CNCF) with a huge exporter ecosystem</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Metrics only — no logs or traces; you need Loki/Tempo or another tool for those</li>
+<li>Long-term storage and high availability need extra components (Thanos, Cortex, Mimir)</li>
+<li>PromQL has a learning curve, and cardinality mistakes can blow up storage</li>
+</ul></div>
+<p><strong>Best for.</strong> Cloud-native teams who need reliable metrics and alerting, usually paired with Grafana</p>
+<p class="src">Price: Free / open source (Apache 2.0, CNCF) · <a href="https://prometheus.io/">Official site</a> · <a href="https://prometheus.io/docs/introduction/overview/">Docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-datadog">
+<h3>Datadog <a class="open" href="https://www.datadoghq.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The everything platform — the most complete observability in one login, with the bill to match.</p>
+<p><strong>What it is.</strong> A SaaS observability platform covering infrastructure monitoring, APM, logs, RUM, synthetics, and security, with 1,000+ integrations and dashboards that correlate it all.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Broadest coverage in one product — infra, APM, logs, RUM, synthetics, and security</li>
+<li>Polished dashboards and strong correlation between metrics, traces, and logs</li>
+<li>1,000+ integrations; the safest &#x27;just works&#x27; choice for a growing team</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Expensive and hard to forecast — per-host, per-GB, and per-event meters stack up</li>
+<li>Billing is per host at the 99th percentile, so autoscaling spikes set the month&#x27;s bill</li>
+<li>Free tier (up to 5 hosts, 1-day retention) is a demo, not a production plan</li>
+</ul></div>
+<p><strong>Best for.</strong> Growing teams that want everything in one polished platform and can afford it</p>
+<p class="src">Price: Free tier (up to 5 hosts); Infrastructure Pro $15/host/mo billed annually ($18 on-demand); APM $31/host/mo; logs $0.10/GB ingest · <a href="https://www.datadoghq.com/">Official site</a> · <a href="https://docs.datadoghq.com/">Docs</a> · <a href="https://www.datadoghq.com/pricing/">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-sentry">
+<h3>Sentry <a class="open" href="https://sentry.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The default error tracker — the fastest way from a production crash to a fix, with usage pricing that punishes noisy apps.</p>
+<p><strong>What it is.</strong> An error-tracking and application-monitoring platform: SDKs capture exceptions, stack traces, releases, session replays, and traces, grouped into actionable issues with alerts.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Best-in-class error grouping and stack traces; SDKs for every major language and framework</li>
+<li>Release tracking, session replay, and tracing in the same product</li>
+<li>Free Developer tier (5,000 errors/mo); self-hostable as source-available software</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Costs scale with event volume — one looping bug can burn the monthly quota fast</li>
+<li>AI debugging add-on (Seer) is $40 per active contributor/mo on top</li>
+<li>No infrastructure monitoring — you still need a second tool for hosts and metrics</li>
+</ul></div>
+<p><strong>Best for.</strong> Web and mobile teams who want the standard error tracker with great SDKs</p>
+<p class="src">Price: Free Developer tier (5,000 errors/mo, 1 user); Team $26/mo (50,000 errors); Business $80/mo; usage-based beyond · <a href="https://sentry.io/">Official site</a> · <a href="https://docs.sentry.io/">Docs</a> · <a href="https://sentry.io/pricing/">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-new-relic">
+<h3>New Relic <a class="open" href="https://newrelic.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The full-stack platform with the most generous free tier — pay for people and data, not hosts.</p>
+<p><strong>What it is.</strong> A full-stack observability platform (APM, infrastructure, logs, browser/mobile monitoring, synthetics) with NRQL querying, billed per user and per GB ingested rather than per host.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Free tier is genuinely useful: 100 GB/mo ingest, 1 full-platform user, unlimited basic users</li>
+<li>No per-host billing — instrumenting more servers doesn&#x27;t automatically raise the bill</li>
+<li>Every feature is available on every plan; NRQL is a flexible query language</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Full-platform seats get expensive fast on Pro ($349/user/mo); seat planning matters</li>
+<li>Dashboard building and UI polish lag Datadog</li>
+<li>Data overage (from $0.35/GB) can spike during incidents — no built-in cap</li>
+</ul></div>
+<p><strong>Best for.</strong> Small teams sending lots of telemetry who want full observability at a low floor</p>
+<p class="src">Price: Free (100 GB/mo, 1 full user); Standard from $10/mo (first full user); Pro $349/user/mo billed annually; data from $0.35/GB beyond free tier · <a href="https://newrelic.com/">Official site</a> · <a href="https://docs.newrelic.com/">Docs</a> · <a href="https://newrelic.com/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-honeycomb">
+<h3>Honeycomb <a class="open" href="https://www.honeycomb.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The debugger&#x27;s observability tool — keep every event and ask any question, if you can afford the event volume.</p>
+<p><strong>What it is.</strong> An event-based observability platform for distributed systems: it stores full-fidelity events (traces, logs) and lets you slice by any dimension, with BubbleUp to find what changed.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>High-cardinality queries on raw events — debug the exact subset of users affected, not an aggregate</li>
+<li>BubbleUp automatically surfaces what changed between good and bad requests</li>
+<li>Excellent OpenTelemetry support; free tier includes 20M events/mo</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Every span counts as an event, so deeply instrumented apps burn volume fast; costs rise with trace depth</li>
+<li>Pro pricing has moved (from ~$130/mo for 100M events) — check the current page before budgeting</li>
+<li>No infrastructure monitoring or error tracking — it&#x27;s for debugging, not for everything</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams debugging complex distributed systems who need high-cardinality, exploratory queries</p>
+<p class="src">Price: Free (20M events/mo); Pro from ~$130/mo (100M events/mo); Enterprise custom · <a href="https://www.honeycomb.io/">Official site</a> · <a href="https://docs.honeycomb.io/">Docs</a> · <a href="https://www.honeycomb.io/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-opentelemetry">
+<h3>OpenTelemetry <a class="open" href="https://opentelemetry.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> Not a product — the vendor-neutral standard that makes every other tool on this page interchangeable.</p>
+<p><strong>What it is.</strong> The CNCF standard for instrumenting code: vendor-neutral APIs, SDKs, and a Collector that receives traces, metrics, and logs and forwards them to any backend (Jaeger, Grafana, Datadog, Honeycomb…).</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Instrument once, send anywhere — no vendor lock-in on your telemetry</li>
+<li>The industry standard, backed by every major observability vendor</li>
+<li>Free and open source (Apache 2.0, CNCF) with SDKs for all major languages</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>It&#x27;s a standard and a toolkit, not a finished product — you still need a backend to store and view data</li>
+<li>Collector configuration and sampling take real setup work</li>
+<li>Semantic conventions and SDK maturity vary by language</li>
+</ul></div>
+<p><strong>Best for.</strong> Any team instrumenting a new service — the default choice for telemetry in 2026</p>
+<p class="src">Price: Free / open source (Apache 2.0, CNCF) · <a href="https://opentelemetry.io/">Official site</a> · <a href="https://opentelemetry.io/docs/">Docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-uptime-kuma">
+<h3>Uptime Kuma <a class="open" href="https://uptime.kuma.pet/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The self-hosted uptime monitor — a pretty status page and alerts for the price of a tiny VPS.</p>
+<p><strong>What it is.</strong> A free, open-source, self-hosted uptime monitor: HTTP(S), TCP, DNS, and keyword checks with notifications (90+ services), a status page, and a clean dashboard.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Free and open source; runs on almost anything, including a $5 VPS or a Raspberry Pi</li>
+<li>Beautiful status pages and 90+ notification integrations (Telegram, Slack, email…)</li>
+<li>Simple setup — one Docker container, no database to manage</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Uptime checks only — no APM, logs, or metrics; it won&#x27;t tell you why something is slow</li>
+<li>Self-hosted means you monitor the monitor; if the VPS dies, alerts stop</li>
+<li>Single-user focus; no team features or SSO in the free version</li>
+</ul></div>
+<p><strong>Best for.</strong> Solo developers and small teams who want a free, self-hosted uptime monitor and status page</p>
+<p class="src">Price: Free / open source (MIT) · <a href="https://uptime.kuma.pet/">Official site</a> · <a href="https://github.com/louislam/uptime-kuma">Docs</a></p>
+</article>
+</section>
+</main>
+<footer>
+DevKit guides — honest overviews of developer tools, checked Oct 2026. Links verified before publishing. All DevKit tools are client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. <a href="index.html">Back to DevKit</a> · <a href="guides.html">All guides</a>.
+</footer>
+</body>
+</html>

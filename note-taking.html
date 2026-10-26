@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Note-taking for devs — DevKit guides</title>
+<meta name="description" content="Notes are where a developer&#x27;s thinking lives — design decisions, bug investigations, runbooks, and research. Pick based on whether you want local files you own, a shared workspace, or an encrypted vault, and whether you need databases and collaboration or just a fast place to write.">
+<link rel="canonical" href="https://astro-devkit.github.io/devkit/note-taking.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Note-taking for devs \u2014 DevKit guides","description":"Notes are where a developer's thinking lives \u2014 design decisions, bug investigations, runbooks, and research. Pick based on whether you want local files you own, a shared workspace, or an encrypted vault, and whether you need databases and collaboration or just a fast place to write.","url":"https://astro-devkit.github.io/devkit/note-taking.html","isPartOf":{"@type":"WebApplication","name":"DevKit","url":"https://astro-devkit.github.io/devkit/"}}</script>
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}
+.topbar{position:sticky;top:0;z-index:50;background:var(--bg);padding:12px 20px;border-bottom:1px solid var(--line)}
+.topbar .in{max-width:1060px;margin:0 auto;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.topbar a{font-size:14px;text-decoration:none;color:var(--txt)}
+.topbar a:hover{color:var(--acc)}
+.topbar a.back{font-weight:700;color:var(--acc)}
+header{max-width:1060px;margin:0 auto;padding:36px 20px 4px}
+h1{margin:0;font-size:30px;letter-spacing:-.5px}h1 span{color:var(--acc)}
+p.sub{color:var(--mut);margin:10px 0 0;max-width:640px;font-size:16px}
+main{max-width:1060px;margin:0 auto;padding:20px}
+section{margin-bottom:36px}
+section>h2{font-size:22px;margin:8px 0 2px}
+.secsub{color:var(--mut);margin:0 0 14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 4px rgba(35,42,61,.05)}
+.card h3{margin:0 0 10px;font-size:16px}
+.card p{margin:8px 0}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.toc a{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--txt);font-size:15px}
+.toc a:hover{border-color:var(--acc);color:var(--acc)}
+.toc a span{float:right;color:var(--mut);font-size:13px}
+.tool-doc{margin-bottom:14px}
+.tool-doc h3 .open{float:right;font-size:13px;font-weight:700}
+.tool-doc .gotcha{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px}
+.tool-doc .src{font-size:13px;color:var(--mut)}
+.tool-doc code{background:#f7f5f0;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+ol,ul{margin:8px 0;padding-left:22px}
+li{margin:3px 0}
+footer{max-width:1060px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font-size:13px;text-align:center}
+@media(max-width:640px){h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="in">
+<a class="back" href="index.html">← Back to DevKit</a>
+<a href="guides.html">Guides</a>
+<a href="llm-harnesses.html">LLM harnesses</a>
+<a href="code-editors.html">Code editors</a>
+<a href="terminals.html">Terminals</a>
+<a href="api-clients.html">API clients</a>
+<a href="git-clients.html">Git clients</a>
+<a href="database-tools.html">Database tools</a>
+<a href="note-taking.html" style="font-weight:700;color:var(--acc)">Note-taking</a>
+<a href="ci-cd.html">CI/CD</a>
+<a href="container-tools.html">Container tools</a>
+<a href="monitoring.html">Monitoring</a>
+<a href="devtools.html">DevKit tools</a>
+</div></div>
+<header>
+<h1>Note-taking for devs</h1>
+<p class="sub">Notes are where a developer&#x27;s thinking lives — design decisions, bug investigations, runbooks, and research. Pick based on whether you want local files you own, a shared workspace, or an encrypted vault, and whether you need databases and collaboration or just a fast place to write. Each entry gives a verdict, what it is good at, what it is bad at, and who it is best for. Checked Oct 2026.</p>
+</header>
+<main>
+
+<section>
+<h2>Contents</h2>
+<p class="secsub">8 tools. Click any entry to jump to its verdict.</p>
+<div class="toc">
+<a href="#tool-obsidian">Obsidian <span>Note-taking</span></a>
+<a href="#tool-notion">Notion <span>Note-taking</span></a>
+<a href="#tool-logseq">Logseq <span>Note-taking</span></a>
+<a href="#tool-joplin">Joplin <span>Note-taking</span></a>
+<a href="#tool-standard-notes">Standard Notes <span>Note-taking</span></a>
+<a href="#tool-anytype">Anytype <span>Note-taking</span></a>
+<a href="#tool-appflowy">AppFlowy <span>Note-taking</span></a>
+<a href="#tool-capacities">Capacities <span>Note-taking</span></a>
+</div>
+</section>
+<section id="sec-note-taking">
+<h2>Note-taking</h2>
+<article class="card tool-doc" id="tool-obsidian">
+<h3>Obsidian <a class="open" href="https://obsidian.md/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The local-first knowledge base that treats your notes as plain files you own — the default pick for developers who want a second brain without lock-in.</p>
+<p><strong>What it is.</strong> A local-first note-taking app that stores every note as a plain Markdown file in a folder (a &#x27;vault&#x27;) on your own device, with bidirectional links, a graph view, and a large community plugin ecosystem.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Notes are plain Markdown files — readable in any editor, version-controllable with Git, and never locked to Obsidian</li>
+<li>Huge plugin ecosystem (4,000+ community plugins) plus Canvas and Bases for visual and database views</li>
+<li>Free for personal use with no account required; fast even with very large vaults</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>No built-in sync — cross-device sync needs the paid Sync service or a DIY setup (iCloud, Dropbox, Git)</li>
+<li>Single-player by design: real-time collaboration is weak compared with Notion</li>
+<li>Getting the most from plugins takes setup; the interface can feel bare until you configure it</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers building a personal knowledge base who value file ownership, offline access, and Markdown</p>
+<p class="src">Price: Free for personal use; Sync $4/user/mo billed annually ($5 monthly); Publish $8/site/mo; optional commercial licence $50/user/yr · <a href="https://obsidian.md/">Official site</a> · <a href="https://help.obsidian.md/">Docs</a> · <a href="https://obsidian.md/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-notion">
+<h3>Notion <a class="open" href="https://www.notion.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The all-in-one workspace: notes, wikis, docs, and databases in one place — the best pick when your notes need to be shared and structured.</p>
+<p><strong>What it is.</strong> A hosted all-in-one workspace where pages, databases, wikis, and docs live together, with real-time collaboration, templates, and a large template community.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Databases with views, filters, and relations turn notes into a lightweight app (docs, wikis, roadmaps, trackers)</li>
+<li>Real-time collaboration and sharing with guests; huge template gallery to start from</li>
+<li>Free plan is generous for solo use — unlimited blocks for a single-owner workspace</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Your data lives in Notion&#x27;s database, not in files you own; export is clunky for large workspaces</li>
+<li>Full Notion AI only comes on the Business tier — Free and Plus get only a limited trial</li>
+<li>Large databases can get slow; offline access is limited compared with local-first apps</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams and individuals who want notes, docs, and wikis in one shared, structured workspace</p>
+<p class="src">Price: Free; Plus $10/user/mo billed annually ($12 monthly); Business $20/user/mo ($24 monthly); Enterprise custom · <a href="https://www.notion.com/">Official site</a> · <a href="https://www.notion.com/help">Help</a> · <a href="https://www.notion.com/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-logseq">
+<h3>Logseq <a class="open" href="https://logseq.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The outliner-first, open-source second brain — great for daily journals and task-linked notes, rough around the edges for teams.</p>
+<p><strong>What it is.</strong> A free, open-source, local-first outliner for personal knowledge management: every note is a block in a Markdown/Org-mode graph, with daily journals, tasks, and queries built in.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Outline-based writing with blocks, backlinks, and queries makes daily journals and task tracking natural</li>
+<li>Local-first Markdown/Org-mode files you own; free and open source (AGPL-3.0)</li>
+<li>Built-in PDF annotation, flashcards, and whiteboards without plugins</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Sync is still in beta, via a $5/mo supporter contribution, with DIY alternatives (iCloud, Dropbox, Git) needing setup</li>
+<li>Smaller plugin ecosystem and less polish than Obsidian; occasional bugs and a slower release pace</li>
+<li>No real-time collaboration yet — team features are limited</li>
+</ul></div>
+<p><strong>Best for.</strong> Outliner fans who want a free, open-source daily journal and task-linked knowledge base</p>
+<p class="src">Price: Free / open source (AGPL-3.0); Sync in beta via a $5/mo supporter contribution · <a href="https://logseq.com/">Official site</a> · <a href="https://docs.logseq.com/">Docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-joplin">
+<h3>Joplin <a class="open" href="https://joplinapp.org/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The pragmatic open-source Evernote replacement — free, encrypted, and syncs anywhere, with a dated interface.</p>
+<p><strong>What it is.</strong> A free, open-source note-taking and to-do app for desktop, mobile, and terminal, with Markdown or rich-text editing, end-to-end encryption, and sync via Joplin Cloud, Dropbox, OneDrive, or WebDAV.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Completely free app with no limits; syncs to any cloud you choose, with end-to-end encryption</li>
+<li>Web clipper, to-dos, tags, and notebooks cover the Evernote-style workflow</li>
+<li>Imports from Evernote and other apps; plugins and themes extend it</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Interface looks dated next to Obsidian or Notion</li>
+<li>No backlinks or graph view out of the box — weaker for linked knowledge bases</li>
+<li>Official cloud sync is a separate paid plan (from €2.99/mo); collaboration is basic</li>
+</ul></div>
+<p><strong>Best for.</strong> Anyone who wants a free, private, encrypted Evernote-style notebook that syncs anywhere</p>
+<p class="src">Price: Free / open source (AGPL-3.0); Joplin Cloud from €2.99/mo (Basic), Pro €5.99/mo, Teams €7.99/user/mo · <a href="https://joplinapp.org/">Official site</a> · <a href="https://joplinapp.org/help/">Help</a> · <a href="https://joplinapp.org/plans/">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-standard-notes">
+<h3>Standard Notes <a class="open" href="https://standardnotes.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The privacy-first notebook: end-to-end encrypted by default, simple to a fault, and the safest place for sensitive notes.</p>
+<p><strong>What it is.</strong> An open-source, end-to-end encrypted notes app for desktop, mobile, and web, built around zero-knowledge privacy: even Standard Notes cannot read your notes.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>End-to-end encryption on by default, including the free plan; independently audited, open-source apps</li>
+<li>Syncs across all devices with offline access, tags, and full data export</li>
+<li>Deliberately simple and fast — a clean writing surface with no distractions</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Free plan is plain-text only — Markdown, rich text, and folders need a paid plan</li>
+<li>No backlinks, graph view, or databases — weak as a linked knowledge base</li>
+<li>Extension ecosystem is small compared with Obsidian or Logseq</li>
+</ul></div>
+<p><strong>Best for.</strong> Anyone whose notes are sensitive and who wants encryption-first, audited privacy above all</p>
+<p class="src">Price: Free (Standard plan); Productivity $90/yr; Professional $120/yr · <a href="https://standardnotes.com/">Official site</a> · <a href="https://standardnotes.com/help">Help</a> · <a href="https://standardnotes.com/plans">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-anytype">
+<h3>Anytype <a class="open" href="https://anytype.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The offline-first, object-based workspace with the strongest privacy story — powerful and unusual, with a steep learning curve.</p>
+<p><strong>What it is.</strong> A local-first, peer-to-peer note-taking and knowledge-management app where everything is an &#x27;object&#x27; (note, task, person, project) with types and relations, synced with end-to-end encryption and no central server.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>True local-first with peer-to-peer sync and end-to-end encryption — no account or central server required</li>
+<li>Object-based model with types, relations, and sets makes structured personal wikis natural</li>
+<li>Free plan includes sync, backup, and small-group collaboration</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Steep learning curve — the object model is a different way of thinking from pages and folders</li>
+<li>Smaller community and fewer integrations than Notion or Obsidian</li>
+<li>Paid plans (Builder $99/yr, Co-Creator $299/3 yrs) are needed for more storage and larger shared spaces</li>
+</ul></div>
+<p><strong>Best for.</strong> Privacy-minded builders who want a structured, object-based knowledge base without a cloud account</p>
+<p class="src">Price: Free (Explorer); Builder $99/yr; Co-Creator $299/3 yrs; Business custom · <a href="https://anytype.io/">Official site</a> · <a href="https://docs.anytype.io/">Docs</a> · <a href="https://anytype.io/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-appflowy">
+<h3>AppFlowy <a class="open" href="https://appflowy.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The open-source Notion alternative you can self-host — the closest free equivalent to Notion&#x27;s databases, still maturing.</p>
+<p><strong>What it is.</strong> An open-source, Notion-style workspace with pages, databases, boards, and AI features, built in Rust and Flutter; self-host it for free or use AppFlowy Cloud.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Notion-like pages and databases, fully open source, with a free self-hosted option for total data control</li>
+<li>Cross-platform (desktop, mobile, web) with offline support and local AI model options</li>
+<li>Free cloud plan includes unlimited pages and blocks with 5 GB storage</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Younger and less polished than Notion — fewer templates, integrations, and advanced database features</li>
+<li>Smaller community, so fewer guides and third-party tools</li>
+<li>Pro plan ($10/mo) is per workspace, and some AI features are paid add-ons</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams who want Notion-style workspaces but need open source and self-hosting</p>
+<p class="src">Price: Free / open source; AppFlowy Cloud free tier; Pro $10/mo billed annually ($12.50 monthly); self-host free · <a href="https://appflowy.io/">Official site</a> · <a href="https://docs.appflowy.io/">Docs</a> · <a href="https://appflowy.io/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-capacities">
+<h3>Capacities <a class="open" href="https://capacities.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The object-based studio for visual thinkers — beautiful, calm, and great for connected notes, but a one-person show with no real collaboration.</p>
+<p><strong>What it is.</strong> A note-taking app built around typed objects (notes, people, books, ideas) connected in a visual graph, with a calm writing experience, daily notes, and an AI assistant on Pro.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Object-based notes with a visual graph and collections feel natural for research and creative work</li>
+<li>Free plan is genuinely full-featured: unlimited spaces, objects, sync, and offline support</li>
+<li>Clean, calm interface with media uploads, calendar integration, and an AI assistant (Pro)</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>No real-time collaboration — sharing is view-only; not a team tool</li>
+<li>Closed source and cloud-based, so no local files or self-hosting</li>
+<li>Smaller ecosystem than Obsidian or Notion; Pro ($9.99/mo) gates the AI assistant and task management</li>
+</ul></div>
+<p><strong>Best for.</strong> Solo researchers, writers, and visual thinkers who want connected, object-based notes</p>
+<p class="src">Price: Free (Basic); Pro $9.99/mo; Believer from $12.49/mo · <a href="https://capacities.io/">Official site</a> · <a href="https://docs.capacities.io/">Docs</a> · <a href="https://capacities.io/pricing">Pricing</a></p>
+</article>
+</section>
+</main>
+<footer>
+DevKit guides — honest overviews of developer tools, checked Oct 2026. Links verified before publishing. All DevKit tools are client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. <a href="index.html">Back to DevKit</a> · <a href="guides.html">All guides</a>.
+</footer>
+</body>
+</html>
