@@ -89,6 +89,17 @@ section{display:none}section.on{display:block}
 .gpa-row input,.gpa-row select{margin:0;min-width:0}
 .gpa-row .gpa-name{flex:2}.gpa-row .gpa-grade{flex:1}.gpa-row .gpa-credits{flex:1}
 .gpa-row button{margin:0!important;padding:6px 10px!important}
+.llm-subhead{grid-column:1/-1}
+.llm-subhead h2{font-size:19px;margin:10px 0 0}
+.llm-subhead p{color:var(--mut);margin:2px 0 0;font-size:14px}
+#llmExplain{margin-top:22px}
+#llmExplain h2{margin-top:0}
+#llmExplain .llm-explainer{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:14px}
+#llmExplain .llm-explainer h3{font-size:17px;margin:0 0 6px}
+#llmExplain .llm-explainer p{margin:6px 0}
+#llmExplain .llm-explainer ul{margin:6px 0;padding-left:20px}
+#llmExplain .llm-explainer svg{max-width:100%;height:auto;display:block;margin:10px 0}
+#llmExplain .llm-explainer .src{font-size:13px;color:var(--mut)}
 </style>
 </head>
 <body>
@@ -137,7 +148,229 @@ section{display:none}section.on{display:block}
 </div>
 </div>
 <div id="pageHead" class="hide"><h2 id="pageTitle"></h2><p id="pageDesc"></p></div>
-<section id="sec-calcs" class="on"><div class="grid" id="calcGrid"></div></section>
+<section id="sec-calcs" class="on"><div class="grid" id="calcGrid"></div>
+<div id="llmExplain" class="hide">
+<h2>Understand LLM pricing</h2>
+<p class="secsub">How input, cached, and output tokens are priced — and what actually makes a request fast or slow.</p>
+<section id="exp-pricing" class="llm-explainer">
+  <h3>How LLM pricing works</h3>
+  <p>Every request is billed in four parts: the new prompt tokens you send, the prompt tokens reused from cache, the new tokens written into the cache, and the tokens the model generates back.</p>
+
+  <svg viewBox="0 0 640 190" style="max-width:100%;height:auto" role="img" aria-label="Token flow for one LLM request: prompt in, split into uncached and cached input, cache-write for new tokens, output out">
+    <defs>
+      <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#64748b"/></marker>
+    </defs>
+    <!-- prompt -->
+    <rect x="10" y="70" width="110" height="50" rx="8" fill="#e0e7ff" stroke="#6366f1"/>
+    <text x="65" y="90" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">Your prompt</text>
+    <text x="65" y="107" text-anchor="middle" font-size="11" fill="#475569">goes in</text>
+    <line x1="120" y1="95" x2="160" y2="95" stroke="#64748b" stroke-width="2" marker-end="url(#arr)"/>
+    <!-- split -->
+    <rect x="165" y="20" width="170" height="50" rx="8" fill="#fef3c7" stroke="#d97706"/>
+    <text x="250" y="40" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">Uncached input</text>
+    <text x="250" y="57" text-anchor="middle" font-size="11" fill="#475569">new tokens, full price</text>
+    <rect x="165" y="80" width="170" height="50" rx="8" fill="#dcfce7" stroke="#16a34a"/>
+    <text x="250" y="100" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">Cached input</text>
+    <text x="250" y="117" text-anchor="middle" font-size="11" fill="#475569">reused tokens, ~10x cheaper</text>
+    <rect x="165" y="140" width="170" height="40" rx="8" fill="#fce7f3" stroke="#db2777"/>
+    <text x="250" y="157" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">Cache-write</text>
+    <text x="250" y="172" text-anchor="middle" font-size="11" fill="#475569">new tokens stored</text>
+    <line x1="335" y1="45" x2="380" y2="45" stroke="#64748b" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="335" y1="105" x2="380" y2="105" stroke="#64748b" stroke-width="2" marker-end="url(#arr)"/>
+    <!-- model -->
+    <rect x="385" y="55" width="110" height="70" rx="8" fill="#e2e8f0" stroke="#475569"/>
+    <text x="440" y="82" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">The model</text>
+    <text x="440" y="99" text-anchor="middle" font-size="11" fill="#475569">reads the prompt</text>
+    <text x="440" y="114" text-anchor="middle" font-size="11" fill="#475569">&amp; writes an answer</text>
+    <line x1="495" y1="90" x2="530" y2="90" stroke="#64748b" stroke-width="2" marker-end="url(#arr)"/>
+    <!-- output -->
+    <rect x="535" y="55" width="95" height="70" rx="8" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="582" y="82" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">Output</text>
+    <text x="582" y="99" text-anchor="middle" font-size="11" fill="#475569">generated tokens</text>
+    <text x="582" y="114" text-anchor="middle" font-size="11" fill="#475569">usually priciest</text>
+  </svg>
+
+  <p><strong>Worked example — GPT-5, the calculator's defaults:</strong> 100k uncached in + 1M cached in + 0 cache-write + 50k out, × 1,000 requests.</p>
+  <ul>
+    <li>Uncached input: 100,000 ÷ 1M × $1.25 = <strong>$0.125</strong> per request</li>
+    <li>Cached input: 1,000,000 ÷ 1M × $0.125 = <strong>$0.125</strong> per request</li>
+    <li>Cache-write: 0 tokens × $0 = <strong>$0.00</strong> (GPT-5's cache-write price isn't published, so the calculator counts it as $0)</li>
+    <li>Output: 50,000 ÷ 1M × $10.00 = <strong>$0.50</strong> per request</li>
+    <li>Total: $0.75 per request × 1,000 requests = <strong>$750.00</strong></li>
+  </ul>
+  <p class="src">Prices: provider list prices, checked Oct 2026 — verify before big commits.
+    <a href="https://platform.openai.com/docs/pricing" target="_blank" rel="noopener">OpenAI</a> ·
+    <a href="https://www.anthropic.com/pricing" target="_blank" rel="noopener">Anthropic</a> ·
+    <a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Google AI</a> ·
+    <a href="https://docs.x.ai/docs/models" target="_blank" rel="noopener">xAI</a> ·
+    <a href="https://api-docs.deepseek.com/quick_start/pricing/" target="_blank" rel="noopener">DeepSeek</a>
+  </p>
+</section>
+<section id="exp-cache" class="llm-explainer">
+  <h3>Cached vs uncached: why the cache is cheap</h3>
+  <p>When a prompt (or part of it) repeats, the provider can reuse work it already did — so reusing cached tokens costs far less than processing new ones.</p>
+
+  <svg viewBox="0 0 640 215" style="max-width:100%;height:auto" role="img" aria-label="Bar chart: uncached vs cached input cost per 1M tokens for GPT-5, Claude Sonnet 4.5 and Gemini 2.5 Pro">
+    <text x="10" y="18" font-size="13" font-weight="bold" fill="#1e293b">Input cost per 1M tokens — uncached vs cached</text>
+    <!-- GPT-5 -->
+    <text x="10" y="48" font-size="12" fill="#1e293b">GPT-5</text>
+    <rect x="130" y="36" width="158" height="14" rx="3" fill="#f59e0b"/>
+    <text x="294" y="48" font-size="12" fill="#1e293b">$1.25 uncached</text>
+    <rect x="130" y="54" width="16" height="14" rx="3" fill="#16a34a"/>
+    <text x="152" y="66" font-size="12" fill="#1e293b">$0.125 cached — 10× cheaper</text>
+    <!-- Sonnet 4.5 -->
+    <text x="10" y="104" font-size="12" fill="#1e293b">Sonnet 4.5</text>
+    <rect x="130" y="92" width="380" height="14" rx="3" fill="#f59e0b"/>
+    <text x="516" y="104" font-size="12" fill="#1e293b">$3.00</text>
+    <rect x="130" y="110" width="38" height="14" rx="3" fill="#16a34a"/>
+    <text x="174" y="122" font-size="12" fill="#1e293b">$0.30 cached — 10× cheaper</text>
+    <!-- Gemini Pro -->
+    <text x="10" y="160" font-size="12" fill="#1e293b">Gemini 2.5 Pro</text>
+    <rect x="130" y="148" width="158" height="14" rx="3" fill="#f59e0b"/>
+    <text x="294" y="160" font-size="12" fill="#1e293b">$1.25 uncached</text>
+    <rect x="130" y="166" width="16" height="14" rx="3" fill="#16a34a"/>
+    <text x="152" y="178" font-size="12" fill="#1e293b">$0.125 cached — 10× cheaper</text>
+    <text x="10" y="205" font-size="11" fill="#64748b">Orange = new (uncached) input · Green = cached-read. Scale: $3.00 = full bar width.</text>
+  </svg>
+
+  <ul>
+    <li><strong>Cached-read</strong> is the price for reusing prompt tokens already in the cache. <strong>Cache-write</strong> is the one-off price for putting new tokens into the cache.</li>
+    <li>Cached reads run about <strong>10× cheaper</strong> than uncached input on most models — GPT-5, Sonnet 4.5/4.6, Gemini Pro, Opus 4.8 and Haiku 4.5 are all exactly 10×. Exceptions: Grok 4.3 is 6.25× ($1.25 → $0.20), GPT-6.1 Sol is 20× ($2.00 → $0.10), DeepSeek V4 Pro is 30× ($1.32 → $0.044).</li>
+    <li>Caching pays off when the same prompt repeats — long system prompts, few-shot examples, or a big document you ask about many times.</li>
+    <li>Rule of thumb: writing a block to cache costs roughly 1.3–1.4× the saving from one reuse, so <strong>reuse the same cached tokens about twice and the write cost is covered</strong> (e.g. Sonnet 4.5: $3.75 write vs $2.70 saved per reuse).</li>
+    <li>Not every model charges a cache-write in this calculator: GPT-5's write price isn't published (counted as $0), and Gemini, Grok and DeepSeek show $0 — Gemini instead charges context-caching storage of $4.50/1M tokens/hour, which the calculator doesn't model.</li>
+  </ul>
+</section>
+<section id="exp-tiering" class="llm-explainer">
+  <h3>Long-context tiering: prices jump above 200k tokens</h3>
+  <p>Gemini 2.5 Pro and Grok 4.3 charge higher rates once a request's total input (uncached + cached) goes above 200,000 tokens. The calculator applies the higher tier automatically.</p>
+
+  <svg viewBox="0 0 640 240" style="max-width:100%;height:auto" role="img" aria-label="Bar chart: base vs long-context rates for Gemini 2.5 Pro and Grok 4.3 input and output prices">
+    <text x="10" y="18" font-size="13" font-weight="bold" fill="#1e293b">Base rate vs long-context rate ($ per 1M tokens)</text>
+    <!-- Gemini input -->
+    <text x="10" y="48" font-size="12" fill="#1e293b">Gemini Pro · input</text>
+    <rect x="170" y="36" width="32" height="14" rx="3" fill="#94a3b8"/>
+    <text x="208" y="48" font-size="12" fill="#1e293b">$1.25 base</text>
+    <rect x="170" y="54" width="63" height="14" rx="3" fill="#2563eb"/>
+    <text x="239" y="66" font-size="12" fill="#1e293b">$2.50 long-context — 2×</text>
+    <!-- Gemini output -->
+    <text x="10" y="104" font-size="12" fill="#1e293b">Gemini Pro · output</text>
+    <rect x="170" y="92" width="253" height="14" rx="3" fill="#94a3b8"/>
+    <text x="429" y="104" font-size="12" fill="#1e293b">$10.00 base</text>
+    <rect x="170" y="110" width="380" height="14" rx="3" fill="#2563eb"/>
+    <text x="556" y="122" font-size="12" fill="#1e293b">$15.00 — 1.5×</text>
+    <!-- Grok input -->
+    <text x="10" y="160" font-size="12" fill="#1e293b">Grok 4.3 · input</text>
+    <rect x="170" y="148" width="32" height="14" rx="3" fill="#94a3b8"/>
+    <text x="208" y="160" font-size="12" fill="#1e293b">$1.25 base</text>
+    <rect x="170" y="166" width="63" height="14" rx="3" fill="#2563eb"/>
+    <text x="239" y="178" font-size="12" fill="#1e293b">$2.50 long-context — 2×</text>
+    <!-- Grok output -->
+    <text x="10" y="216" font-size="12" fill="#1e293b">Grok 4.3 · output</text>
+    <rect x="170" y="204" width="63" height="14" rx="3" fill="#94a3b8"/>
+    <text x="239" y="216" font-size="12" fill="#1e293b">$2.50 base</text>
+    <rect x="170" y="222" width="127" height="14" rx="3" fill="#2563eb"/>
+    <text x="303" y="234" font-size="12" fill="#1e293b">$5.00 long-context — 2×</text>
+  </svg>
+
+  <ul>
+    <li><strong>Gemini 2.5 Pro</strong> above 200k input tokens: input $1.25 → $2.50, cached-read $0.125 → $0.25, output $10.00 → $15.00.</li>
+    <li><strong>Grok 4.3</strong> above 200k input tokens: input $1.25 → $2.50, cached-read $0.20 → $0.40, output $2.50 → $5.00 — everything doubles.</li>
+    <li>The trigger is <strong>total input</strong> (uncached + cached tokens together), not output length — a short question over a huge cached document can still trip it.</li>
+    <li>Only these two models in the calculator have a long-context tier; the others charge one flat rate at any length.</li>
+    <li>Side notes the calculator doesn't model: Grok's 20% batch discount, and Gemini's $4.50/1M tokens/hour cache-storage charge.</li>
+  </ul>
+</section>
+<section id="exp-speed" class="llm-explainer">
+  <h3>Speed: time to first token vs decode vs tokens/sec</h3>
+  <p>A request has two phases: <strong>prefill</strong> (the model reads your whole prompt at once) and <strong>decode</strong> (it writes the answer one token at a time). Prefill is fast; decode is the slow part.</p>
+
+  <svg viewBox="0 0 640 150" style="max-width:100%;height:auto" role="img" aria-label="Timeline: 1 second of prefill reading a 2000-token prompt, then 10 seconds of decode generating 500 tokens">
+    <text x="10" y="18" font-size="13" font-weight="bold" fill="#1e293b">One request, to scale — 1 s prefill, then 10 s decode</text>
+    <!-- prefill -->
+    <rect x="10" y="40" width="40" height="44" rx="6" fill="#f59e0b"/>
+    <text x="30" y="58" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">TTFT</text>
+    <text x="30" y="74" text-anchor="middle" font-size="11" fill="#fff">1 s</text>
+    <text x="30" y="100" text-anchor="middle" font-size="11" fill="#475569">prefill</text>
+    <text x="30" y="114" text-anchor="middle" font-size="11" fill="#475569">2,000 tok</text>
+    <!-- decode -->
+    <rect x="60" y="40" width="400" height="44" rx="6" fill="#2563eb"/>
+    <text x="260" y="58" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Decode — 500 tokens, one at a time</text>
+    <text x="260" y="74" text-anchor="middle" font-size="11" fill="#fff">10 s at 50 tok/s</text>
+    <text x="260" y="100" text-anchor="middle" font-size="11" fill="#475569">output tokens appear here, token by token</text>
+    <!-- total -->
+    <text x="470" y="58" font-size="12" font-weight="bold" fill="#1e293b">Total: 11 s</text>
+    <text x="470" y="76" font-size="12" fill="#1e293b">Effective: 227 tok/s</text>
+    <text x="470" y="94" font-size="11" fill="#475569">(2,000 + 500) ÷ 11 s</text>
+    <text x="10" y="140" font-size="11" fill="#64748b">Time-to-first-token (TTFT) is the prefill time — how long until the first word appears.</text>
+  </svg>
+
+  <ul>
+    <li><strong>TTFT (time to first token)</strong> = prompt tokens ÷ prefill speed. Worked example: 2,000 ÷ 2,000 tok/s = <strong>1 s</strong>. Longer prompts mean a longer wait before anything appears.</li>
+    <li><strong>Decode</strong> = output tokens ÷ decode speed. Worked example: 500 ÷ 50 tok/s = <strong>10 s</strong>. Longer answers dominate total time.</li>
+    <li><strong>Effective tokens/sec</strong> = (prompt + output) ÷ total time = 2,500 ÷ 11 s ≈ <strong>227 tok/s</strong>. It blends both phases, so it looks faster than the 50 tok/s decode rate — don't compare it directly with a decode-only number.</li>
+    <li><strong>Concurrency</strong> splits the decode speed between simultaneous requests: at 2 concurrent requests each one decodes at 25 tok/s, so each takes twice as long to finish.</li>
+    <li>What affects each: prompt length drives TTFT; output length drives decode; concurrency and server load slow decode for everyone sharing it.</li>
+  </ul>
+</section>
+<section id="exp-compare" class="llm-explainer">
+  <h3>Model prices at a glance</h3>
+  <p>All 14 presets in the calculator, base rates per 1M tokens. Output is almost always the bigger number — and the bigger cost driver.</p>
+
+  <svg viewBox="0 0 640 404" style="max-width:100%;height:auto" role="img" aria-label="Bar chart: input price per 1M tokens for all 14 models, from Claude Opus 4.8 at $5.00 down to GPT-5.6 Luna at $0.20">
+    <text x="10" y="18" font-size="13" font-weight="bold" fill="#1e293b">Input — $ per 1M tokens</text>
+    <text x="145" y="48" text-anchor="end" font-size="12" fill="#1e293b">Claude Opus 4.8</text><rect x="150" y="36" width="400" height="16" rx="3" fill="#2563eb"/><text x="556" y="48" font-size="12" fill="#1e293b">$5.00</text>
+    <text x="145" y="74" text-anchor="end" font-size="12" fill="#1e293b">GPT-5.6 Sol</text><rect x="150" y="62" width="320" height="16" rx="3" fill="#2563eb"/><text x="476" y="74" font-size="12" fill="#1e293b">$4.00</text>
+    <text x="145" y="100" text-anchor="end" font-size="12" fill="#1e293b">Claude Sonnet 4.5</text><rect x="150" y="88" width="240" height="16" rx="3" fill="#2563eb"/><text x="396" y="100" font-size="12" fill="#1e293b">$3.00</text>
+    <text x="145" y="126" text-anchor="end" font-size="12" fill="#1e293b">Claude Sonnet 4.6</text><rect x="150" y="114" width="240" height="16" rx="3" fill="#2563eb"/><text x="396" y="126" font-size="12" fill="#1e293b">$3.00</text>
+    <text x="145" y="152" text-anchor="end" font-size="12" fill="#1e293b">GPT-6.1 Sol</text><rect x="150" y="140" width="160" height="16" rx="3" fill="#2563eb"/><text x="316" y="152" font-size="12" fill="#1e293b">$2.00</text>
+    <text x="145" y="178" text-anchor="end" font-size="12" fill="#1e293b">GPT-6 Sol</text><rect x="150" y="166" width="160" height="16" rx="3" fill="#2563eb"/><text x="316" y="178" font-size="12" fill="#1e293b">$2.00</text>
+    <text x="145" y="204" text-anchor="end" font-size="12" fill="#1e293b">GPT-5.6 Terra</text><rect x="150" y="192" width="160" height="16" rx="3" fill="#2563eb"/><text x="316" y="204" font-size="12" fill="#1e293b">$2.00</text>
+    <text x="145" y="230" text-anchor="end" font-size="12" fill="#1e293b">DeepSeek V4 Pro</text><rect x="150" y="218" width="106" height="16" rx="3" fill="#2563eb"/><text x="262" y="230" font-size="12" fill="#1e293b">$1.32</text>
+    <text x="145" y="256" text-anchor="end" font-size="12" fill="#1e293b">GPT-5</text><rect x="150" y="244" width="100" height="16" rx="3" fill="#2563eb"/><text x="256" y="256" font-size="12" fill="#1e293b">$1.25</text>
+    <text x="145" y="282" text-anchor="end" font-size="12" fill="#1e293b">Gemini 2.5 Pro</text><rect x="150" y="270" width="100" height="16" rx="3" fill="#2563eb"/><text x="256" y="282" font-size="12" fill="#1e293b">$1.25</text>
+    <text x="145" y="308" text-anchor="end" font-size="12" fill="#1e293b">Grok 4.3</text><rect x="150" y="296" width="100" height="16" rx="3" fill="#2563eb"/><text x="256" y="308" font-size="12" fill="#1e293b">$1.25</text>
+    <text x="145" y="334" text-anchor="end" font-size="12" fill="#1e293b">Claude Haiku 4.5</text><rect x="150" y="322" width="80" height="16" rx="3" fill="#2563eb"/><text x="236" y="334" font-size="12" fill="#1e293b">$1.00</text>
+    <text x="145" y="360" text-anchor="end" font-size="12" fill="#1e293b">Gemini 2.5 Flash</text><rect x="150" y="348" width="24" height="16" rx="3" fill="#2563eb"/><text x="180" y="360" font-size="12" fill="#1e293b">$0.30</text>
+    <text x="145" y="386" text-anchor="end" font-size="12" fill="#1e293b">GPT-5.6 Luna</text><rect x="150" y="374" width="16" height="16" rx="3" fill="#2563eb"/><text x="172" y="386" font-size="12" fill="#1e293b">$0.20</text>
+  </svg>
+
+  <svg viewBox="0 0 640 404" style="max-width:100%;height:auto" role="img" aria-label="Bar chart: output price per 1M tokens for all 14 models, from Claude Opus 4.8 at $25.00 down to GPT-5.6 Luna at $1.20">
+    <text x="10" y="18" font-size="13" font-weight="bold" fill="#1e293b">Output — $ per 1M tokens</text>
+    <text x="145" y="48" text-anchor="end" font-size="12" fill="#1e293b">Claude Opus 4.8</text><rect x="150" y="36" width="400" height="16" rx="3" fill="#16a34a"/><text x="556" y="48" font-size="12" fill="#1e293b">$25.00</text>
+    <text x="145" y="74" text-anchor="end" font-size="12" fill="#1e293b">GPT-5.6 Sol</text><rect x="150" y="62" width="320" height="16" rx="3" fill="#16a34a"/><text x="476" y="74" font-size="12" fill="#1e293b">$20.00</text>
+    <text x="145" y="100" text-anchor="end" font-size="12" fill="#1e293b">Claude Sonnet 4.5</text><rect x="150" y="88" width="240" height="16" rx="3" fill="#16a34a"/><text x="396" y="100" font-size="12" fill="#1e293b">$15.00</text>
+    <text x="145" y="126" text-anchor="end" font-size="12" fill="#1e293b">Claude Sonnet 4.6</text><rect x="150" y="114" width="240" height="16" rx="3" fill="#16a34a"/><text x="396" y="126" font-size="12" fill="#1e293b">$15.00</text>
+    <text x="145" y="152" text-anchor="end" font-size="12" fill="#1e293b">GPT-5.6 Terra</text><rect x="150" y="140" width="192" height="16" rx="3" fill="#16a34a"/><text x="348" y="152" font-size="12" fill="#1e293b">$12.00</text>
+    <text x="145" y="178" text-anchor="end" font-size="12" fill="#1e293b">GPT-6.1 Sol</text><rect x="150" y="166" width="160" height="16" rx="3" fill="#16a34a"/><text x="316" y="178" font-size="12" fill="#1e293b">$10.00</text>
+    <text x="145" y="204" text-anchor="end" font-size="12" fill="#1e293b">GPT-6 Sol</text><rect x="150" y="192" width="160" height="16" rx="3" fill="#16a34a"/><text x="316" y="204" font-size="12" fill="#1e293b">$10.00</text>
+    <text x="145" y="230" text-anchor="end" font-size="12" fill="#1e293b">GPT-5</text><rect x="150" y="218" width="160" height="16" rx="3" fill="#16a34a"/><text x="316" y="230" font-size="12" fill="#1e293b">$10.00</text>
+    <text x="145" y="256" text-anchor="end" font-size="12" fill="#1e293b">Gemini 2.5 Pro</text><rect x="150" y="244" width="160" height="16" rx="3" fill="#16a34a"/><text x="316" y="256" font-size="12" fill="#1e293b">$10.00</text>
+    <text x="145" y="282" text-anchor="end" font-size="12" fill="#1e293b">Claude Haiku 4.5</text><rect x="150" y="270" width="80" height="16" rx="3" fill="#16a34a"/><text x="236" y="282" font-size="12" fill="#1e293b">$5.00</text>
+    <text x="145" y="308" text-anchor="end" font-size="12" fill="#1e293b">DeepSeek V4 Pro</text><rect x="150" y="296" width="63" height="16" rx="3" fill="#16a34a"/><text x="219" y="308" font-size="12" fill="#1e293b">$3.96</text>
+    <text x="145" y="334" text-anchor="end" font-size="12" fill="#1e293b">Gemini 2.5 Flash</text><rect x="150" y="322" width="40" height="16" rx="3" fill="#16a34a"/><text x="196" y="334" font-size="12" fill="#1e293b">$2.50</text>
+    <text x="145" y="360" text-anchor="end" font-size="12" fill="#1e293b">Grok 4.3</text><rect x="150" y="348" width="40" height="16" rx="3" fill="#16a34a"/><text x="196" y="360" font-size="12" fill="#1e293b">$2.50</text>
+    <text x="145" y="386" text-anchor="end" font-size="12" fill="#1e293b">GPT-5.6 Luna</text><rect x="150" y="374" width="19" height="16" rx="3" fill="#16a34a"/><text x="175" y="386" font-size="12" fill="#1e293b">$1.20</text>
+  </svg>
+
+  <ul>
+    <li><strong>Cheapest overall:</strong> GPT-5.6 Luna ($0.20 in / $1.20 out) and Gemini 2.5 Flash ($0.30 in / $2.50 out) — roughly 20× cheaper than Opus on output.</li>
+    <li><strong>Most expensive:</strong> Claude Opus 4.8 ($5.00 in / $25.00 out), then GPT-5.6 Sol ($4.00 in / $20.00 out).</li>
+    <li><strong>Output costs 2–10× input</strong> on every model here — Grok 4.3 is the narrowest gap (2×), GPT-5 the widest (8×). Long outputs dominate the bill.</li>
+    <li><strong>Base rates shown.</strong> Gemini 2.5 Pro and Grok 4.3 charge more above 200k input tokens (see the tiering section above), and GPT-5.6 Sol is on promotional pricing through Nov 21, 2026.</li>
+    <li>DeepSeek V4 Pro shows peak-hour prices; off-peak is half. Try the calculator above with your own token counts to compare models on your workload.</li>
+  </ul>
+</section>
+<section id="exp-tokens" class="llm-explainer">
+  <h3>How to estimate tokens</h3>
+  <p>As a rough rule, <strong>1 token ≈ 4 characters</strong> of English text, or about <strong>0.75 words per token</strong> — so 100 words is roughly 133 tokens. Code, non-English text and unusual formatting can tokenize differently, so treat this as an estimate, not an exact count.</p>
+  <ul>
+    <li>Paste your actual text into the <a href="#tool-tokenest">token estimator</a> on the Dev tab for a quick estimate before you price a request.</li>
+    <li>Remember: the prompt you send counts as input tokens, and everything the model writes back counts as output tokens — usually the pricier kind.</li>
+  </ul>
+</section>
+</div>
+</section>
 
 <!-- ============ FILE CONVERTERS ============ -->
 <section id="sec-files">
@@ -504,11 +737,13 @@ function swapUnits(id){const c=CALCS.find(function(x){return x.id===id});if(!c)r
 function setTip(p){const el=document.getElementById('in_tip_pct');if(!el)return;el.value=p;el.dispatchEvent(new Event('input'))}
 function convertCardUnits(c,sel){const to=sel.value,from=sel.dataset.prev||'metric';if(from===to||!c.unitMap)return;sel.dataset.prev=to;if(c.id==='bmi'){const cmEl=document.getElementById('in_bmi_cm'),ftEl=document.getElementById('in_bmi_ft'),inEl=document.getElementById('in_bmi_in');if(cmEl&&ftEl&&inEl){if(to==='imperial'){const totalIn=(parseFloat(cmEl.value)||0)/2.54;ftEl.value=totalIn?Math.floor(totalIn/12):'';inEl.value=totalIn?Math.round((totalIn%12)*10)/10:''}else{const tin=(parseFloat(ftEl.value)||0)*12+(parseFloat(inEl.value)||0);cmEl.value=tin?Math.round(tin*2.54*10)/10:''}}}
 function num(x){return parseFloat(x.toFixed(1))}for(const k in c.unitMap){const el=document.getElementById('in_'+c.id+'_'+k);if(!el)continue;const v=parseFloat(el.value);if(!isFinite(v))continue;const kind=c.unitMap[k];let nv;if(kind==='w')nv=to==='imperial'?v*2.20462:v*0.45359237;else nv=to==='imperial'?v/2.54:v*2.54;el.value=num(nv);const lab=el.previousElementSibling;if(lab){const base=lab.textContent.replace(/ \([^)]*\)$/,'');lab.textContent=base+(to==='imperial'?(kind==='w'?' (lb)':' (in)'):(kind==='w'?' (kg)':' (cm)'))}}if(c.fImp){const card=document.getElementById('calc-'+c.id);if(card){const fEl=card.querySelector('.formula');if(fEl)fEl.textContent=to==='imperial'?c.fImp:c.f}}}
-function renderCalcs(){const g=$('calcGrid');if(!g)return;g.innerHTML='';CALCS.slice().sort(function(a,b){return (a.cat==='llm'?0:1)-(b.cat==='llm'?0:1)}).forEach(function(c){const card=document.createElement('div');card.className='card calc';card.id='calc-'+c.id;card.dataset.cat=c.cat;card.dataset.name=(c.id+' '+c.name+' '+c.tags).toLowerCase();let h='<h3>'+c.name+'</h3>';c.inputs.forEach(function(inp){const sw=inp.showWhen?' data-showwhen="'+inp.showWhen+'"':'';h+='<div class="f"'+sw+'>'+inp.label+'</div>';if(inp.type==='select'){h+='<select id="in_'+c.id+'_'+inp.k+'"'+sw+'>'+inp.opts.map(function(o){return '<option value="'+o[0]+'"'+(String(o[0])===String(inp.def)?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'}else if(inp.type==='textarea'){h+='<textarea id="in_'+c.id+'_'+inp.k+'"'+sw+'>'+inp.def+'</textarea>'}else if(inp.type==='gparows'){h+='<div id="in_'+c.id+'_'+inp.k+'"'+sw+'></div><button class="ghost" onclick="addGpaRow(\''+c.id+'\')">+ Add course</button>'}else if(inp.type==='date'||inp.type==='time'){h+='<input type="'+inp.type+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'"'+sw+'>'}else{h+='<input type="number" step="'+(inp.step||'any')+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'"'+sw+'>'}});const fi=c.inputs.find(function(i){return i.k==='from'}),ti=c.inputs.find(function(i){return i.k==='to'});if(fi&&ti&&fi.type==='select'&&ti.type==='select'){h+='<button class="swap" onclick="swapUnits(\''+c.id+'\')">⇄ Swap units</button>'}if(c.id==='tip'){h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">'+[10,15,18,20,25].map(function(p){return '<button class="swap" onclick="setTip('+p+')">'+p+'%</button>'}).join('')+'</div>'}h+='<div class="result"><div class="main" id="out_'+c.id+'_main"></div><div class="sub" id="out_'+c.id+'_sub"></div></div>';h+='<div class="formula">'+c.f+'</div>';if(c.id==='llmcost'){h+='<div class="src" style="margin-top:6px;font-size:13px">Source: <a id="llmSrc" href="https://platform.openai.com/docs/pricing" target="_blank" rel="noopener">OpenAI pricing</a></div>'}card.innerHTML=h;g.appendChild(card);const gpInp=c.inputs.find(function(i){return i.type==='gparows'});if(gpInp){const rows=Array.isArray(gpInp.def)?gpInp.def:[];if(rows.length)rows.forEach(function(r){addGpaRow(c.id,r)});else addGpaRow(c.id,{})}syncUnitFields(c);const uSel=card.querySelector('#in_'+c.id+'_units');if(uSel){uSel.dataset.prev=uSel.value;uSel.addEventListener('input',function(){convertCardUnits(c,uSel);syncUnitFields(c);runCalc(c)})}const mSel=c.id==='llmcost'?card.querySelector('#in_llmcost_model'):null;if(mSel){const tog=function(){const isC=mSel.value==='custom';['pin','pread','pwrite','pout'].forEach(function(k){const el=document.getElementById('in_llmcost_'+k);if(!el)return;const lab=el.previousElementSibling;el.style.display=isC?'':'none';if(lab)lab.style.display=isC?'':'none'});updateLlmSource(mSel.value)};mSel.addEventListener('input',tog);tog()}card.querySelectorAll('input,select,textarea').forEach(function(el){el.addEventListener('input',function(){runCalc(c)})});runCalc(c)})}
+function renderCalcs(){const g=$('calcGrid');if(!g)return;g.innerHTML='';CALCS.slice().sort(function(a,b){return (a.cat==='llm'?0:1)-(b.cat==='llm'?0:1)}).forEach(function(c){const card=document.createElement('div');card.className='card calc';card.id='calc-'+c.id;card.dataset.cat=c.cat;card.dataset.name=(c.id+' '+c.name+' '+c.tags).toLowerCase();let h='<h3>'+c.name+'</h3>';c.inputs.forEach(function(inp){const sw=inp.showWhen?' data-showwhen="'+inp.showWhen+'"':'';h+='<div class="f"'+sw+'>'+inp.label+'</div>';if(inp.type==='select'){h+='<select id="in_'+c.id+'_'+inp.k+'"'+sw+'>'+inp.opts.map(function(o){return '<option value="'+o[0]+'"'+(String(o[0])===String(inp.def)?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'}else if(inp.type==='textarea'){h+='<textarea id="in_'+c.id+'_'+inp.k+'"'+sw+'>'+inp.def+'</textarea>'}else if(inp.type==='gparows'){h+='<div id="in_'+c.id+'_'+inp.k+'"'+sw+'></div><button class="ghost" onclick="addGpaRow(\''+c.id+'\')">+ Add course</button>'}else if(inp.type==='date'||inp.type==='time'){h+='<input type="'+inp.type+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'"'+sw+'>'}else{h+='<input type="number" step="'+(inp.step||'any')+'" id="in_'+c.id+'_'+inp.k+'" value="'+inp.def+'"'+sw+'>'}});const fi=c.inputs.find(function(i){return i.k==='from'}),ti=c.inputs.find(function(i){return i.k==='to'});if(fi&&ti&&fi.type==='select'&&ti.type==='select'){h+='<button class="swap" onclick="swapUnits(\''+c.id+'\')">⇄ Swap units</button>'}if(c.id==='tip'){h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">'+[10,15,18,20,25].map(function(p){return '<button class="swap" onclick="setTip('+p+')">'+p+'%</button>'}).join('')+'</div>'}h+='<div class="result"><div class="main" id="out_'+c.id+'_main"></div><div class="sub" id="out_'+c.id+'_sub"></div></div>';h+='<div class="formula">'+c.f+'</div>';if(c.id==='llmcost'){h+='<div class="src" style="margin-top:6px;font-size:13px">Source: <a id="llmSrc" href="https://platform.openai.com/docs/pricing" target="_blank" rel="noopener">OpenAI pricing</a></div>'}if(c.id==='llmcost'){const sh=document.createElement('div');sh.className='llm-subhead';sh.id='llmHeadCost';sh.innerHTML='<h2>Cost</h2><p>Price one request, a day, or a month of API calls.</p>';g.appendChild(sh)}
+if(c.id==='toksec'){const sh=document.createElement('div');sh.className='llm-subhead';sh.id='llmHeadSpeed';sh.innerHTML='<h2>Speed</h2><p>How long a request takes, from first token to last.</p>';g.appendChild(sh)}
+card.innerHTML=h;g.appendChild(card);const gpInp=c.inputs.find(function(i){return i.type==='gparows'});if(gpInp){const rows=Array.isArray(gpInp.def)?gpInp.def:[];if(rows.length)rows.forEach(function(r){addGpaRow(c.id,r)});else addGpaRow(c.id,{})}syncUnitFields(c);const uSel=card.querySelector('#in_'+c.id+'_units');if(uSel){uSel.dataset.prev=uSel.value;uSel.addEventListener('input',function(){convertCardUnits(c,uSel);syncUnitFields(c);runCalc(c)})}const mSel=c.id==='llmcost'?card.querySelector('#in_llmcost_model'):null;if(mSel){const tog=function(){const isC=mSel.value==='custom';['pin','pread','pwrite','pout'].forEach(function(k){const el=document.getElementById('in_llmcost_'+k);if(!el)return;const lab=el.previousElementSibling;el.style.display=isC?'':'none';if(lab)lab.style.display=isC?'':'none'});updateLlmSource(mSel.value)};mSel.addEventListener('input',tog);tog()}card.querySelectorAll('input,select,textarea').forEach(function(el){el.addEventListener('input',function(){runCalc(c)})});runCalc(c)})}
 var curCat='all';
 var TABS={
  all:{title:'All tools',desc:'Pick a category, or search above.'},
- llm:{title:'LLM tools',desc:'Price your AI work.'},
+ llm:{title:'LLM tools',desc:'Cost and speed calculators, plus plain-English explainers on how LLM pricing works.'},
  finance:{title:'Finance calculators',desc:'Mortgages, loans, interest, retirement and ROI.'},
  health:{title:'Health calculators',desc:'BMI, BMR, macros, water, heart-rate and more.'},
  math:{title:'Math calculators',desc:'GPA, quadratics, GCD/LCM, powers, mean and standard deviation.'},
@@ -550,6 +785,9 @@ function applyFilter(){
  document.querySelectorAll('#sec-files .card, #sec-dev .card').forEach(function(card){
   card.classList.toggle('hide',!!q&&!qw.every(function(w){return (card.dataset.name+' '+card.textContent).toLowerCase().indexOf(w)>=0}));
  });
+ var showLlm=curCat==='llm'&&!q;
+ document.querySelectorAll('#calcGrid .llm-subhead').forEach(function(h){h.classList.toggle('hide',!showLlm)});
+ var lx=$('llmExplain');if(lx)lx.classList.toggle('hide',!showLlm);
  if(q){
   [['sec-calcs','#calcGrid .calc'],['sec-files','#sec-files .card'],['sec-dev','#sec-dev .card']].forEach(function(pair){
    var sec=$(pair[0]),vis=false;
