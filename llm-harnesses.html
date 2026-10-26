@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM harnesses — DevKit guides</title>
+<meta name="description" content="An LLM harness is the layer between your code and a language model — it handles prompts, tools, retrieval, agents or serving so you don&#x27;t reinvent it. Pick by job: a framework for building apps, an agent framework for multi-agent teams, a gateway for routing many models, or a local runner for private, offline inference.">
+<link rel="canonical" href="https://astro-devkit.github.io/devkit/llm-harnesses.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"LLM harnesses \u2014 DevKit guides","description":"An LLM harness is the layer between your code and a language model \u2014 it handles prompts, tools, retrieval, agents or serving so you don't reinvent it. Pick by job: a framework for building apps, an agent framework for multi-agent teams, a gateway for routing many models, or a local runner for private, offline inference.","url":"https://astro-devkit.github.io/devkit/llm-harnesses.html","isPartOf":{"@type":"WebApplication","name":"DevKit","url":"https://astro-devkit.github.io/devkit/"}}</script>
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}
+.topbar{position:sticky;top:0;z-index:50;background:var(--bg);padding:12px 20px;border-bottom:1px solid var(--line)}
+.topbar .in{max-width:1060px;margin:0 auto;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.topbar a{font-size:14px;text-decoration:none;color:var(--txt)}
+.topbar a:hover{color:var(--acc)}
+.topbar a.back{font-weight:700;color:var(--acc)}
+header{max-width:1060px;margin:0 auto;padding:36px 20px 4px}
+h1{margin:0;font-size:30px;letter-spacing:-.5px}h1 span{color:var(--acc)}
+p.sub{color:var(--mut);margin:10px 0 0;max-width:640px;font-size:16px}
+main{max-width:1060px;margin:0 auto;padding:20px}
+section{margin-bottom:36px}
+section>h2{font-size:22px;margin:8px 0 2px}
+.secsub{color:var(--mut);margin:0 0 14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 4px rgba(35,42,61,.05)}
+.card h3{margin:0 0 10px;font-size:16px}
+.card p{margin:8px 0}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.toc a{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--txt);font-size:15px}
+.toc a:hover{border-color:var(--acc);color:var(--acc)}
+.toc a span{float:right;color:var(--mut);font-size:13px}
+.tool-doc{margin-bottom:14px}
+.tool-doc h3 .open{float:right;font-size:13px;font-weight:700}
+.tool-doc .gotcha{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px}
+.tool-doc .src{font-size:13px;color:var(--mut)}
+.tool-doc code{background:#f7f5f0;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+ol,ul{margin:8px 0;padding-left:22px}
+li{margin:3px 0}
+footer{max-width:1060px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font-size:13px;text-align:center}
+@media(max-width:640px){h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="in">
+<a class="back" href="index.html">← Back to DevKit</a>
+<a href="guides.html">Guides</a>
+<a href="llm-harnesses.html" style="font-weight:700;color:var(--acc)">LLM harnesses</a>
+<a href="code-editors.html">Code editors</a>
+<a href="terminals.html">Terminals</a>
+<a href="api-clients.html">API clients</a>
+<a href="git-clients.html">Git clients</a>
+<a href="database-tools.html">Database tools</a>
+<a href="devtools.html">DevKit tools</a>
+</div></div>
+<header>
+<h1>LLM harnesses</h1>
+<p class="sub">An LLM harness is the layer between your code and a language model — it handles prompts, tools, retrieval, agents or serving so you don&#x27;t reinvent it. Pick by job: a framework for building apps, an agent framework for multi-agent teams, a gateway for routing many models, or a local runner for private, offline inference. Each entry gives a verdict, what it is good at, what it is bad at, and who it is best for. Checked Oct 2026.</p>
+</header>
+<main>
+
+<section>
+<h2>Contents</h2>
+<p class="secsub">16 tools. Click any entry to jump to its verdict.</p>
+<div class="toc">
+<a href="#tool-langchain">LangChain <span>Frameworks</span></a>
+<a href="#tool-langgraph">LangGraph <span>Frameworks</span></a>
+<a href="#tool-llamaindex">LlamaIndex <span>Frameworks</span></a>
+<a href="#tool-haystack">Haystack <span>Frameworks</span></a>
+<a href="#tool-dspy">DSPy <span>Frameworks</span></a>
+<a href="#tool-semantic-kernel">Semantic Kernel <span>Frameworks</span></a>
+<a href="#tool-vercel-ai-sdk">Vercel AI SDK <span>Frameworks</span></a>
+<a href="#tool-mastra">Mastra <span>Agent frameworks</span></a>
+<a href="#tool-crewai">CrewAI <span>Agent frameworks</span></a>
+<a href="#tool-autogen">AutoGen <span>Agent frameworks</span></a>
+<a href="#tool-litellm">LiteLLM <span>Gateways &amp; routers</span></a>
+<a href="#tool-openrouter">OpenRouter <span>Gateways &amp; routers</span></a>
+<a href="#tool-ollama">Ollama <span>Local runners</span></a>
+<a href="#tool-lm-studio">LM Studio <span>Local runners</span></a>
+<a href="#tool-llama-cpp">llama.cpp <span>Local runners</span></a>
+<a href="#tool-vllm">vLLM <span>Local runners</span></a>
+</div>
+</section>
+<section id="sec-frameworks">
+<h2>Frameworks</h2>
+<article class="card tool-doc" id="tool-langchain">
+<h3>LangChain <a class="open" href="https://www.langchain.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The Swiss-army framework — huge ecosystem and integrations, with a learning curve and API churn to match</p>
+<p><strong>What it is.</strong> Python and JavaScript framework for building LLM apps with chains, agents, tools, retrieval and memory, from LangChain Inc.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Largest integration ecosystem of any LLM framework</li>
+<li>Python and JS/TS support, with LangGraph underneath for stateful agents</li>
+<li>LangSmith adds tracing, evals and deployment in one place</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>API has changed often; older tutorials go stale fast</li>
+<li>Abstractions can obscure what is actually happening</li>
+<li>Production observability and deployment push you toward paid LangSmith</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams building varied LLM apps who want the biggest ecosystem and don&#x27;t mind the learning curve</p>
+<p class="src">Price: Free / open source (MIT); paid LangSmith platform (Developer free, Plus $39/seat/mo) · <a href="https://www.langchain.com/">Official site</a> · <a href="https://docs.langchain.com/oss/python/langchain/overview">Docs</a> · <a href="https://github.com/langchain-ai/langchain">GitHub</a></p>
+</article>
+<article class="card tool-doc" id="tool-langgraph">
+<h3>LangGraph <a class="open" href="https://langchain-ai.github.io/langgraph/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The control freak&#x27;s agent runtime — explicit stateful graphs with durable execution, if you want to build it yourself</p>
+<p><strong>What it is.</strong> Low-level framework from LangChain for stateful, multi-actor LLM apps modelled as graphs of nodes and edges, with persistence and human-in-the-loop.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Durable execution: runs survive crashes and resume</li>
+<li>Checkpointing, time-travel debugging and interrupts for approval</li>
+<li>Fine-grained control over branching, cycles and streaming</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>You build almost everything yourself — few opinions, lots of code</li>
+<li>Steeper learning curve than higher-level agent frameworks</li>
+<li>Best experience is tied to the LangChain/LangSmith stack</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams shipping long-running, production agents that must be reliable, resumable and auditable</p>
+<p class="src">Price: Free / open source (MIT); managed deployment via LangSmith (Developer free, Plus $39/seat/mo) · <a href="https://langchain-ai.github.io/langgraph/">Official site</a> · <a href="https://github.com/langchain-ai/langgraph">GitHub</a></p>
+</article>
+<article class="card tool-doc" id="tool-llamaindex">
+<h3>LlamaIndex <a class="open" href="https://www.llamaindex.ai/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The RAG specialist — the fastest route from a pile of documents to a grounded answer</p>
+<p><strong>What it is.</strong> Data framework for LLM apps focused on ingesting, indexing and retrieving private data, with query engines, agents and workflows.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Best-in-class document ingestion, parsing and retrieval tooling</li>
+<li>Huge connector and integration library (LlamaHub)</li>
+<li>LlamaCloud adds managed parsing and retrieval when you outgrow DIY</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Less suited to general agent orchestration than LangGraph or CrewAI</li>
+<li>Hosted LlamaCloud pricing is credit-based and can be hard to predict</li>
+<li>Smaller agent ecosystem than LangChain</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams whose core problem is RAG over documents — search, Q&amp;A and grounded answers</p>
+<p class="src">Price: Free / open source (MIT); hosted LlamaCloud has a free tier, Starter from $50/mo · <a href="https://www.llamaindex.ai/">Official site</a> · <a href="https://developers.llamaindex.ai/python/framework/">Docs</a> · <a href="https://www.llamaindex.ai/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-haystack">
+<h3>Haystack <a class="open" href="https://haystack.deepset.ai/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The pipeline engineer&#x27;s pick — declarative, auditable RAG pipelines built for production</p>
+<p><strong>What it is.</strong> Open-source framework from deepset for building LLM pipelines — search, RAG, agents — as explicit, inspectable component graphs, in Python.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Declarative pipelines that are easy to audit, version and test</li>
+<li>Strong retrieval and search heritage</li>
+<li>YAML pipeline definitions make review and reuse straightforward</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Smaller community and fewer tutorials than LangChain or LlamaIndex</li>
+<li>Fewer third-party integrations out of the box</li>
+<li>DAG mental model takes getting used to</li>
+</ul></div>
+<p><strong>Best for.</strong> Platform teams that need inspectable, production-grade RAG pipelines they can audit</p>
+<p class="src">Price: Free / open source (Apache 2.0); deepset AI Platform has a free Studio tier, Enterprise custom · <a href="https://haystack.deepset.ai/">Official site</a> · <a href="https://docs.haystack.deepset.ai/docs/intro">Docs</a> · <a href="https://github.com/deepset-ai/haystack">GitHub</a></p>
+</article>
+<article class="card tool-doc" id="tool-dspy">
+<h3>DSPy <a class="open" href="https://dspy.ai/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The optimizer, not the plumber — program your prompts and let it tune them for you</p>
+<p><strong>What it is.</strong> Stanford-origin framework that treats LLM programs as code: declare signatures and modules, then automatically optimise prompts and weights against a metric.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Prompt optimisation is built in, not bolted on</li>
+<li>Clean separation of program logic from specific prompts and models</li>
+<li>Strong for RAG and classification tasks with measurable quality bars</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Different paradigm — a real learning curve if you think in chains</li>
+<li>No built-in observability or deployment story</li>
+<li>Smaller ecosystem and fewer integrations than mainstream frameworks</li>
+</ul></div>
+<p><strong>Best for.</strong> Builders who care about measurable output quality and want prompts tuned systematically</p>
+<p class="src">Price: Free / open source (MIT); no paid tier · <a href="https://dspy.ai/">Official site</a> · <a href="https://dspy.ai/learn/">Docs</a> · <a href="https://github.com/stanfordnlp/dspy">GitHub</a></p>
+</article>
+<article class="card tool-doc" id="tool-semantic-kernel">
+<h3>Semantic Kernel <a class="open" href="https://learn.microsoft.com/en-us/semantic-kernel/overview/">Official site →</a></h3>
+<p><strong>Verdict.</strong> Microsoft&#x27;s enterprise SDK — the natural choice if your stack is .NET or Azure</p>
+<p><strong>What it is.</strong> Microsoft&#x27;s open-source SDK for adding LLM capabilities to apps in C#, Python and Java, with plugins, planners, memory and agents.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>First-class .NET/C# support — unique among major frameworks</li>
+<li>Plugin model turns ordinary code into AI-callable functions</li>
+<li>Enterprise-friendly: Azure integration and Microsoft backing</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Smaller community and ecosystem than LangChain</li>
+<li>Multi-language support isn&#x27;t perfectly even across C#, Python and Java</li>
+<li>Agent features have lagged the Python-first frameworks</li>
+</ul></div>
+<p><strong>Best for.</strong> Enterprise .NET/Azure teams adding AI to existing applications</p>
+<p class="src">Price: Free / open source (MIT); you pay only for the underlying model APIs · <a href="https://learn.microsoft.com/en-us/semantic-kernel/overview/">Official site</a> · <a href="https://learn.microsoft.com/en-us/semantic-kernel/">Docs</a> · <a href="https://github.com/microsoft/semantic-kernel">GitHub</a></p>
+</article>
+<article class="card tool-doc" id="tool-vercel-ai-sdk">
+<h3>Vercel AI SDK <a class="open" href="https://ai-sdk.dev/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The TypeScript default for AI in the browser — streaming UIs with almost no boilerplate</p>
+<p><strong>What it is.</strong> TypeScript toolkit for building AI-powered web apps: unified model calls across providers, streaming, structured output, agents and UI hooks for React/Next.js.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>One API across many model providers</li>
+<li>Excellent streaming and React/Next.js UI primitives</li>
+<li>Lightweight and easy to start — no heavy framework to learn</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>TypeScript/JavaScript only</li>
+<li>Thinner than LangChain for complex server-side agent orchestration</li>
+<li>Closest integrations assume the Vercel ecosystem</li>
+</ul></div>
+<p><strong>Best for.</strong> TypeScript teams building AI features into web apps, especially on Next.js</p>
+<p class="src">Price: Free / open source (Apache 2.0); Vercel hosting and AI Gateway billed separately · <a href="https://ai-sdk.dev/">Official site</a> · <a href="https://ai-sdk.dev/docs/introduction">Docs</a> · <a href="https://github.com/vercel/ai">GitHub</a></p>
+</article>
+</section>
+<section id="sec-agent-frameworks">
+<h2>Agent frameworks</h2>
+<article class="card tool-doc" id="tool-mastra">
+<h3>Mastra <a class="open" href="https://mastra.ai/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The TypeScript agent framework — agents, workflows and evals in one tidy SDK</p>
+<p><strong>What it is.</strong> TypeScript-first open-source framework for building agents, workflows, RAG and tool use, with built-in evals, observability and a local dev playground.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>TypeScript-native with type-safe tools and workflows</li>
+<li>Agents, workflows, memory and evals in one SDK</li>
+<li>Local dev server with playground UI for testing agents</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Younger project — smaller ecosystem than LangGraph or CrewAI</li>
+<li>Multi-agent orchestration is lighter than the Python heavyweights</li>
+<li>Enterprise features live under a separate commercial licence</li>
+</ul></div>
+<p><strong>Best for.</strong> TypeScript/Node teams shipping agents inside web apps</p>
+<p class="src">Price: Free / open source (Apache 2.0 core; enterprise features under commercial licence); Mastra Cloud Starter free, Teams $250/mo · <a href="https://mastra.ai/">Official site</a> · <a href="https://mastra.ai/docs">Docs</a> · <a href="https://mastra.ai/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-crewai">
+<h3>CrewAI <a class="open" href="https://crewai.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The org-chart framework — cast agents as roles and let the crew run the job</p>
+<p><strong>What it is.</strong> Python framework for multi-agent systems where agents have roles, goals and backstories and collaborate as a &#x27;crew&#x27; on sequential or hierarchical tasks.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Intuitive role-based mental model — fast to prototype</li>
+<li>Memory, guardrails and human-in-the-loop built in</li>
+<li>YAML config for defining crews without boilerplate</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Sequential and hierarchical processes feel limiting for free-form agent conversations</li>
+<li>Less fine-grained control than LangGraph when workflows get complex</li>
+<li>Hosted platform&#x27;s free tier is capped at 50 executions a month</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams that want a working multi-agent prototype fast, especially research and content pipelines</p>
+<p class="src">Price: Free / open source (MIT); hosted CrewAI AMP free tier (50 executions/mo), Enterprise custom · <a href="https://crewai.com/">Official site</a> · <a href="https://docs.crewai.com/">Docs</a> · <a href="https://crewai.com/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-autogen">
+<h3>AutoGen <a class="open" href="https://microsoft.github.io/autogen/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The conversation-first framework — agents that talk to each other until the job is done</p>
+<p><strong>What it is.</strong> Microsoft&#x27;s open-source framework for multi-agent applications built around conversational, event-driven agents that message each other, with async execution and observability.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Conversation-driven model maps well to collaborative agent work</li>
+<li>Async, event-driven runtime with good observability</li>
+<li>Microsoft backing and active research community</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Older tutorials target the pre-rewrite API, so docs and examples can disagree</li>
+<li>More moving parts than a simple sequential crew</li>
+<li>Conversation loops can be harder to debug and bound</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers and researchers building conversational multi-agent systems, especially on Microsoft&#x27;s stack</p>
+<p class="src">Price: Free / open source; no paid tier · <a href="https://microsoft.github.io/autogen/">Official site</a> · <a href="https://microsoft.github.io/autogen/stable/">Docs</a> · <a href="https://github.com/microsoft/autogen">GitHub</a></p>
+</article>
+</section>
+<section id="sec-gateways">
+<h2>Gateways &amp; routers</h2>
+<article class="card tool-doc" id="tool-litellm">
+<h3>LiteLLM <a class="open" href="https://www.litellm.ai/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The universal translator — one OpenAI-compatible API for 100+ providers, self-hosted</p>
+<p><strong>What it is.</strong> Open-source Python library and proxy that gives every LLM provider a single OpenAI-compatible interface, with load balancing, fallbacks, caching and spend tracking.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>One API shape for 100+ providers — swap models by changing config</li>
+<li>Fallbacks, retries and load balancing built in</li>
+<li>Spend tracking and per-key budgets for teams</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>You operate it: self-hosting means owning the infra and upgrades</li>
+<li>Enterprise features (SSO, RBAC, audit logs) are paid and behind a licence key</li>
+<li>Python-centric; very high throughput needs careful tuning</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams that want provider freedom and cost control without vendor lock-in, and can run a proxy</p>
+<p class="src">Price: Free / open source (MIT core; enterprise features under commercial licence); Enterprise paid, pricing on request · <a href="https://www.litellm.ai/">Official site</a> · <a href="https://docs.litellm.ai/">Docs</a> · <a href="https://www.litellm.ai/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-openrouter">
+<h3>OpenRouter <a class="open" href="https://openrouter.ai/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The model marketplace — every frontier model behind one key and one bill</p>
+<p><strong>What it is.</strong> Hosted gateway that routes requests to hundreds of models from many providers through a single API key, with per-model pricing and automatic fallbacks.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Instant access to hundreds of models with no per-provider setup</li>
+<li>Pay-as-you-go per token; free models available for trying things</li>
+<li>Built-in fallbacks and usage analytics</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Some models carry a markup over the provider&#x27;s direct price</li>
+<li>Hosted service — traffic and keys flow through a third party</li>
+<li>No self-hosted option for strict data-residency needs</li>
+</ul></div>
+<p><strong>Best for.</strong> Builders who want to try or switch models quickly without managing provider accounts</p>
+<p class="src">Price: Pay-as-you-go per token, rates vary by model; no subscription, some models free · <a href="https://openrouter.ai/">Official site</a> · <a href="https://openrouter.ai/docs/quickstart">Docs</a> · <a href="https://openrouter.ai/pricing">Pricing</a></p>
+</article>
+</section>
+<section id="sec-local-runners">
+<h2>Local runners</h2>
+<article class="card tool-doc" id="tool-ollama">
+<h3>Ollama <a class="open" href="https://ollama.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The easy button for local models — one command and you&#x27;re chatting offline</p>
+<p><strong>What it is.</strong> Free tool for running open-weight models locally on macOS, Windows and Linux, with a CLI, REST API and model library.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Simplest local setup: pull a model, run it</li>
+<li>OpenAI-compatible API for apps and agents</li>
+<li>Models stay on your machine — private by default</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Not built for multi-user production serving or horizontal scaling</li>
+<li>One request per model by default; concurrent load queues</li>
+<li>Signed-in cloud models can send traffic off-device</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers trying local models, prototyping offline, or giving agents a private local backend</p>
+<p class="src">Price: Free / open source (MIT) for local use; optional Ollama Cloud from $20/mo · <a href="https://ollama.com/">Official site</a> · <a href="https://github.com/ollama/ollama">GitHub</a> · <a href="https://ollama.com/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-lm-studio">
+<h3>LM Studio <a class="open" href="https://lmstudio.ai/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The friendly desktop for local models — browse, chat and serve with sliders, not terminals</p>
+<p><strong>What it is.</strong> Desktop app for discovering, downloading and running open models locally, with a chat UI, an OpenAI-compatible local server and MCP support.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Best GUI for exploring models — search, chat and tweak settings visually</li>
+<li>One-click local OpenAI-compatible server for apps</li>
+<li>Runs fully offline; good Apple-silicon (MLX) support</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Proprietary app — you can&#x27;t use it as a SaaS or service-bureau backend</li>
+<li>Bundled runtimes can lag the newest model architectures</li>
+<li>Desktop-first; headless serving needs the separate daemon</li>
+</ul></div>
+<p><strong>Best for.</strong> People who want to try local models hands-on without the command line</p>
+<p class="src">Price: Free for personal and internal business use; paid Enterprise tier · <a href="https://lmstudio.ai/">Official site</a> · <a href="https://lmstudio.ai/docs/app">Docs</a> · <a href="https://lmstudio.ai/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-llama-cpp">
+<h3>llama.cpp <a class="open" href="https://github.com/ggml-org/llama.cpp">Official site →</a></h3>
+<p><strong>Verdict.</strong> The engine under everything — raw speed and control, with no hand-holding</p>
+<p><strong>What it is.</strong> Open-source C/C++ inference engine for running LLMs on CPU and GPU, the core that powers Ollama, LM Studio and many other tools; includes llama-server.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Fastest to support new model architectures and quantisations</li>
+<li>Runs anywhere: CPU, CUDA, Metal, Vulkan and more</li>
+<li>Full control over sampling, context and performance tuning</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Command-line first — no polished app or chat UI</li>
+<li>You configure everything yourself, including GGUF quantisation</li>
+<li>API surface moves fast; docs assume technical users</li>
+</ul></div>
+<p><strong>Best for.</strong> Engineers who want maximum control and early access to new models, or who embed inference in their own products</p>
+<p class="src">Price: Free / open source (MIT); no paid tier · <a href="https://github.com/ggml-org/llama.cpp">Official site</a> · <a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md">Docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-vllm">
+<h3>vLLM <a class="open" href="https://vllm.ai/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The production serving engine — built for throughput when one GPU must serve many users</p>
+<p><strong>What it is.</strong> High-throughput open-source LLM serving engine (PagedAttention, continuous batching) that exposes an OpenAI-compatible API for production deployments.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Best-in-class throughput via PagedAttention and continuous batching</li>
+<li>OpenAI-compatible API — drop-in for existing clients</li>
+<li>Wide hardware support: NVIDIA, AMD, Intel and more</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Linux-focused; Windows needs WSL</li>
+<li>More moving parts to tune and maintain than Ollama</li>
+<li>API-only — no chat UI or model library included</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams serving open models to many users at scale on their own GPUs</p>
+<p class="src">Price: Free / open source (Apache 2.0); no paid tier · <a href="https://vllm.ai/">Official site</a> · <a href="https://docs.vllm.ai/en/latest/">Docs</a> · <a href="https://github.com/vllm-project/vllm">GitHub</a></p>
+</article>
+</section>
+</main>
+<footer>
+DevKit guides — honest overviews of developer tools, checked Oct 2026. Links verified before publishing. All DevKit tools are client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. <a href="index.html">Back to DevKit</a> · <a href="guides.html">All guides</a>.
+</footer>
+</body>
+</html>

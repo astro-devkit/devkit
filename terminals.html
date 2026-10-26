@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terminals — DevKit guides</title>
+<meta name="description" content="A terminal emulator is the window where you run your shell and command-line tools. Pick based on your OS, whether you want tabs and splits built in or bring your own multiplexer, and how much configuration you enjoy doing.">
+<link rel="canonical" href="https://astro-devkit.github.io/devkit/terminals.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Terminals \u2014 DevKit guides","description":"A terminal emulator is the window where you run your shell and command-line tools. Pick based on your OS, whether you want tabs and splits built in or bring your own multiplexer, and how much configuration you enjoy doing.","url":"https://astro-devkit.github.io/devkit/terminals.html","isPartOf":{"@type":"WebApplication","name":"DevKit","url":"https://astro-devkit.github.io/devkit/"}}</script>
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}
+.topbar{position:sticky;top:0;z-index:50;background:var(--bg);padding:12px 20px;border-bottom:1px solid var(--line)}
+.topbar .in{max-width:1060px;margin:0 auto;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.topbar a{font-size:14px;text-decoration:none;color:var(--txt)}
+.topbar a:hover{color:var(--acc)}
+.topbar a.back{font-weight:700;color:var(--acc)}
+header{max-width:1060px;margin:0 auto;padding:36px 20px 4px}
+h1{margin:0;font-size:30px;letter-spacing:-.5px}h1 span{color:var(--acc)}
+p.sub{color:var(--mut);margin:10px 0 0;max-width:640px;font-size:16px}
+main{max-width:1060px;margin:0 auto;padding:20px}
+section{margin-bottom:36px}
+section>h2{font-size:22px;margin:8px 0 2px}
+.secsub{color:var(--mut);margin:0 0 14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 4px rgba(35,42,61,.05)}
+.card h3{margin:0 0 10px;font-size:16px}
+.card p{margin:8px 0}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.toc a{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--txt);font-size:15px}
+.toc a:hover{border-color:var(--acc);color:var(--acc)}
+.toc a span{float:right;color:var(--mut);font-size:13px}
+.tool-doc{margin-bottom:14px}
+.tool-doc h3 .open{float:right;font-size:13px;font-weight:700}
+.tool-doc .gotcha{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px}
+.tool-doc .src{font-size:13px;color:var(--mut)}
+.tool-doc code{background:#f7f5f0;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+ol,ul{margin:8px 0;padding-left:22px}
+li{margin:3px 0}
+footer{max-width:1060px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font-size:13px;text-align:center}
+@media(max-width:640px){h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="in">
+<a class="back" href="index.html">← Back to DevKit</a>
+<a href="guides.html">Guides</a>
+<a href="llm-harnesses.html">LLM harnesses</a>
+<a href="code-editors.html">Code editors</a>
+<a href="terminals.html" style="font-weight:700;color:var(--acc)">Terminals</a>
+<a href="api-clients.html">API clients</a>
+<a href="git-clients.html">Git clients</a>
+<a href="database-tools.html">Database tools</a>
+<a href="devtools.html">DevKit tools</a>
+</div></div>
+<header>
+<h1>Terminals</h1>
+<p class="sub">A terminal emulator is the window where you run your shell and command-line tools. Pick based on your OS, whether you want tabs and splits built in or bring your own multiplexer, and how much configuration you enjoy doing. Each entry gives a verdict, what it is good at, what it is bad at, and who it is best for. Checked Oct 2026.</p>
+</header>
+<main>
+
+<section>
+<h2>Contents</h2>
+<p class="secsub">8 tools. Click any entry to jump to its verdict.</p>
+<div class="toc">
+<a href="#tool-ghostty">Ghostty <span>Terminals</span></a>
+<a href="#tool-iterm2">iTerm2 <span>Terminals</span></a>
+<a href="#tool-windows-terminal">Windows Terminal <span>Terminals</span></a>
+<a href="#tool-alacritty">Alacritty <span>Terminals</span></a>
+<a href="#tool-kitty">Kitty <span>Terminals</span></a>
+<a href="#tool-warp">Warp <span>Terminals</span></a>
+<a href="#tool-wezterm">WezTerm <span>Terminals</span></a>
+<a href="#tool-tabby">Tabby <span>Terminals</span></a>
+</div>
+</section>
+<section id="sec-terminals">
+<h2>Terminals</h2>
+<article class="card tool-doc" id="tool-ghostty">
+<h3>Ghostty <a class="open" href="https://ghostty.org/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The fastest-feeling modern terminal that still feels like a native app — the default pick on Mac and Linux in 2026.</p>
+<p><strong>What it is.</strong> A fast, feature-rich terminal emulator by Mitchell Hashimoto (creator of Vagrant and Terraform), written in Zig with a native UI on each platform — AppKit/Metal on macOS, GTK4 on Linux.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Very low input latency with GPU-accelerated rendering</li>
+<li>Native platform feel: tabs, splits, and fullscreen that behave like system apps</li>
+<li>Sensible defaults — works well with no configuration, plain-text config file when you want it</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>No Windows support (macOS and Linux only)</li>
+<li>Younger project: fewer power-user features than iTerm2 (no tmux -CC integration, no triggers)</li>
+<li>No built-in session persistence — still needs tmux or Zellij for that</li>
+</ul></div>
+<p><strong>Best for.</strong> Mac and Linux users who want a fast, native-feeling terminal with minimal setup</p>
+<p class="src">Price: Free / open source (MIT) · <a href="https://ghostty.org/">Official site</a> · <a href="https://ghostty.org/docs">Docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-iterm2">
+<h3>iTerm2 <a class="open" href="https://iterm2.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The veteran Mac terminal: unmatched feature depth, at the cost of speed and a sprawling settings window.</p>
+<p><strong>What it is.</strong> The long-standing, feature-packed terminal emulator for macOS, in active development for over 15 years, with deep shell integration and scripting support.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Deepest feature set: triggers, Smart Selection, instant replay, annotations</li>
+<li>Native tmux integration mode — tmux windows become native tabs and panes</li>
+<li>Hotkey dropdown window, profiles, and a mature Python scripting API</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>macOS only — no Linux or Windows builds</li>
+<li>Slower and heavier than Ghostty under heavy output</li>
+<li>GUI-driven preferences are awkward to version-control in dotfiles</li>
+</ul></div>
+<p><strong>Best for.</strong> Mac power users who want every knob, especially tmux users and server admins</p>
+<p class="src">Price: Free / open source (GPL v2) · <a href="https://iterm2.com/">Official site</a> · <a href="https://iterm2.com/documentation.html">Documentation</a></p>
+</article>
+<article class="card tool-doc" id="tool-windows-terminal">
+<h3>Windows Terminal <a class="open" href="https://github.com/microsoft/terminal">Official site →</a></h3>
+<p><strong>Verdict.</strong> The obvious default on Windows: free, fast, and the best way to run PowerShell, CMD, and WSL side by side.</p>
+<p><strong>What it is.</strong> Microsoft&#x27;s modern, open-source terminal for Windows, with tabs, panes, GPU-accelerated text rendering, and profiles for PowerShell, CMD, Azure Cloud Shell, and WSL distributions.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>First-class WSL and multi-shell support in one window</li>
+<li>Tabs, split panes, and GPU-accelerated rendering built in</li>
+<li>Free, open source, and preinstalled on Windows 11</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Windows only</li>
+<li>No built-in SSH connection manager — relies on profiles and external tools</li>
+<li>Fewer power-user features than Kitty or iTerm2 (no inline images, limited scripting)</li>
+</ul></div>
+<p><strong>Best for.</strong> Windows developers, especially anyone working across PowerShell, CMD, and WSL</p>
+<p class="src">Price: Free / open source (MIT) · <a href="https://github.com/microsoft/terminal">Official site</a> · <a href="https://learn.microsoft.com/en-us/windows/terminal/">Docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-alacritty">
+<h3>Alacritty <a class="open" href="https://alacritty.org/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The minimalist speed demon: just a fast rendering canvas, nothing else — bring your own tmux.</p>
+<p><strong>What it is.</strong> A cross-platform, GPU-accelerated terminal emulator written in Rust, deliberately minimal: it renders text fast and leaves tabs, splits, and multiplexing to other tools like tmux.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Extremely fast with a tiny memory footprint (~30 MB idle)</li>
+<li>Cross-platform: same config on Linux, macOS, Windows, and BSD</li>
+<li>Simple declarative TOML config, easy to keep in dotfiles</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>No tabs or split panes — you need tmux or Zellij for multiplexing</li>
+<li>No font ligatures, by design</li>
+<li>No inline image or graphics protocol support</li>
+</ul></div>
+<p><strong>Best for.</strong> Minimalists and tmux users who want the fastest possible canvas and nothing more</p>
+<p class="src">Price: Free / open source (Apache 2.0) · <a href="https://alacritty.org/">Official site</a> · <a href="https://alacritty.org/config-alacritty.html">Configuration docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-kitty">
+<h3>Kitty <a class="open" href="https://sw.kovidgoyal.net/kitty/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The most programmable GPU terminal on Linux and Mac — unmatched extensibility, but no Windows and a learning curve.</p>
+<p><strong>What it is.</strong> A fast, feature-rich, GPU-based terminal emulator for Linux and macOS with its own graphics protocol, layouts, and a Python extension system called kittens.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Kitty graphics protocol — the best inline image support of any terminal</li>
+<li>Extremely extensible via kittens (Python scripts) and a remote control protocol</li>
+<li>Built-in tabs, splits, layouts, and scrollback search</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>No Windows support</li>
+<li>Custom-drawn window controls can feel out of place on macOS</li>
+<li>Configuration is powerful but sprawling — a lot to learn</li>
+</ul></div>
+<p><strong>Best for.</strong> Linux and Mac users who want maximum scriptability and inline graphics</p>
+<p class="src">Price: Free / open source (GPL v3) · <a href="https://sw.kovidgoyal.net/kitty/">Official site</a> · <a href="https://sw.kovidgoyal.net/kitty/quickstart/">Quickstart</a></p>
+</article>
+<article class="card tool-doc" id="tool-warp">
+<h3>Warp <a class="open" href="https://www.warp.dev/">Official site →</a></h3>
+<p><strong>Verdict.</strong> A terminal reimagined as an AI workspace — great if you want AI help and block-based output, heavy if you just want a terminal.</p>
+<p><strong>What it is.</strong> A modern, Rust-based terminal with an IDE-style input editor, block-based command output, built-in AI command generation and coding agents, and team features via Warp Drive.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>AI built in: command generation, error explanations, and coding agents</li>
+<li>Block-based output makes commands easy to copy, share, and revisit</li>
+<li>IDE-style editing with completions for 500+ CLI tools</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Account and telemetry by default for AI and team features</li>
+<li>Client open-sourced under AGPL-3.0 (April 2026), but the AI/cloud platform (Oz) stays proprietary; AI usage is metered</li>
+<li>Heavier than pure terminals (~200 MB idle) and non-standard behavior can break some TUI apps</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers who want AI assistance and modern editing built into their terminal</p>
+<p class="src">Price: Free tier; paid AI plans from $18/mo (Build) · <a href="https://www.warp.dev/">Official site</a> · <a href="https://docs.warp.dev/">Docs</a> · <a href="https://www.warp.dev/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-wezterm">
+<h3>WezTerm <a class="open" href="https://wezterm.org/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The cross-platform multiplexer terminal: tmux built in, scriptable in Lua, and the same setup everywhere.</p>
+<p><strong>What it is.</strong> A GPU-accelerated terminal emulator and multiplexer written in Rust, configured entirely in Lua, with built-in tabs, panes, and SSH domains that let you split panes directly into remote machines.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Built-in multiplexer with tabs, panes, and SSH domains — a tmux replacement</li>
+<li>Cross-platform: macOS, Linux, Windows, and FreeBSD with the same config</li>
+<li>Lua scripting gives unlimited customization, plus ligatures and all major image protocols</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Higher memory usage than Alacritty or Ghostty</li>
+<li>Lua config has a steep learning curve for simple tweaks</li>
+<li>Slower raw throughput than the leanest terminals in benchmarks</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers who live on multiple OSes or SSH into servers and want multiplexing without tmux</p>
+<p class="src">Price: Free / open source (MIT) · <a href="https://wezterm.org/">Official site</a> · <a href="https://wezterm.org/config/files.html">Configuration docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-tabby">
+<h3>Tabby <a class="open" href="https://tabby.sh/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The connection manager disguised as a terminal — best pick if you juggle lots of SSH, serial, and SFTP sessions.</p>
+<p><strong>What it is.</strong> A cross-platform terminal app (formerly Terminus) with saved SSH profiles, a built-in SFTP browser, serial and Telnet support, jump hosts, and a plugin system.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Best-in-class connection management: SSH profiles, SFTP, serial, Telnet, jump hosts</li>
+<li>Cross-platform with tabs, splits, and 240+ built-in color schemes</li>
+<li>Plugin ecosystem and a polished GUI for profiles and settings</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Electron-based, so heavier on memory and startup than native GPU terminals</li>
+<li>Less suited as a pure local shell — its strengths are remote connections</li>
+<li>Occasional quirks from the Electron shell (input lag, larger install)</li>
+</ul></div>
+<p><strong>Best for.</strong> Sysadmins and anyone managing many remote servers and SSH connections</p>
+<p class="src">Price: Free / open source (MIT) · <a href="https://tabby.sh/">Official site</a> · <a href="https://tabby.sh/docs/">Docs</a> · <a href="https://github.com/Eugeny/tabby/releases">Releases</a></p>
+</article>
+</section>
+</main>
+<footer>
+DevKit guides — honest overviews of developer tools, checked Oct 2026. Links verified before publishing. All DevKit tools are client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. <a href="index.html">Back to DevKit</a> · <a href="guides.html">All guides</a>.
+</footer>
+</body>
+</html>

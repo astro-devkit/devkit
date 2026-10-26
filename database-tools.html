@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Database tools — DevKit guides</title>
+<meta name="description" content="A database GUI lets you browse, query, and edit databases without living in a terminal. Pick based on which databases you use, whether you need admin depth or daily querying speed, and whether free and open source matters to you.">
+<link rel="canonical" href="https://astro-devkit.github.io/devkit/database-tools.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Database tools \u2014 DevKit guides","description":"A database GUI lets you browse, query, and edit databases without living in a terminal. Pick based on which databases you use, whether you need admin depth or daily querying speed, and whether free and open source matters to you.","url":"https://astro-devkit.github.io/devkit/database-tools.html","isPartOf":{"@type":"WebApplication","name":"DevKit","url":"https://astro-devkit.github.io/devkit/"}}</script>
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}
+.topbar{position:sticky;top:0;z-index:50;background:var(--bg);padding:12px 20px;border-bottom:1px solid var(--line)}
+.topbar .in{max-width:1060px;margin:0 auto;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.topbar a{font-size:14px;text-decoration:none;color:var(--txt)}
+.topbar a:hover{color:var(--acc)}
+.topbar a.back{font-weight:700;color:var(--acc)}
+header{max-width:1060px;margin:0 auto;padding:36px 20px 4px}
+h1{margin:0;font-size:30px;letter-spacing:-.5px}h1 span{color:var(--acc)}
+p.sub{color:var(--mut);margin:10px 0 0;max-width:640px;font-size:16px}
+main{max-width:1060px;margin:0 auto;padding:20px}
+section{margin-bottom:36px}
+section>h2{font-size:22px;margin:8px 0 2px}
+.secsub{color:var(--mut);margin:0 0 14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 4px rgba(35,42,61,.05)}
+.card h3{margin:0 0 10px;font-size:16px}
+.card p{margin:8px 0}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.toc a{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--txt);font-size:15px}
+.toc a:hover{border-color:var(--acc);color:var(--acc)}
+.toc a span{float:right;color:var(--mut);font-size:13px}
+.tool-doc{margin-bottom:14px}
+.tool-doc h3 .open{float:right;font-size:13px;font-weight:700}
+.tool-doc .gotcha{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px}
+.tool-doc .src{font-size:13px;color:var(--mut)}
+.tool-doc code{background:#f7f5f0;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+ol,ul{margin:8px 0;padding-left:22px}
+li{margin:3px 0}
+footer{max-width:1060px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font-size:13px;text-align:center}
+@media(max-width:640px){h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="in">
+<a class="back" href="index.html">← Back to DevKit</a>
+<a href="guides.html">Guides</a>
+<a href="llm-harnesses.html">LLM harnesses</a>
+<a href="code-editors.html">Code editors</a>
+<a href="terminals.html">Terminals</a>
+<a href="api-clients.html">API clients</a>
+<a href="git-clients.html">Git clients</a>
+<a href="database-tools.html" style="font-weight:700;color:var(--acc)">Database tools</a>
+<a href="devtools.html">DevKit tools</a>
+</div></div>
+<header>
+<h1>Database tools</h1>
+<p class="sub">A database GUI lets you browse, query, and edit databases without living in a terminal. Pick based on which databases you use, whether you need admin depth or daily querying speed, and whether free and open source matters to you. Each entry gives a verdict, what it is good at, what it is bad at, and who it is best for. Checked Oct 2026.</p>
+</header>
+<main>
+
+<section>
+<h2>Contents</h2>
+<p class="secsub">7 tools. Click any entry to jump to its verdict.</p>
+<div class="toc">
+<a href="#tool-dbeaver">DBeaver <span>Database tools</span></a>
+<a href="#tool-tableplus">TablePlus <span>Database tools</span></a>
+<a href="#tool-datagrip">DataGrip <span>Database tools</span></a>
+<a href="#tool-beekeeper-studio">Beekeeper Studio <span>Database tools</span></a>
+<a href="#tool-pgadmin">pgAdmin <span>Database tools</span></a>
+<a href="#tool-db-browser-for-sqlite">DB Browser for SQLite <span>Database tools</span></a>
+<a href="#tool-studio-3t">Studio 3T <span>Database tools</span></a>
+</div>
+</section>
+<section id="sec-database-tools">
+<h2>Database tools</h2>
+<article class="card tool-doc" id="tool-dbeaver">
+<h3>DBeaver <a class="open" href="https://dbeaver.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The free all-rounder: one tool for almost any database, with a dense interface to match.</p>
+<p><strong>What it is.</strong> A free, open-source universal database client that connects to 100+ databases (PostgreSQL, MySQL, SQL Server, SQLite, Oracle and more) via JDBC, with a SQL editor, data editor, and ER diagrams.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Free Community edition covers most daily relational-database work</li>
+<li>Widest database support of any free client, plus ER diagrams and data import/export</li>
+<li>Cross-platform (Windows, macOS, Linux) with SSH tunneling and task scheduling</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Java-based, so it can feel heavy and slow to start</li>
+<li>NoSQL, cloud databases, and advanced tools are locked behind paid Pro/Enterprise</li>
+<li>Interface is dense and cluttered, with a learning curve for new users</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers who juggle several different databases and want one capable free tool.</p>
+<p class="src">Price: Free Community edition (open source); paid Pro and Enterprise subscriptions · <a href="https://dbeaver.io/">Official site</a> · <a href="https://dbeaver.com/docs/dbeaver/">Docs</a> · <a href="https://dbeaver.io/download/">Download</a></p>
+</article>
+<article class="card tool-doc" id="tool-tableplus">
+<h3>TablePlus <a class="open" href="https://tableplus.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The fast, native-feeling client for daily querying — you pay once, not monthly.</p>
+<p><strong>What it is.</strong> A native, lightweight database client for macOS, Windows, Linux, and iOS, supporting relational databases (PostgreSQL, MySQL, SQL Server, SQLite) as well as MongoDB, Redis, and Cassandra.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Very fast to launch with a clean, modern interface and inline data editing</li>
+<li>Perpetual license: buy once, keep using it forever, with one year of updates</li>
+<li>Supports many databases including NoSQL, with safe staged edits before committing</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Free tier is limited to 2 open tabs, 2 windows, and 2 advanced filters at a time</li>
+<li>Fewer admin and DBA features than DBeaver or DataGrip</li>
+<li>Windows and Linux versions have historically lagged the Mac version</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers who open a database client many times a day and value speed and a clean UI.</p>
+<p class="src">Price: Free tier (limited); paid perpetual licenses from $99 one-time · <a href="https://tableplus.com/">Official site</a> · <a href="https://tableplus.com/docs/overview">Docs</a> · <a href="https://tableplus.com/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-datagrip">
+<h3>DataGrip <a class="open" href="https://www.jetbrains.com/datagrip/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The smartest SQL editor you can buy — best-in-class autocomplete, at a subscription price.</p>
+<p><strong>What it is.</strong> JetBrains&#x27; cross-platform database IDE, with schema-aware SQL completion, code analysis, refactoring, visual explain plans, and support for 30+ database engines.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Best-in-class SQL autocomplete, introspection, and query analysis</li>
+<li>Refactoring, version-control integration, and visual explain plans built in</li>
+<li>Feels familiar if you already use a JetBrains IDE; included in the All Products Pack</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Paid subscription only for commercial use — no permanent free edition</li>
+<li>JVM-based, so startup is slow and memory use is high</li>
+<li>No visual query builder; it expects you to write SQL by hand</li>
+</ul></div>
+<p><strong>Best for.</strong> Professional developers and DBAs who write SQL all day and want the smartest editor.</p>
+<p class="src">Price: Paid subscription (individual and organization tiers, with continuity discounts); free for non-commercial use, students, and open-source contributors · <a href="https://www.jetbrains.com/datagrip/">Official site</a> · <a href="https://www.jetbrains.com/help/datagrip/getting-started.html">Docs</a> · <a href="https://www.jetbrains.com/datagrip/buy/">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-beekeeper-studio">
+<h3>Beekeeper Studio <a class="open" href="https://www.beekeeperstudio.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The clean, friendly open-source client — great for everyday SQL, lighter on power features.</p>
+<p><strong>What it is.</strong> A modern, open-source SQL editor and database manager for PostgreSQL, MySQL, SQLite, SQL Server, Oracle, and more, with a free Community edition under GPLv3.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Clean, modern interface that is easy to pick up with no tutorial</li>
+<li>Free Community edition is genuinely open source (GPLv3), with no telemetry or mandatory login</li>
+<li>Same features on macOS, Windows, and Linux, and works offline by default</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Community edition covers the common SQL engines; NoSQL, AI, and backup/restore need paid tiers</li>
+<li>Fewer advanced DBA and admin features than DBeaver or DataGrip</li>
+<li>Desktop-only Electron app — no web or shared team instance</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers who want a simple, pretty, open-source client for everyday PostgreSQL, MySQL, or SQLite work.</p>
+<p class="src">Price: Free Community edition (open source, GPLv3); paid Indie and Pro subscriptions · <a href="https://www.beekeeperstudio.io/">Official site</a> · <a href="https://docs.beekeeperstudio.io/">Docs</a> · <a href="https://www.beekeeperstudio.io/pricing/">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-pgadmin">
+<h3>pgAdmin <a class="open" href="https://www.pgadmin.org/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The official PostgreSQL admin tool: free, deep, and battle-tested — but Postgres-only and dated.</p>
+<p><strong>What it is.</strong> The most popular open-source administration and development platform for PostgreSQL, with a SQL editor, schema browser, server monitoring dashboards, and backup/restore built on pg_dump and pg_restore.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Free and open source with the deepest PostgreSQL-specific support of any GUI</li>
+<li>Backup/restore, server monitoring, and user/role management built in</li>
+<li>Runs as a desktop app or a self-hosted web app for teams</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>PostgreSQL only — useless if you also run MySQL, SQL Server, or MongoDB</li>
+<li>Web-app UI wrapped in a desktop shell, so it feels slow and non-native</li>
+<li>Interface is dated and can overwhelm beginners</li>
+</ul></div>
+<p><strong>Best for.</strong> Anyone administering PostgreSQL who wants the official, free, fully-featured tool.</p>
+<p class="src">Price: Free and open source (PostgreSQL License) · <a href="https://www.pgadmin.org/">Official site</a> · <a href="https://www.pgadmin.org/docs/">Docs</a> · <a href="https://www.pgadmin.org/download/">Download</a></p>
+</article>
+<article class="card tool-doc" id="tool-db-browser-for-sqlite">
+<h3>DB Browser for SQLite <a class="open" href="https://sqlitebrowser.org/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The simplest way to open and edit a SQLite file — free, tiny, and single-purpose.</p>
+<p><strong>What it is.</strong> A free, open-source visual tool for creating, browsing, and editing SQLite database files, with a spreadsheet-style data view, SQL editor, and CSV/SQL import and export.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Completely free and open source, and very easy for beginners to learn</li>
+<li>Lightweight and cross-platform, with a portable version that needs no install</li>
+<li>Spreadsheet-style editing plus SQLCipher support for encrypted databases</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>SQLite only — no support for server databases like PostgreSQL or MySQL</li>
+<li>Can be slow with very large databases</li>
+<li>Dated interface and no official support, only community help</li>
+</ul></div>
+<p><strong>Best for.</strong> Anyone working with local SQLite files, including app developers and learners.</p>
+<p class="src">Price: Free and open source (GPL) · <a href="https://sqlitebrowser.org/">Official site</a> · <a href="https://sqlitebrowser.org/dl/">Download</a> · <a href="https://github.com/sqlitebrowser/sqlitebrowser">GitHub</a></p>
+</article>
+<article class="card tool-doc" id="tool-studio-3t">
+<h3>Studio 3T <a class="open" href="https://studio3t.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The power tool for MongoDB professionals — unmatched for MongoDB, expensive and MongoDB-only.</p>
+<p><strong>What it is.</strong> A commercial MongoDB IDE for Windows, macOS, and Linux, with a Visual Query Builder, Aggregation Editor, IntelliShell with autocompletion, SQL Query, and schema exploration.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Most powerful MongoDB GUI: visual query builder, aggregation editor, and SQL-to-MongoDB translation</li>
+<li>Schema Explorer, data import/export, and code generation for several languages</li>
+<li>Free Community Edition for non-commercial use</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Expensive paid tiers, and MongoDB only — no relational databases</li>
+<li>Feature-dense interface can overwhelm beginners</li>
+<li>Requires creating a free Studio 3T account before use</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers and teams who work with MongoDB daily and need its most advanced tooling.</p>
+<p class="src">Price: Free Community Edition (non-commercial use); Professional $499/user/year, Ultimate $699/user/year · <a href="https://studio3t.com/">Official site</a> · <a href="https://studio3t.com/buy/">Pricing</a> · <a href="https://studio3t.com/knowledge-base/">Knowledge base</a></p>
+</article>
+</section>
+</main>
+<footer>
+DevKit guides — honest overviews of developer tools, checked Oct 2026. Links verified before publishing. All DevKit tools are client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. <a href="index.html">Back to DevKit</a> · <a href="guides.html">All guides</a>.
+</footer>
+</body>
+</html>

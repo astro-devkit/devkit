@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API clients — DevKit guides</title>
+<meta name="description" content="An API client lets you send requests to an API and inspect the responses — essential for building, testing, and debugging APIs. Pick based on where you work (browser, terminal, editor, or desktop app), whether you need team collaboration, and whether your collections should live in Git or in the cloud.">
+<link rel="canonical" href="https://astro-devkit.github.io/devkit/api-clients.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"API clients \u2014 DevKit guides","description":"An API client lets you send requests to an API and inspect the responses \u2014 essential for building, testing, and debugging APIs. Pick based on where you work (browser, terminal, editor, or desktop app), whether you need team collaboration, and whether your collections should live in Git or in the cloud.","url":"https://astro-devkit.github.io/devkit/api-clients.html","isPartOf":{"@type":"WebApplication","name":"DevKit","url":"https://astro-devkit.github.io/devkit/"}}</script>
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}
+.topbar{position:sticky;top:0;z-index:50;background:var(--bg);padding:12px 20px;border-bottom:1px solid var(--line)}
+.topbar .in{max-width:1060px;margin:0 auto;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.topbar a{font-size:14px;text-decoration:none;color:var(--txt)}
+.topbar a:hover{color:var(--acc)}
+.topbar a.back{font-weight:700;color:var(--acc)}
+header{max-width:1060px;margin:0 auto;padding:36px 20px 4px}
+h1{margin:0;font-size:30px;letter-spacing:-.5px}h1 span{color:var(--acc)}
+p.sub{color:var(--mut);margin:10px 0 0;max-width:640px;font-size:16px}
+main{max-width:1060px;margin:0 auto;padding:20px}
+section{margin-bottom:36px}
+section>h2{font-size:22px;margin:8px 0 2px}
+.secsub{color:var(--mut);margin:0 0 14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 4px rgba(35,42,61,.05)}
+.card h3{margin:0 0 10px;font-size:16px}
+.card p{margin:8px 0}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.toc a{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--txt);font-size:15px}
+.toc a:hover{border-color:var(--acc);color:var(--acc)}
+.toc a span{float:right;color:var(--mut);font-size:13px}
+.tool-doc{margin-bottom:14px}
+.tool-doc h3 .open{float:right;font-size:13px;font-weight:700}
+.tool-doc .gotcha{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px}
+.tool-doc .src{font-size:13px;color:var(--mut)}
+.tool-doc code{background:#f7f5f0;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+ol,ul{margin:8px 0;padding-left:22px}
+li{margin:3px 0}
+footer{max-width:1060px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font-size:13px;text-align:center}
+@media(max-width:640px){h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="in">
+<a class="back" href="index.html">← Back to DevKit</a>
+<a href="guides.html">Guides</a>
+<a href="llm-harnesses.html">LLM harnesses</a>
+<a href="code-editors.html">Code editors</a>
+<a href="terminals.html">Terminals</a>
+<a href="api-clients.html" style="font-weight:700;color:var(--acc)">API clients</a>
+<a href="git-clients.html">Git clients</a>
+<a href="database-tools.html">Database tools</a>
+<a href="devtools.html">DevKit tools</a>
+</div></div>
+<header>
+<h1>API clients</h1>
+<p class="sub">An API client lets you send requests to an API and inspect the responses — essential for building, testing, and debugging APIs. Pick based on where you work (browser, terminal, editor, or desktop app), whether you need team collaboration, and whether your collections should live in Git or in the cloud. Each entry gives a verdict, what it is good at, what it is bad at, and who it is best for. Checked Oct 2026.</p>
+</header>
+<main>
+
+<section>
+<h2>Contents</h2>
+<p class="secsub">8 tools. Click any entry to jump to its verdict.</p>
+<div class="toc">
+<a href="#tool-postman">Postman <span>API clients</span></a>
+<a href="#tool-insomnia">Insomnia <span>API clients</span></a>
+<a href="#tool-bruno">Bruno <span>API clients</span></a>
+<a href="#tool-httpie">HTTPie <span>API clients</span></a>
+<a href="#tool-hoppscotch">Hoppscotch <span>API clients</span></a>
+<a href="#tool-thunder-client">Thunder Client <span>API clients</span></a>
+<a href="#tool-yaak">Yaak <span>API clients</span></a>
+<a href="#tool-rest-client">REST Client <span>API clients</span></a>
+</div>
+</section>
+<section id="sec-api-clients">
+<h2>API clients</h2>
+<article class="card tool-doc" id="tool-postman">
+<h3>Postman <a class="open" href="https://www.postman.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The default choice for teams — the most capable API platform, at the cost of cloud lock-in and per-seat pricing.</p>
+<p><strong>What it is.</strong> The most widely used API platform: build, test, document, and monitor APIs in shared workspaces, with desktop and web apps.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Most complete feature set: collections, mock servers, monitors, docs, and automated testing in one place</li>
+<li>Huge community, templates, and integrations — easy to find help and ready-made collections</li>
+<li>Strong team collaboration with shared workspaces and version control</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Cloud-first: requires an account and syncs collections to Postman&#x27;s cloud</li>
+<li>Free tier is single-user and caps collection runs, so teams must pay</li>
+<li>Can feel heavy and slow, and paid tiers get expensive as teams grow</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams that want one full API platform for design, testing, docs, and monitoring</p>
+<p class="src">Price: Free tier (1 user); paid plans from $14/user/mo (Basic), $29 Professional, $49 Enterprise (annual billing) · <a href="https://www.postman.com/">Official site</a> · <a href="https://learning.postman.com/docs/getting-started/overview/">Docs</a> · <a href="https://www.postman.com/pricing/">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-insomnia">
+<h3>Insomnia <a class="open" href="https://insomnia.rest/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The best balance of polish, protocols, and open source — if you can live without Postman&#x27;s platform depth.</p>
+<p><strong>What it is.</strong> Kong&#x27;s open-source desktop API client for REST, GraphQL, gRPC, WebSockets, and SSE, with API design and Git sync.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Multi-protocol support (REST, GraphQL, gRPC, WebSocket, SSE) in one clean app</li>
+<li>Open-source core; the local Scratch Pad works with no account at all</li>
+<li>Git sync and end-to-end encrypted sync for team workflows</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Git sync for larger teams, RBAC, and other team controls sit behind paid plans</li>
+<li>Smaller plugin and template ecosystem than Postman</li>
+<li>Pricing and account requirements have changed under Kong&#x27;s ownership</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers who want a clean, fast, multi-protocol client with an open-source core</p>
+<p class="src">Price: Free Essentials tier; Pro from $12/user/mo, Enterprise $45/user/mo · <a href="https://insomnia.rest/">Official site</a> · <a href="https://developer.konghq.com/insomnia/">Docs</a> · <a href="https://insomnia.rest/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-bruno">
+<h3>Bruno <a class="open" href="https://www.usebruno.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The Git-native, offline-first favorite — ideal if your collections belong in a repo, not a cloud.</p>
+<p><strong>What it is.</strong> An offline-first, open-source API client that stores collections as plain-text .bru files on your filesystem, designed to live in Git.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Collections are plain files — diff, review, and merge them in Git like code</li>
+<li>No account, no cloud, no telemetry; your data never leaves your machine</li>
+<li>Fast, lightweight, and free under the MIT license</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>No built-in mock servers, monitors, or API docs generation</li>
+<li>Collaboration only works through Git — no cloud workspaces</li>
+<li>Smaller ecosystem and fewer auth presets than Postman</li>
+</ul></div>
+<p><strong>Best for.</strong> Git-native teams and privacy-minded developers who want API collections in version control</p>
+<p class="src">Price: Free and open source; Pro from $6/user/mo, Ultimate $11/user/mo (billed annually) · <a href="https://www.usebruno.com/">Official site</a> · <a href="https://docs.usebruno.com/">Docs</a> · <a href="https://www.usebruno.com/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-httpie">
+<h3>HTTPie <a class="open" href="https://httpie.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The nicest way to poke an API from the terminal; the GUI is lovely but thinner than its rivals.</p>
+<p><strong>What it is.</strong> A friendly command-line HTTP client (a human-friendlier curl) plus desktop and web apps for sending requests and inspecting responses.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>CLI syntax is far more readable than curl, with syntax highlighting and JSON built in</li>
+<li>Desktop and web apps share the same clean, minimal design</li>
+<li>Great for quick terminal checks and scripting API calls</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>No scripting, test assertions, or collection runner in the Desktop app</li>
+<li>Desktop app is REST/HTTP only — no WebSocket, gRPC, or GraphQL</li>
+<li>Free tier caps request history at 200; sync and team features need paid plans</li>
+</ul></div>
+<p><strong>Best for.</strong> Terminal-first developers who want a prettier, faster curl — and a simple GUI when they need one</p>
+<p class="src">Price: Free CLI (open source); Desktop/web free tier; paid Plus plans from $9/mo · <a href="https://httpie.io/">Official site</a> · <a href="https://httpie.io/docs">Docs</a> · <a href="https://httpie.io/app">Web app</a></p>
+</article>
+<article class="card tool-doc" id="tool-hoppscotch">
+<h3>Hoppscotch <a class="open" href="https://hoppscotch.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The fastest way to test an API — open a tab and go — with a real free tier and self-hosting.</p>
+<p><strong>What it is.</strong> An open-source, browser-first API client (formerly Postwoman) for REST, GraphQL, WebSocket, MQTT, and SSE — no install needed.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Runs entirely in the browser; zero install to start testing an API</li>
+<li>Free tier is genuinely generous: unlimited workspaces, collections, and requests</li>
+<li>Open source and self-hostable for full control of your data</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Browser security (CORS) can block requests without the browser extension or a proxy</li>
+<li>Fewer enterprise features and integrations than Postman</li>
+<li>Self-hosting means running and maintaining your own infrastructure</li>
+</ul></div>
+<p><strong>Best for.</strong> Anyone who wants a free, no-install API client in the browser, or a self-hosted option for their team</p>
+<p class="src">Price: Free forever; Organization plan from $6/user/mo (billed annually) · <a href="https://hoppscotch.io/">Official site</a> · <a href="https://hoppscotch.io/docs">Docs</a> · <a href="https://hoppscotch.io/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-thunder-client">
+<h3>Thunder Client <a class="open" href="https://www.thunderclient.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The most convenient API client if you live in VS Code — but the free tier is now heavily limited.</p>
+<p><strong>What it is.</strong> A lightweight API client that lives inside VS Code as an extension, so you can test APIs without leaving your editor.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Stays in VS Code — no app switching while you code</li>
+<li>Very lightweight and fast to open</li>
+<li>Collections stored locally in the workspace</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Free tier is personal, non-commercial use only, with tight limits (e.g. 1 collection run/month)</li>
+<li>Scripting, Git sync, and WebSocket/gRPC testing need paid tiers</li>
+<li>VS Code only — no standalone or web version</li>
+</ul></div>
+<p><strong>Best for.</strong> VS Code users who want quick API checks inside their editor</p>
+<p class="src">Price: Free tier (personal, non-commercial use); paid plans from $3/user/mo (Starter, billed annually) · <a href="https://www.thunderclient.com/">Official site</a> · <a href="https://docs.thunderclient.com/">Docs</a> · <a href="https://www.thunderclient.com/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-yaak">
+<h3>Yaak <a class="open" href="https://yaak.app/">Official site →</a></h3>
+<p><strong>Verdict.</strong> Insomnia&#x27;s creator, rebuilt without the cloud — fast and private, but work use is paid.</p>
+<p><strong>What it is.</strong> A local-first desktop API client by the creator of Insomnia, for HTTP, GraphQL, gRPC, WebSocket, and SSE — no account, no cloud.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Local-first: no account or cloud sync; workspaces live on your machine</li>
+<li>Fast, clean UI from the developer who built Insomnia</li>
+<li>Git-friendly plain-file workspaces, plus a CLI and MCP server for AI coding agents</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Free only for personal use — commercial use needs a paid license after a 30-day trial</li>
+<li>No built-in team collaboration beyond Git or synced folders</li>
+<li>Younger and smaller ecosystem than Insomnia or Postman</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers who want a fast, private, offline API client — and don&#x27;t mind paying for work use</p>
+<p class="src">Price: Free for personal use; commercial licenses from $79/user/yr (Individual), $149 Business, $399 Lifetime · <a href="https://yaak.app/">Official site</a> · <a href="https://yaak.app/docs">Docs</a> · <a href="https://yaak.app/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-rest-client">
+<h3>REST Client <a class="open" href="https://marketplace.visualstudio.com/items?itemName=humao.rest-client">Official site →</a></h3>
+<p><strong>Verdict.</strong> The minimalist&#x27;s API client — if your requests belong in a text file next to your code, nothing beats it.</p>
+<p><strong>What it is.</strong> A free VS Code extension by Huachao Mao that lets you send HTTP requests from plain-text .http/.rest files and view responses right in the editor.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Requests are plain text files — version them in Git alongside your code</li>
+<li>Zero setup beyond the extension; no account or separate app</li>
+<li>Variables, environments, and response history built in</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>No GUI — you write requests as text, which is a learning curve for some</li>
+<li>No collections UI, test runner, or team features</li>
+<li>Response viewing is basic compared with full API clients</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers who live in VS Code and want their API requests checked into Git as text</p>
+<p class="src">Price: Free · <a href="https://marketplace.visualstudio.com/items?itemName=humao.rest-client">Official site</a> · <a href="https://github.com/Huachao/vscode-restclient">GitHub</a></p>
+</article>
+</section>
+</main>
+<footer>
+DevKit guides — honest overviews of developer tools, checked Oct 2026. Links verified before publishing. All DevKit tools are client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. <a href="index.html">Back to DevKit</a> · <a href="guides.html">All guides</a>.
+</footer>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Git clients — DevKit guides</title>
+<meta name="description" content="A Git client is a graphical or terminal app that lets you commit, branch, merge, and review changes without memorizing Git commands. Pick based on your OS, whether you live on GitHub or across several hosts, and how much power you need beyond everyday commit-push-pull.">
+<link rel="canonical" href="https://astro-devkit.github.io/devkit/git-clients.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Git clients \u2014 DevKit guides","description":"A Git client is a graphical or terminal app that lets you commit, branch, merge, and review changes without memorizing Git commands. Pick based on your OS, whether you live on GitHub or across several hosts, and how much power you need beyond everyday commit-push-pull.","url":"https://astro-devkit.github.io/devkit/git-clients.html","isPartOf":{"@type":"WebApplication","name":"DevKit","url":"https://astro-devkit.github.io/devkit/"}}</script>
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}
+.topbar{position:sticky;top:0;z-index:50;background:var(--bg);padding:12px 20px;border-bottom:1px solid var(--line)}
+.topbar .in{max-width:1060px;margin:0 auto;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.topbar a{font-size:14px;text-decoration:none;color:var(--txt)}
+.topbar a:hover{color:var(--acc)}
+.topbar a.back{font-weight:700;color:var(--acc)}
+header{max-width:1060px;margin:0 auto;padding:36px 20px 4px}
+h1{margin:0;font-size:30px;letter-spacing:-.5px}h1 span{color:var(--acc)}
+p.sub{color:var(--mut);margin:10px 0 0;max-width:640px;font-size:16px}
+main{max-width:1060px;margin:0 auto;padding:20px}
+section{margin-bottom:36px}
+section>h2{font-size:22px;margin:8px 0 2px}
+.secsub{color:var(--mut);margin:0 0 14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 4px rgba(35,42,61,.05)}
+.card h3{margin:0 0 10px;font-size:16px}
+.card p{margin:8px 0}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.toc a{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--txt);font-size:15px}
+.toc a:hover{border-color:var(--acc);color:var(--acc)}
+.toc a span{float:right;color:var(--mut);font-size:13px}
+.tool-doc{margin-bottom:14px}
+.tool-doc h3 .open{float:right;font-size:13px;font-weight:700}
+.tool-doc .gotcha{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px}
+.tool-doc .src{font-size:13px;color:var(--mut)}
+.tool-doc code{background:#f7f5f0;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+ol,ul{margin:8px 0;padding-left:22px}
+li{margin:3px 0}
+footer{max-width:1060px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font-size:13px;text-align:center}
+@media(max-width:640px){h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="in">
+<a class="back" href="index.html">← Back to DevKit</a>
+<a href="guides.html">Guides</a>
+<a href="llm-harnesses.html">LLM harnesses</a>
+<a href="code-editors.html">Code editors</a>
+<a href="terminals.html">Terminals</a>
+<a href="api-clients.html">API clients</a>
+<a href="git-clients.html" style="font-weight:700;color:var(--acc)">Git clients</a>
+<a href="database-tools.html">Database tools</a>
+<a href="devtools.html">DevKit tools</a>
+</div></div>
+<header>
+<h1>Git clients</h1>
+<p class="sub">A Git client is a graphical or terminal app that lets you commit, branch, merge, and review changes without memorizing Git commands. Pick based on your OS, whether you live on GitHub or across several hosts, and how much power you need beyond everyday commit-push-pull. Each entry gives a verdict, what it is good at, what it is bad at, and who it is best for. Checked Oct 2026.</p>
+</header>
+<main>
+
+<section>
+<h2>Contents</h2>
+<p class="secsub">7 tools. Click any entry to jump to its verdict.</p>
+<div class="toc">
+<a href="#tool-github-desktop">GitHub Desktop <span>Graphical</span></a>
+<a href="#tool-gitkraken">GitKraken <span>Graphical</span></a>
+<a href="#tool-sourcetree">Sourcetree <span>Graphical</span></a>
+<a href="#tool-fork">Fork <span>Graphical</span></a>
+<a href="#tool-tower">Tower <span>Graphical</span></a>
+<a href="#tool-sublime-merge">Sublime Merge <span>Graphical</span></a>
+<a href="#tool-lazygit">Lazygit <span>Terminal</span></a>
+</div>
+</section>
+<section id="sec-graphical">
+<h2>Graphical</h2>
+<article class="card tool-doc" id="tool-github-desktop">
+<h3>GitHub Desktop <a class="open" href="https://github.com/apps/desktop">Official site →</a></h3>
+<p><strong>Verdict.</strong> The simplest, friendliest way into Git — if your work lives on GitHub.</p>
+<p><strong>What it is.</strong> GitHub&#x27;s official free, open-source Git client for Windows and macOS, built around the everyday loop of clone, commit, push, pull, and pull requests.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Dead-simple UI with a minimal learning curve — ideal for Git beginners</li>
+<li>First-class GitHub integration: create and review pull requests, see CI status</li>
+<li>Syntax-highlighted diffs, image diffs, and easy co-authored commits</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Deliberately omits advanced operations such as interactive rebase</li>
+<li>No official Linux build (community forks only)</li>
+<li>Pull-request features are GitHub-only; other hosts get basic Git only</li>
+</ul></div>
+<p><strong>Best for.</strong> Beginners and teams whose repos live on GitHub and want the easiest possible workflow</p>
+<p class="src">Price: Free / open source (MIT) · <a href="https://github.com/apps/desktop">Official site</a> · <a href="https://docs.github.com/en/desktop">Docs</a> · <a href="https://github.com/desktop/desktop">Source code</a></p>
+</article>
+<article class="card tool-doc" id="tool-gitkraken">
+<h3>GitKraken <a class="open" href="https://gitkraken.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The most polished visual Git experience — but the free tier is barely usable for real work.</p>
+<p><strong>What it is.</strong> A cross-platform (Windows, macOS, Linux) graphical Git client known for its colourful commit graph, drag-and-drop branching, and built-in merge-conflict editor, with integrations for GitHub, GitLab, and Bitbucket.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Best-looking commit graph of any client, with drag-and-drop merge and rebase</li>
+<li>Built-in merge-conflict editor and workspaces for managing many repos</li>
+<li>Runs on Windows, macOS, and Linux with GitHub, GitLab, and Bitbucket integrations</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Free Community tier covers local and public repos only — private repos need a paid plan</li>
+<li>Electron-based, so heavier on memory and slower on very large repos than native clients</li>
+<li>Subscription pricing per user, which adds up for teams</li>
+</ul></div>
+<p><strong>Best for.</strong> Teams that want a visual workflow across GitHub, GitLab, and Bitbucket, including on Linux</p>
+<p class="src">Price: Free Community plan (local and public repos only); paid Pro/Advanced plans — current prices not verified · <a href="https://gitkraken.com/">Official site</a> · <a href="https://gitkraken.com/pricing">Pricing</a> · <a href="https://help.gitkraken.com/">Docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-sourcetree">
+<h3>Sourcetree <a class="open" href="https://www.sourcetreeapp.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The most capable free Git GUI — if you can live with the Atlassian account and the dated UI.</p>
+<p><strong>What it is.</strong> Atlassian&#x27;s free Git (and Mercurial) client for Windows and macOS, with a full feature set including interactive rebase, Git-flow, and hunk- and line-level staging.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Free, with a serious feature set: interactive rebase, Git-flow, stash and cherry-pick</li>
+<li>Stage changes by file, hunk, or single line, with a built-in conflict editor</li>
+<li>Fits naturally with Bitbucket and Jira; supports Git LFS and submodules</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Requires an Atlassian account to activate</li>
+<li>No Linux version (Windows and macOS only)</li>
+<li>UI feels dated and can be sluggish on large repositories</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers in the Atlassian ecosystem (Bitbucket, Jira) who want a free, full-featured client</p>
+<p class="src">Price: Free · <a href="https://www.sourcetreeapp.com/">Official site</a> · <a href="https://support.atlassian.com/sourcetree/">Docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-fork">
+<h3>Fork <a class="open" href="https://git-fork.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> Fast, native, and one payment forever — the best value for solo developers on Mac or Windows.</p>
+<p><strong>What it is.</strong> A fast, native Git client for macOS and Windows from a small independent team, focused on core Git operations done well: interactive rebase, merge-conflict resolution, blame, and image diffs.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Native app, so it starts fast and stays responsive on large repositories</li>
+<li>Excellent interactive rebase, merge-conflict resolver, and image diff viewer</li>
+<li>One-time purchase with a free evaluation that has no time limit or feature restrictions</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>No Linux version (macOS and Windows only)</li>
+<li>No built-in integrations with GitHub, GitLab, or issue trackers</li>
+<li>Solo-developer tool: no team workspaces or collaboration features</li>
+</ul></div>
+<p><strong>Best for.</strong> Individual developers who want native speed without a subscription</p>
+<p class="src">Price: $59.99 one-time; free evaluation with no time limit · <a href="https://git-fork.com/">Official site</a></p>
+</article>
+<article class="card tool-doc" id="tool-tower">
+<h3>Tower <a class="open" href="https://www.git-tower.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The most polished professional Git client — worth it if Git is your whole working day, overkill if it isn&#x27;t.</p>
+<p><strong>What it is.</strong> A premium native Git client for macOS and Windows, built around a refined drag-and-drop workflow, pull-request integration, and an undo feature that reverses almost any Git operation.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Undo for almost every operation — commits, merges, stash and branch deletions</li>
+<li>Polished native UI with drag-and-drop, quick actions, and a step-by-step conflict wizard</li>
+<li>Pull-request integration with GitHub, GitLab, Bitbucket, and Azure DevOps</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Subscription-only with no free tier (30-day trial, free for students and educators)</li>
+<li>Mac and Windows only — no Linux version</li>
+<li>Expensive for occasional use when capable free clients exist</li>
+</ul></div>
+<p><strong>Best for.</strong> Professional developers who use Git all day and want the most polished, forgiving client</p>
+<p class="src">Price: From $69/user/year; 30-day free trial, no free tier · <a href="https://www.git-tower.com/">Official site</a> · <a href="https://www.git-tower.com/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-sublime-merge">
+<h3>Sublime Merge <a class="open" href="https://www.sublimemerge.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> Blazingly fast and keyboard-driven — speed first, integrations a distant second.</p>
+<p><strong>What it is.</strong> A Git client from the makers of Sublime Text, built on the same fast custom UI toolkit, with line-by-line staging, a three-way merge tool, and powerful commit search on Windows, macOS, and Linux.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Extremely fast — opens and searches huge repositories near-instantly</li>
+<li>Powerful find-as-you-type search across commits, diffs, and files</li>
+<li>Line- and hunk-level staging, three-way merge tool, and full keyboard control</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>No built-in pull-request or hosting integrations</li>
+<li>Sparse, minimal interface compared with GitKraken or Tower</li>
+<li>Unregistered evaluation shows nag dialogs until you buy a licence</li>
+</ul></div>
+<p><strong>Best for.</strong> Sublime Text users and developers who value speed and keyboard-driven work on huge repos</p>
+<p class="src">Price: $99 one-time; free evaluation with no time limit · <a href="https://www.sublimemerge.com/">Official site</a> · <a href="https://www.sublimemerge.com/docs/">Docs</a> · <a href="https://www.sublimemerge.com/download">Download</a></p>
+</article>
+</section>
+<section id="sec-terminal">
+<h2>Terminal</h2>
+<article class="card tool-doc" id="tool-lazygit">
+<h3>Lazygit <a class="open" href="https://github.com/jesseduffield/lazygit">Official site →</a></h3>
+<p><strong>Verdict.</strong> Full Git power in the terminal, without memorising flags — the best bridge between CLI and GUI.</p>
+<p><strong>What it is.</strong> A free, open-source terminal UI for Git (written in Go) that shows files, branches, commits, and stashes in keyboard-driven panels, so staging, rebasing, and cherry-picking are single keypresses.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Stage individual lines and hunks, interactive rebase, and cherry-pick with single keys</li>
+<li>Undo and redo for most operations, plus custom commands and keybindings</li>
+<li>Runs anywhere Git runs — macOS, Linux, and Windows — with no account or GUI needed</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Terminal-only: no mouse-first GUI, image diffs, or pull-request management</li>
+<li>Keybinding-driven workflow takes learning before it feels fast</li>
+<li>Can slow down on very large repositories compared with lighter tools</li>
+</ul></div>
+<p><strong>Best for.</strong> Terminal dwellers who want GUI-style Git power without leaving the command line</p>
+<p class="src">Price: Free / open source (MIT) · <a href="https://github.com/jesseduffield/lazygit">Official site</a> · <a href="https://github.com/jesseduffield/lazygit#installation">Installation</a> · <a href="https://github.com/jesseduffield/lazygit/releases">Releases</a></p>
+</article>
+</section>
+</main>
+<footer>
+DevKit guides — honest overviews of developer tools, checked Oct 2026. Links verified before publishing. All DevKit tools are client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. <a href="index.html">Back to DevKit</a> · <a href="guides.html">All guides</a>.
+</footer>
+</body>
+</html>

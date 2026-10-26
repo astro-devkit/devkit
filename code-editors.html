@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code editors — DevKit guides</title>
+<meta name="description" content="A code editor is where you write, read, and debug code. Pick by how you work: a fast graphical editor with a huge extension library, an AI-first editor that writes code with you, or a keyboard-driven terminal editor you can shape exactly to your taste.">
+<link rel="canonical" href="https://astro-devkit.github.io/devkit/code-editors.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Code editors \u2014 DevKit guides","description":"A code editor is where you write, read, and debug code. Pick by how you work: a fast graphical editor with a huge extension library, an AI-first editor that writes code with you, or a keyboard-driven terminal editor you can shape exactly to your taste.","url":"https://astro-devkit.github.io/devkit/code-editors.html","isPartOf":{"@type":"WebApplication","name":"DevKit","url":"https://astro-devkit.github.io/devkit/"}}</script>
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}
+.topbar{position:sticky;top:0;z-index:50;background:var(--bg);padding:12px 20px;border-bottom:1px solid var(--line)}
+.topbar .in{max-width:1060px;margin:0 auto;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.topbar a{font-size:14px;text-decoration:none;color:var(--txt)}
+.topbar a:hover{color:var(--acc)}
+.topbar a.back{font-weight:700;color:var(--acc)}
+header{max-width:1060px;margin:0 auto;padding:36px 20px 4px}
+h1{margin:0;font-size:30px;letter-spacing:-.5px}h1 span{color:var(--acc)}
+p.sub{color:var(--mut);margin:10px 0 0;max-width:640px;font-size:16px}
+main{max-width:1060px;margin:0 auto;padding:20px}
+section{margin-bottom:36px}
+section>h2{font-size:22px;margin:8px 0 2px}
+.secsub{color:var(--mut);margin:0 0 14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 4px rgba(35,42,61,.05)}
+.card h3{margin:0 0 10px;font-size:16px}
+.card p{margin:8px 0}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.toc a{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--txt);font-size:15px}
+.toc a:hover{border-color:var(--acc);color:var(--acc)}
+.toc a span{float:right;color:var(--mut);font-size:13px}
+.tool-doc{margin-bottom:14px}
+.tool-doc h3 .open{float:right;font-size:13px;font-weight:700}
+.tool-doc .gotcha{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px}
+.tool-doc .src{font-size:13px;color:var(--mut)}
+.tool-doc code{background:#f7f5f0;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+ol,ul{margin:8px 0;padding-left:22px}
+li{margin:3px 0}
+footer{max-width:1060px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font-size:13px;text-align:center}
+@media(max-width:640px){h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="in">
+<a class="back" href="index.html">← Back to DevKit</a>
+<a href="guides.html">Guides</a>
+<a href="llm-harnesses.html">LLM harnesses</a>
+<a href="code-editors.html" style="font-weight:700;color:var(--acc)">Code editors</a>
+<a href="terminals.html">Terminals</a>
+<a href="api-clients.html">API clients</a>
+<a href="git-clients.html">Git clients</a>
+<a href="database-tools.html">Database tools</a>
+<a href="devtools.html">DevKit tools</a>
+</div></div>
+<header>
+<h1>Code editors</h1>
+<p class="sub">A code editor is where you write, read, and debug code. Pick by how you work: a fast graphical editor with a huge extension library, an AI-first editor that writes code with you, or a keyboard-driven terminal editor you can shape exactly to your taste. Each entry gives a verdict, what it is good at, what it is bad at, and who it is best for. Checked Oct 2026.</p>
+</header>
+<main>
+
+<section>
+<h2>Contents</h2>
+<p class="secsub">11 tools. Click any entry to jump to its verdict.</p>
+<div class="toc">
+<a href="#tool-vscode">VS Code <span>Graphical</span></a>
+<a href="#tool-cursor">Cursor <span>Graphical</span></a>
+<a href="#tool-devin-desktop">Devin Desktop (formerly Windsurf) <span>Graphical</span></a>
+<a href="#tool-zed">Zed <span>Graphical</span></a>
+<a href="#tool-sublime-text">Sublime Text <span>Graphical</span></a>
+<a href="#tool-jetbrains-ides">JetBrains IDEs <span>Graphical</span></a>
+<a href="#tool-nova">Nova <span>Graphical</span></a>
+<a href="#tool-neovim">Neovim <span>Terminal</span></a>
+<a href="#tool-vim">Vim <span>Terminal</span></a>
+<a href="#tool-emacs">Emacs <span>Terminal</span></a>
+<a href="#tool-helix">Helix <span>Terminal</span></a>
+</div>
+</section>
+<section id="sec-graphical">
+<h2>Graphical</h2>
+<article class="card tool-doc" id="tool-vscode">
+<h3>VS Code <a class="open" href="https://code.visualstudio.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The default choice for most developers — free, huge ecosystem, good at everything.</p>
+<p><strong>What it is.</strong> Microsoft&#x27;s free, open-source editor, built on Electron. The most widely used code editor, with a marketplace of tens of thousands of extensions.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Largest extension ecosystem of any editor — languages, debuggers, themes, and AI assistants</li>
+<li>Built-in terminal, Git, debugging, and remote development (SSH, containers, WSL)</li>
+<li>Free and open source, cross-platform, and constantly updated</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Electron-based, so it can feel slower and heavier than native editors, especially on large projects</li>
+<li>Out of the box it is fairly bare — you assemble your ideal setup from extensions</li>
+<li>AI features are built around GitHub Copilot, which is a separate paid plan for heavy use</li>
+</ul></div>
+<p><strong>Best for.</strong> Almost anyone — the safe first editor, and the one most tutorials and teams assume you use.</p>
+<p class="src">Price: Free / open source (MIT) · <a href="https://code.visualstudio.com/">Official site</a> · <a href="https://code.visualstudio.com/docs">Docs</a> · <a href="https://code.visualstudio.com/download">Download</a></p>
+</article>
+<article class="card tool-doc" id="tool-cursor">
+<h3>Cursor <a class="open" href="https://cursor.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The leading AI-first editor — a VS Code fork where the agent, not the sidebar, is the point.</p>
+<p><strong>What it is.</strong> An AI-native code editor built on VS Code by Anysphere. Its agent mode can plan, edit many files, and run terminal commands, with tab autocomplete and chat built in.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Agent mode handles multi-file features, refactors, and bug fixes in one pass</li>
+<li>Most VS Code extensions, themes, and keybindings carry over</li>
+<li>Access to many frontier models (Claude, GPT, and others) in one UI</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Heavy agent use burns through the included usage pool fast — the lower tiers often are not enough for daily agent work</li>
+<li>Closed source and tied to a subscription for its best features</li>
+<li>Lags behind VS Code on some upstream updates</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers who want an AI agent as their main way of coding, especially across large or unfamiliar codebases.</p>
+<p class="src">Price: Free tier (limited agent use); Plus $8/mo, Premium $30/mo, Super $100/mo, Ultra $200/mo (unified X subscription, Oct 2026) · <a href="https://cursor.com/">Official site</a> · <a href="https://cursor.com/pricing">Pricing</a> · <a href="https://cursor.com/docs">Docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-devin-desktop">
+<h3>Devin Desktop (formerly Windsurf) <a class="open" href="https://devin.ai/desktop">Official site →</a></h3>
+<p><strong>Verdict.</strong> A strong AI agent editor — now rebranded as Devin Desktop after Cognition acquired it.</p>
+<p><strong>What it is.</strong> An AI-powered editor (a VS Code fork) built around Devin Local, the local agent that plans and executes multi-file changes. Acquired by Cognition in 2025 and rebranded Devin Desktop in June 2026 (Cascade, the original agent, was retired July 2026); windsurf.com now redirects to devin.ai/desktop.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Devin Local agent handles multi-file edits with whole-codebase awareness</li>
+<li>Feels familiar on day one — a VS Code fork, so extensions and keybindings transfer</li>
+<li>Free tier includes agent access with unlimited tab autocomplete</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Rebrand and ownership change (2026) make its long-term roadmap less certain than Cursor&#x27;s</li>
+<li>Pro rose from $15 to $20/mo in March 2026, now the same price as Cursor</li>
+<li>Usage is metered by daily/weekly quotas rather than a simple monthly allowance</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers who want an agentic editor with a good free tier, especially those interested in handing tasks to cloud agents.</p>
+<p class="src">Price: Free tier; Pro $20/mo, Max $200/mo, Teams $40/user/mo · <a href="https://devin.ai/desktop">Official site</a> · <a href="https://devin.ai/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-zed">
+<h3>Zed <a class="open" href="https://zed.dev/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The fastest graphical editor — native Rust speed with real-time collaboration built in.</p>
+<p><strong>What it is.</strong> A free, open-source code editor written in Rust with GPU-accelerated rendering, built by the team behind Atom. Includes an AI agent panel, edit predictions, and built-in multiplayer editing.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Noticeably faster startup and scrolling than Electron editors</li>
+<li>Real-time collaboration with shared cursors built in — no extension needed</li>
+<li>Editor is free and open source; you can bring your own API key or use local models</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Extension ecosystem is far smaller than VS Code&#x27;s and it cannot run VS Code extensions</li>
+<li>Fewer language-specific tools out of the box — you assemble more yourself</li>
+<li>Younger project, so fewer tutorials and less community troubleshooting material</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers who find VS Code sluggish and want a fast native editor with AI, especially those happy to bring their own model key.</p>
+<p class="src">Price: Free / open source (GPL); Pro $10/mo for unlimited edit predictions + hosted AI credit, Business $30/seat/mo · <a href="https://zed.dev/">Official site</a> · <a href="https://zed.dev/docs/">Docs</a> · <a href="https://zed.dev/pricing">Pricing</a></p>
+</article>
+<article class="card tool-doc" id="tool-sublime-text">
+<h3>Sublime Text <a class="open" href="https://www.sublimetext.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The speed purist&#x27;s editor — instant, light, and distraction-free, with a one-time licence.</p>
+<p><strong>What it is.</strong> A fast, proprietary text editor with multi-cursor editing, Goto Anything navigation, and a large package ecosystem. Evaluation is free with no time limit; a licence removes purchase reminders.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Extremely fast startup and low memory use, even on huge files</li>
+<li>One-time licence, not a subscription, with 3 years of updates included</li>
+<li>Goto Anything and multi-cursor editing remain best-in-class for pure text work</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>No built-in Git, terminal, or debugger — you assemble those via packages</li>
+<li>Smaller, slower-moving ecosystem than VS Code; AI support comes from third-party packages</li>
+<li>Licence is $99, which is hard to justify when VS Code is free</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers who want the fastest possible editor for quick edits, huge files, and low-spec machines.</p>
+<p class="src">Price: $99 one-time personal licence (3 years of updates); business from $65/seat/yr; unlimited free evaluation · <a href="https://www.sublimetext.com/">Official site</a> · <a href="https://www.sublimetext.com/download">Download</a> · <a href="https://www.sublimetext.com/docs/">Docs</a></p>
+</article>
+<article class="card tool-doc" id="tool-jetbrains-ides">
+<h3>JetBrains IDEs <a class="open" href="https://www.jetbrains.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The most capable language-specific IDEs — deep understanding of your code, at a subscription price.</p>
+<p><strong>What it is.</strong> A family of full-featured IDEs from JetBrains: IntelliJ IDEA (Java/Kotlin), PyCharm (Python), WebStorm (JavaScript/TypeScript), plus PhpStorm, GoLand, CLion, Rider, and more. Each is tuned to one language ecosystem.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Deepest language intelligence: refactoring, inspections, and debugging tuned per language</li>
+<li>Everything is built in — no assembling extensions for core workflows</li>
+<li>Perpetual fallback licence: stop paying and you keep the version you had</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Subscription pricing per IDE; costs add up if you use several</li>
+<li>Heavier on RAM and slower to start than lightweight editors</li>
+<li>AI Assistant is a separate subscription on top of the IDE licence</li>
+</ul></div>
+<p><strong>Best for.</strong> Professional developers who live in one language all day and want the smartest possible tooling for it.</p>
+<p class="src">Price: Paid subscriptions, roughly $8–$20/mo per IDE for individuals (All Products Pack ~$25/mo); free Community editions and free licences for students and open-source projects · <a href="https://www.jetbrains.com/">Official site</a> · <a href="https://www.jetbrains.com/idea/">IntelliJ IDEA</a> · <a href="https://www.jetbrains.com/pycharm/">PyCharm</a></p>
+</article>
+<article class="card tool-doc" id="tool-nova">
+<h3>Nova <a class="open" href="https://nova.app/">Official site →</a></h3>
+<p><strong>Verdict.</strong> A beautiful Mac-native editor for web developers who want one polished app, not fifty extensions.</p>
+<p><strong>What it is.</strong> A macOS-only code editor from Panic (successor to Coda), built fully native — no Electron. Includes a terminal, Git client, publishing tools, and language-server support.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Fully native Mac app — fast, polished, and feels like part of macOS</li>
+<li>Terminal, Git, and FTP/SFTP publishing built in, designed to work together</li>
+<li>One-time purchase model — you keep the version you bought</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>macOS only — no Windows or Linux version</li>
+<li>Extension library is a fraction of VS Code&#x27;s</li>
+<li>No free tier beyond the 30-day trial; $99 is the priciest commitment here</li>
+</ul></div>
+<p><strong>Best for.</strong> Mac-based web developers who value a native, all-in-one app over a huge extension ecosystem.</p>
+<p class="src">Price: $99 (includes 1 year of updates); optional $49/yr renewal; 30-day free trial · <a href="https://nova.app/">Official site</a> · <a href="https://nova.app/help/">Help &amp; docs</a></p>
+</article>
+</section>
+<section id="sec-terminal">
+<h2>Terminal</h2>
+<article class="card tool-doc" id="tool-neovim">
+<h3>Neovim <a class="open" href="https://neovim.io/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The modern terminal editor — Vim&#x27;s soul with Lua config, built-in LSP, and a huge plugin scene.</p>
+<p><strong>What it is.</strong> A free, open-source fork of Vim, rebuilt for extensibility: Lua-based configuration, a built-in language-server client, and a first-class plugin ecosystem. Runs in the terminal or as a GUI via frontends.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Blazing fast and keyboard-driven — edit at the speed of thought once the keys are muscle memory</li>
+<li>Built-in LSP, Treesitter, and a huge Lua plugin ecosystem (telescope, lazy.nvim, and more)</li>
+<li>Runs anywhere, including over SSH on remote servers</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Steep learning curve — you build your own IDE from plugins and config</li>
+<li>Configuration can become a hobby in itself; updates occasionally break plugins</li>
+<li>No graphical conveniences by default — mouse and menus are afterthoughts</li>
+</ul></div>
+<p><strong>Best for.</strong> Terminal-first developers who want a fully custom, keyboard-driven setup they control completely.</p>
+<p class="src">Price: Free / open source · <a href="https://neovim.io/">Official site</a> · <a href="https://neovim.io/doc/">Docs</a> · <a href="https://github.com/neovim/neovim">GitHub</a></p>
+</article>
+<article class="card tool-doc" id="tool-vim">
+<h3>Vim <a class="open" href="https://www.vim.org/">Official site →</a></h3>
+<p><strong>Verdict.</strong> The original modal editor — everywhere, rock-solid, and the keybindings every other editor imitates.</p>
+<p><strong>What it is.</strong> The classic modal text editor, installed by default on most Unix systems since the 1990s. Vim&#x27;s keybindings are so influential that nearly every editor offers a Vim mode.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Available on virtually every Unix machine — often already installed</li>
+<li>Modal editing makes complex edits fast once learned</li>
+<li>Extremely stable, light, and scriptable with Vimscript</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Dated defaults and a hard learning curve for beginners</li>
+<li>Modern features (LSP, async plugins) are bolted on rather than built in</li>
+<li>Most new users are better served by Neovim, its actively developed fork</li>
+</ul></div>
+<p><strong>Best for.</strong> Anyone who needs to edit files on remote servers, or who wants to learn the keybindings that power Neovim and every Vim mode.</p>
+<p class="src">Price: Free / open source (charityware) · <a href="https://www.vim.org/">Official site</a> · <a href="https://www.vim.org/docs.php">Docs</a> · <a href="https://www.vim.org/download.php">Download</a></p>
+</article>
+<article class="card tool-doc" id="tool-emacs">
+<h3>Emacs <a class="open" href="https://www.gnu.org/software/emacs/">Official site →</a></h3>
+<p><strong>Verdict.</strong> An editor that is also a Lisp machine — infinitely extensible, and a lifestyle choice.</p>
+<p><strong>What it is.</strong> GNU Emacs is a free, extensible text editor built around Emacs Lisp: it can be a code editor, mail client, calendar, and much more. Org mode alone keeps many users loyal for decades.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Infinitely extensible in Emacs Lisp — if you can imagine it, someone has built it</li>
+<li>Org mode is unmatched for notes, planning, and literate programming</li>
+<li>Keyboard-centric workflow with decades of accumulated packages</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>Steepest learning curve of any editor here, with its own keybinding dialect</li>
+<li>Defaults feel dated; a good setup takes serious configuration</li>
+<li>Can feel slow and heavy compared to Vim-family editors</li>
+</ul></div>
+<p><strong>Best for.</strong> Tinkerers and long-term users who want one tool for editing, notes, and everything else — and enjoy configuring it in Lisp.</p>
+<p class="src">Price: Free / open source (GPL) · <a href="https://www.gnu.org/software/emacs/">Official site</a> · <a href="https://www.gnu.org/software/emacs/manual/">Manual</a></p>
+</article>
+<article class="card tool-doc" id="tool-helix">
+<h3>Helix <a class="open" href="https://helix-editor.com/">Official site →</a></h3>
+<p><strong>Verdict.</strong> A modern modal editor that works great out of the box — no plugins, no config rabbit hole.</p>
+<p><strong>What it is.</strong> A free, open-source terminal editor written in Rust, inspired by Vim and Kakoune. It ships with built-in language-server support, Treesitter syntax, and multiple selections — no plugin system at all.</p>
+<p><strong>Good.</strong></p>
+<ul>
+<li>Excellent out of the box — LSP and Treesitter built in, no plugins to install</li>
+<li>Multiple selections and Kakoune-style editing make refactoring fast</li>
+<li>Fast, light, and written in Rust</li>
+</ul>
+<div class="gotcha"><strong>Bad.</strong><ul>
+<li>No plugin system — if a feature isn&#x27;t built in, you can&#x27;t add it</li>
+<li>Smaller community and fewer learning resources than Vim or Neovim</li>
+<li>Modal editing still has a learning curve if you&#x27;re new to it</li>
+</ul></div>
+<p><strong>Best for.</strong> Developers who want Vim-style modal editing with modern features working immediately, without building a config.</p>
+<p class="src">Price: Free / open source (MPL-2.0) · <a href="https://helix-editor.com/">Official site</a> · <a href="https://docs.helix-editor.com/">Docs</a> · <a href="https://github.com/helix-editor/helix">GitHub</a></p>
+</article>
+</section>
+</main>
+<footer>
+DevKit guides — honest overviews of developer tools, checked Oct 2026. Links verified before publishing. All DevKit tools are client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. <a href="index.html">Back to DevKit</a> · <a href="guides.html">All guides</a>.
+</footer>
+</body>
+</html>

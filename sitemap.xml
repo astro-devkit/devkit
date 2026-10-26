@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://astro-devkit.github.io/devkit/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://astro-devkit.github.io/devkit/devtools.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://astro-devkit.github.io/devkit/guides.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://astro-devkit.github.io/devkit/llm-harnesses.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://astro-devkit.github.io/devkit/code-editors.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://astro-devkit.github.io/devkit/terminals.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://astro-devkit.github.io/devkit/api-clients.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://astro-devkit.github.io/devkit/git-clients.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://astro-devkit.github.io/devkit/database-tools.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>
