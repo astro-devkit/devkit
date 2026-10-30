@@ -178,10 +178,33 @@ function onProgress(data) {
   }
 }
 
-let modelAttempt = 0;
-function loadModel() {
-  modelAttempt = 0;
+let plan = [];
+let planIdx = 0;
+async function loadModel() {
+  plan = await buildPlan();
+  planIdx = 0;
   startWorker();
+}
+// Every attempt gets a fresh worker (an aborted runtime keeps its memory,
+// so retries inside one worker are doomed). The plan walks models,
+// devices and formats from most capable to most compatible. WebGPU with
+// the plain q4 format matters for phones: it runs from GPU memory and
+// does not need the shader-f16 feature that q4f16 requires.
+async function buildPlan() {
+  let gpu = false, f16 = false;
+  if (navigator.gpu) {
+    try {
+      const ad = await navigator.gpu.requestAdapter();
+      if (ad) { gpu = true; f16 = !!(ad.features && ad.features.has('shader-f16')); }
+    } catch (e) { /* no WebGPU — WASM attempts only */ }
+  }
+  const p = [];
+  if (gpu && f16) p.push({ m: 0, dev: 'webgpu', d: 'q4f16' });
+  p.push({ m: 0, dev: 'wasm', d: 'q4f16' });
+  if (gpu) p.push({ m: 1, dev: 'webgpu', d: f16 ? 'q4f16' : 'q4' });
+  if (gpu && f16) p.push({ m: 1, dev: 'webgpu', d: 'q4' });
+  p.push({ m: 1, dev: 'wasm', d: 'q4f16' });
+  return p;
 }
 function startWorker() {
   hideError();
@@ -191,9 +214,10 @@ function startWorker() {
   }
   loadBtn.disabled = true;
   loadBtn.textContent = 'Loading…';
-  if (modelAttempt === 0) setStatus('Starting the model worker…');
+  if (planIdx === 0) setStatus('Starting the model worker…');
+  const step = plan[planIdx];
   try {
-    worker = new Worker('ai-worker.js?v=86&m=' + modelAttempt, { type: 'module' });
+    worker = new Worker('ai-worker.js?v=87&m=' + step.m + '&d=' + step.d + '&dev=' + step.dev, { type: 'module' });
   } catch (err) {
     showError('The model worker could not start: ' + err.message);
     loadBtn.disabled = false; loadBtn.textContent = 'Try loading again';
@@ -246,10 +270,12 @@ function startWorker() {
 // inside the poisoned one.
 function loadFailed(details) {
   if (worker) { try { worker.terminate(); } catch (e) {} worker = null; }
-  if (modelAttempt < 1) {
-    modelAttempt += 1;
+  const cur = plan[planIdx];
+  planIdx += 1;
+  if (planIdx < plan.length) {
+    const nxt = plan[planIdx];
     startWorker();
-    setStatus('The bigger model didn\'t fit on this device — loading the smaller SmolLM-135M instead (~121 MB)…');
+    setStatus(nxt.m !== cur.m ? 'The bigger model didn\'t fit on this device — loading the smaller SmolLM-135M instead (~121 MB)…' : 'Trying a different way to run it on this device…');
   } else {
     showError('The model could not be loaded. The model files come from the Hugging Face CDN. This usually means the download was blocked, you are offline, or the model ran out of memory in this browser. Check your connection and try again.' + (details ? ' (Details: ' + details + ')' : ''));
     loadBtn.disabled = false; loadBtn.textContent = 'Try loading again';

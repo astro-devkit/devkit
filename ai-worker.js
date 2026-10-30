@@ -25,8 +25,10 @@ const MODELS = [
   { id: 'onnx-community/gemma-3-270m-it-ONNX', label: 'Gemma 3 270M' },
   { id: 'onnx-community/SmolLM-135M-Instruct-ONNX', label: 'SmolLM-135M' },
 ];
-const MODEL = MODELS[Math.min(MODELS.length - 1, Math.max(0, Number(new URLSearchParams(self.location.search).get('m')) || 0))];
-const DTYPE = 'q4f16';
+const PARAMS = new URLSearchParams(self.location.search);
+const MODEL = MODELS[Math.min(MODELS.length - 1, Math.max(0, Number(PARAMS.get('m')) || 0))];
+const DTYPE = PARAMS.get('d') === 'q4' ? 'q4' : 'q4f16';
+const DEV = PARAMS.get('dev');
 let activeModel = null;
 
 function errText(err) {
@@ -48,19 +50,22 @@ function post(msg) { self.postMessage(msg); }
 async function load() {
   if (generator) { post({ type: 'ready', backend, model: activeModel }); return; }
   const progress_callback = (data) => post({ type: 'progress', data });
-  // Prefer WebGPU (fast, and avoids the single-threaded WASM limits of a
-  // plain static host with no COOP/COEP headers); fall back to WASM.
-  const attempts = [];
-  if (self.navigator && 'gpu' in self.navigator) {
-    try {
-      const adapter = await self.navigator.gpu.requestAdapter();
-      // q4f16 weights need the shader-f16 WebGPU feature. Many mobile GPUs
-      // expose an adapter WITHOUT it, and session creation then fails —
-      // skip WebGPU entirely on those and go straight to WASM.
-      if (adapter && adapter.features && adapter.features.has('shader-f16')) attempts.push('webgpu');
-    } catch (e) { /* no usable WebGPU adapter — WASM will handle it */ }
+  // The page schedules ONE concrete device per worker (?dev=), so every
+  // attempt runs in a clean worker. 'auto' remains only for direct links:
+  // WebGPU when the adapter has shader-f16 (q4f16 needs it), else WASM.
+  let attempts;
+  if (DEV === 'webgpu') attempts = ['webgpu'];
+  else if (DEV === 'wasm') attempts = ['wasm'];
+  else {
+    attempts = [];
+    if (self.navigator && 'gpu' in self.navigator) {
+      try {
+        const adapter = await self.navigator.gpu.requestAdapter();
+        if (adapter && adapter.features && adapter.features.has('shader-f16')) attempts.push('webgpu');
+      } catch (e) { /* no usable WebGPU adapter — WASM will handle it */ }
+    }
+    attempts.push('wasm');
   }
-  attempts.push('wasm');
   let lastErr = null;
   for (const device of attempts) {
     try {
