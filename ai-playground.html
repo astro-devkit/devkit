@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI Playground — a free LLM that runs in your browser · DevKit</title>
-<meta name="description" content="Chat with a real LLM (SmolLM-135M) that runs 100% on your device with Transformers.js. Free, unlimited, no API key, no server — nothing you type leaves the page.">
+<meta name="description" content="Chat with a real LLM (Gemma 3 270M) that runs 100% on your device with Transformers.js. Free, unlimited, no API key, no server — nothing you type leaves the page.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
 <link rel="canonical" href="https://astro-devkit.github.io/devkit/ai-playground.html">
 <meta property="og:title" content="DevKit AI Playground — a free, unlimited LLM inside a web page">
-<meta property="og:description" content="SmolLM-135M running 100% in your browser via Transformers.js. No servers, no API key, no cost per token. Watch it generate live, in tokens/sec.">
+<meta property="og:description" content="Gemma 3 270M running 100% in your browser via Transformers.js. No servers, no API key, no cost per token. Watch it generate live, in tokens/sec.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://astro-devkit.github.io/devkit/ai-playground.html">
 <meta name="twitter:card" content="summary">
@@ -79,20 +79,20 @@ footer{max-width:860px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font
 
 <div class="aip-card">
 <h2>How this works</h2>
-<p style="margin:6px 0">This page uses <a href="https://huggingface.co/docs/transformers.js" target="_blank" rel="noopener">Transformers.js</a> to run <b>SmolLM-135M-Instruct</b> (a small open model from Hugging Face) directly in your browser, inside a Web Worker so the page never freezes. Inference uses WebGPU if your browser offers it, and falls back to WASM on your CPU.</p>
+<p style="margin:6px 0">This page uses <a href="https://huggingface.co/docs/transformers.js" target="_blank" rel="noopener">Transformers.js</a> to run <b>Gemma 3 270M IT</b> (Google's small open model) directly in your browser, inside a Web Worker so the page never freezes. Inference uses WebGPU if your browser offers it, and falls back to WASM on your CPU.</p>
 <ul class="aip-specs">
-<li><b>Model:</b> SmolLM-135M-Instruct, 4-bit quantized (q4f16) — small enough to live in your RAM</li>
-<li><b>One-time download:</b> ~121 MB, then cached by your browser for every future visit</li>
+<li><b>Model:</b> Gemma 3 270M IT, 4-bit quantized (q4f16) — small enough to live in your RAM</li>
+<li><b>One-time download:</b> ~293 MB, then cached by your browser for every future visit</li>
 <li><b>Privacy:</b> after the download, nothing you type leaves this page — there is no server to send it to</li>
 <li><b>Cost:</b> $0. Your device does the work, so there is no per-token bill</li>
 </ul>
-<div class="aip-honest">Honest expectations: a tiny 135M model that lives in your RAM — fun and instant, not GPT-class. It will write plausible text, answer simple questions, and cheerfully make things up. For real API models and what they cost, see the <a href="index.html#tab-llm">LLM cost calculator</a>.</div>
+<div class="aip-honest">Honest expectations: a small 270M model that lives in your RAM — fun and instant, not GPT-class. It will write plausible text, answer simple questions, and cheerfully make things up. For real API models and what they cost, see the <a href="index.html#tab-llm">LLM cost calculator</a>.</div>
 </div>
 
 <div class="aip-card" id="aipLoadCard">
 <h2>1. Load the model</h2>
-<p class="aip-note" style="margin:6px 0">Nothing downloads until you click. The ~121 MB one-time download is cached by your browser, then the model runs 100% on your device — free, unlimited, no API key, nothing you type leaves the page.</p>
-<button class="aip-bigbtn" id="aipLoadBtn">Load the model (~121 MB, one time)</button>
+<p class="aip-note" style="margin:6px 0">Nothing downloads until you click. The ~293 MB one-time download is cached by your browser, then the model runs 100% on your device — free, unlimited, no API key, nothing you type leaves the page.</p>
+<button class="aip-bigbtn" id="aipLoadBtn">Load the model (~293 MB, one time)</button>
 <div id="aipProgress"></div>
 <div class="aip-status" id="aipStatus">Not loaded yet.</div>
 <div class="aip-err" id="aipError"></div>
@@ -119,7 +119,7 @@ footer{max-width:860px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font
 </div>
 </div>
 
-<footer>DevKit — calculators, converters and dev tools. All client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. Model: <a href="https://huggingface.co/onnx-community/SmolLM-135M-Instruct-ONNX" target="_blank" rel="noopener">SmolLM-135M-Instruct (ONNX)</a>, run with <a href="https://huggingface.co/docs/transformers.js" target="_blank" rel="noopener">Transformers.js</a>.</footer>
+<footer>DevKit — calculators, converters and dev tools. All client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. Model: <a href="https://huggingface.co/onnx-community/gemma-3-270m-it-ONNX" target="_blank" rel="noopener">Gemma 3 270M IT (ONNX)</a>, run with <a href="https://huggingface.co/docs/transformers.js" target="_blank" rel="noopener">Transformers.js</a>.</footer>
 </div>
 <noscript><p style="text-align:center">The AI playground needs JavaScript — the model runs in your browser.</p></noscript>
 
@@ -188,7 +188,7 @@ function loadModel() {
   loadBtn.textContent = 'Loading…';
   setStatus('Starting the model worker…');
   try {
-    worker = new Worker('ai-worker.js?v=82', { type: 'module' });
+    worker = new Worker('ai-worker.js?v=83', { type: 'module' });
   } catch (err) {
     showError('The model worker could not start: ' + err.message);
     loadBtn.disabled = false; loadBtn.textContent = 'Try loading again';
@@ -196,7 +196,7 @@ function loadModel() {
   }
   worker.onerror = (ev) => {
     if (!ready) {
-      showError('The model could not be loaded. This usually means the download was blocked or you are offline — the model files come from the Hugging Face CDN (~121 MB). Check your connection and try again.' + (ev.message ? ' (Details: ' + ev.message + ')' : ''));
+      showError('The model could not be loaded. This usually means the download was blocked or you are offline — the model files come from the Hugging Face CDN (~293 MB). Check your connection and try again.' + (ev.message ? ' (Details: ' + ev.message + ')' : ''));
       loadBtn.disabled = false; loadBtn.textContent = 'Try loading again';
       setStatus('Load failed.');
     }
@@ -227,7 +227,7 @@ function loadModel() {
       inputEl.focus();
     } else if (m.type === 'error') {
       if (!ready) {
-        showError('The model could not be loaded. This usually means the download was blocked or you are offline — the model files come from the Hugging Face CDN (~121 MB). Check your connection and try again. (Details: ' + m.message + ')');
+        showError('The model could not be loaded. This usually means the download was blocked or you are offline — the model files come from the Hugging Face CDN (~293 MB). Check your connection and try again. (Details: ' + m.message + ')');
         loadBtn.disabled = false; loadBtn.textContent = 'Try loading again';
         setStatus('Load failed.');
       } else {

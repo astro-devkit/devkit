@@ -3,14 +3,16 @@
 // this worker only talks to the Hugging Face CDN (to download the model
 // files once) and to the page that created it.
 //
-// Model: onnx-community/SmolLM-135M-Instruct-ONNX (SmolLM-135M-Instruct),
-// dtype q4f16 — the 4-bit weights file that is 117,266,133 bytes
-// (onnx/model_q4f16.onnx). The plain q4 file is 180,581,125 bytes, so
-// q4f16 is the q4 variant that keeps the one-time download ~121 MB total
-// including the tokenizer. Browser-cached after the first load.
+// Model: onnx-community/gemma-3-270m-it-ONNX (Google Gemma 3 270M IT),
+// dtype q4f16 — the 4-bit weights live in onnx/model_q4f16.onnx_data
+// (~272.6 MB; the plain q4 variant is ~322.9 MB, so q4f16 is the smaller
+// download). Gemma's 262k-token vocabulary makes tokenizer.json ~20.3 MB,
+// so the one-time download totals ~293 MB. Browser-cached after first load.
+// Switched from SmolLM-135M on 2026-10-30 after load failures on a real
+// phone (WebGPU adapters without shader-f16 are now skipped — see load()).
 import { pipeline, TextStreamer, InterruptableStoppingCriteria } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js';
 
-const MODEL_ID = 'onnx-community/SmolLM-135M-Instruct-ONNX';
+const MODEL_ID = 'onnx-community/gemma-3-270m-it-ONNX';
 const DTYPE = 'q4f16';
 
 let generator = null;
@@ -30,7 +32,10 @@ async function load() {
   if (self.navigator && 'gpu' in self.navigator) {
     try {
       const adapter = await self.navigator.gpu.requestAdapter();
-      if (adapter) attempts.push('webgpu');
+      // q4f16 weights need the shader-f16 WebGPU feature. Many mobile GPUs
+      // expose an adapter WITHOUT it, and session creation then fails —
+      // skip WebGPU entirely on those and go straight to WASM.
+      if (adapter && adapter.features && adapter.features.has('shader-f16')) attempts.push('webgpu');
     } catch (e) { /* no usable WebGPU adapter — WASM will handle it */ }
   }
   attempts.push('wasm');
