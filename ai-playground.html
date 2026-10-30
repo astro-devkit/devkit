@@ -81,7 +81,7 @@ footer{max-width:860px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font
 <h2>How this works</h2>
 <p style="margin:6px 0">This page uses <a href="https://huggingface.co/docs/transformers.js" target="_blank" rel="noopener">Transformers.js</a> to run <b>Gemma 3 270M IT</b> (Google's small open model) directly in your browser, inside a Web Worker so the page never freezes. Inference uses WebGPU if your browser offers it, and falls back to WASM on your CPU.</p>
 <ul class="aip-specs">
-<li><b>Model:</b> Gemma 3 270M IT, 4-bit quantized — small enough to live in your RAM</li>
+<li><b>Model:</b> Gemma 3 270M IT, 4-bit quantized — and if it doesn't fit your device, the smaller SmolLM-135M loads instead, automatically</li>
 <li><b>One-time download:</b> ~293 MB, then cached by your browser for every future visit</li>
 <li><b>Privacy:</b> after the download, nothing you type leaves this page — there is no server to send it to</li>
 <li><b>Cost:</b> $0. Your device does the work, so there is no per-token bill</li>
@@ -119,7 +119,7 @@ footer{max-width:860px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font
 </div>
 </div>
 
-<footer>DevKit — calculators, converters and dev tools. All client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. Model: <a href="https://huggingface.co/onnx-community/gemma-3-270m-it-ONNX" target="_blank" rel="noopener">Gemma 3 270M IT (ONNX)</a>, run with <a href="https://huggingface.co/docs/transformers.js" target="_blank" rel="noopener">Transformers.js</a>.</footer>
+<footer>DevKit — calculators, converters and dev tools. All client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. Models: <a href="https://huggingface.co/onnx-community/gemma-3-270m-it-ONNX" target="_blank" rel="noopener">Gemma 3 270M IT (ONNX)</a> · <a href="https://huggingface.co/onnx-community/SmolLM-135M-Instruct-ONNX" target="_blank" rel="noopener">SmolLM-135M (automatic fallback)</a>, run with <a href="https://huggingface.co/docs/transformers.js" target="_blank" rel="noopener">Transformers.js</a>.</footer>
 </div>
 <noscript><p style="text-align:center">The AI playground needs JavaScript — the model runs in your browser.</p></noscript>
 
@@ -188,7 +188,7 @@ function loadModel() {
   loadBtn.textContent = 'Loading…';
   setStatus('Starting the model worker…');
   try {
-    worker = new Worker('ai-worker.js?v=84', { type: 'module' });
+    worker = new Worker('ai-worker.js?v=85', { type: 'module' });
   } catch (err) {
     showError('The model worker could not start: ' + err.message);
     loadBtn.disabled = false; loadBtn.textContent = 'Try loading again';
@@ -204,11 +204,11 @@ function loadModel() {
   worker.onmessage = (e) => {
     const m = e.data || {};
     if (m.type === 'progress') onProgress(m.data);
-    else if (m.type === 'phase') setStatus(m.phase === 'loading-webgpu' ? 'Starting WebGPU engine…' : m.phase === 'retry-q4' ? 'That format didn\'t start on this device — retrying with a more compatible 4-bit format (one more download)…' : 'Starting WASM (CPU) engine…');
+    else if (m.type === 'phase') setStatus(m.phase === 'loading-webgpu' ? 'Starting WebGPU engine…' : m.phase === 'retry-q4' ? 'That format didn\'t start on this device — retrying with a more compatible 4-bit format (one more download)…' : m.phase === 'fallback-model' ? 'The bigger model didn\'t fit on this device — loading the smaller SmolLM-135M instead…' : 'Starting WASM (CPU) engine…');
     else if (m.type === 'ready') {
       ready = true;
       setStatus('Model loaded. It now runs entirely on your device.');
-      backendEl.innerHTML = 'Running on: <span class="aip-badge">' + (m.backend === 'webgpu' ? 'WebGPU — your graphics chip' : 'WASM — your CPU') + '</span>';
+      backendEl.innerHTML = 'Running on: <span class="aip-badge">' + (m.backend === 'webgpu' ? 'WebGPU — your graphics chip' : 'WASM — your CPU') + '</span>' + (m.model ? ' <span class="aip-badge">' + m.model + '</span>' : '');
       loadBtn.textContent = 'Model loaded ✓';
       inputEl.disabled = false; sendBtn.disabled = false;
       inputEl.focus();

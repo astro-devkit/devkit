@@ -12,13 +12,19 @@
 // phone (WebGPU adapters without shader-f16 are now skipped — see load()).
 import { pipeline, TextStreamer, InterruptableStoppingCriteria } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js';
 
-const MODEL_ID = 'onnx-community/gemma-3-270m-it-ONNX';
-// Tried in order per device. q4f16 is the smaller download (~293 MB total);
-// if session creation fails with it (observed 2026-10-30: downloads complete,
-// then the runtime aborts with a bare numeric error — the Gemma3 q4f16 graph
-// does not initialize in this WASM build), q4 (~343 MB, fp32 scales, the
-// widest-supported 4-bit format) is the compatibility fallback.
-const DTYPES = ['q4f16', 'q4'];
+// Model fallback chain, tried in order per device. Gemma 3 270M first
+// (Jeff's pick, 2026-10-30): q4f16 is ~293 MB total, q4 ~343 MB. BUT Gemma
+// aborts at session creation (bare numeric runtime error, after full
+// download) in memory-constrained browsers — both formats, observed
+// 2026-10-30 in a browser on a VM with ~0.5 GB free RAM. SmolLM-135M
+// (~121 MB, q4f16) is proven to load and generate in that same browser,
+// so it is the safety net: a numeric abort abandons the model (its other
+// format is bigger still) and the chain moves on.
+const MODELS = [
+  { id: 'onnx-community/gemma-3-270m-it-ONNX', label: 'Gemma 3 270M', dtypes: ['q4f16', 'q4'] },
+  { id: 'onnx-community/SmolLM-135M-Instruct-ONNX', label: 'SmolLM-135M', dtypes: ['q4f16', 'q4'] },
+];
+let activeModel = null;
 
 function errText(err) {
   const raw = err && err.message ? String(err.message) : String(err);
@@ -37,7 +43,7 @@ let generating = false;
 function post(msg) { self.postMessage(msg); }
 
 async function load() {
-  if (generator) { post({ type: 'ready', backend }); return; }
+  if (generator) { post({ type: 'ready', backend, model: activeModel }); return; }
   const progress_callback = (data) => post({ type: 'progress', data });
   // Prefer WebGPU (fast, and avoids the single-threaded WASM limits of a
   // plain static host with no COOP/COEP headers); fall back to WASM.
@@ -54,20 +60,28 @@ async function load() {
   attempts.push('wasm');
   let lastErr = null;
   for (const device of attempts) {
-    for (const dtype of DTYPES) {
-      try {
-        post({ type: 'phase', phase: dtype === 'q4' ? 'retry-q4' : 'loading-' + device });
-        generator = await pipeline('text-generation', MODEL_ID, {
-          dtype,
-          device,
-          progress_callback,
-        });
-        backend = device;
-        post({ type: 'ready', backend });
-        return;
-      } catch (err) {
-        lastErr = err;
-        generator = null;
+    for (let mi = 0; mi < MODELS.length; mi++) {
+      const model = MODELS[mi];
+      for (const dtype of model.dtypes) {
+        try {
+          post({ type: 'phase', phase: mi > 0 ? 'fallback-model' : dtype === 'q4' ? 'retry-q4' : 'loading-' + device });
+          generator = await pipeline('text-generation', model.id, {
+            dtype,
+            device,
+            progress_callback,
+          });
+          backend = device;
+          activeModel = model.label;
+          post({ type: 'ready', backend, model: activeModel });
+          return;
+        } catch (err) {
+          lastErr = err;
+          generator = null;
+          // A bare numeric error is a runtime abort (out of memory / trap):
+          // this model's other format is even bigger, so abandon the model
+          // on this device and let the chain try the smaller one.
+          if (/^\d+$/.test(String(err && err.message ? err.message : err).trim())) break;
+        }
       }
     }
   }
