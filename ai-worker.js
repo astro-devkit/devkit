@@ -8,7 +8,7 @@
 // (onnx/model_q4f16.onnx). The plain q4 file is 180,581,125 bytes, so
 // q4f16 is the q4 variant that keeps the one-time download ~121 MB total
 // including the tokenizer. Browser-cached after the first load.
-import { pipeline, InterruptableStreamer } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js';
+import { pipeline, InterruptableStreamer } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.web.js';
 
 const MODEL_ID = 'onnx-community/SmolLM-135M-Instruct-ONNX';
 const DTYPE = 'q4f16';
@@ -26,7 +26,12 @@ async function load() {
   // Prefer WebGPU (fast, and avoids the single-threaded WASM limits of a
   // plain static host with no COOP/COEP headers); fall back to WASM.
   const attempts = [];
-  if (self.navigator && 'gpu' in self.navigator) attempts.push('webgpu');
+  if (self.navigator && 'gpu' in self.navigator) {
+    try {
+      const adapter = await self.navigator.gpu.requestAdapter();
+      if (adapter) attempts.push('webgpu');
+    } catch (e) { /* no usable WebGPU adapter — WASM will handle it */ }
+  }
   attempts.push('wasm');
   let lastErr = null;
   for (const device of attempts) {
