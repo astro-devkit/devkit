@@ -188,7 +188,7 @@ function loadModel() {
   loadBtn.textContent = 'Loading…';
   setStatus('Starting the model worker…');
   try {
-    worker = new Worker('ai-worker.js', { type: 'module' });
+    worker = new Worker('ai-worker.js?v=82', { type: 'module' });
   } catch (err) {
     showError('The model worker could not start: ' + err.message);
     loadBtn.disabled = false; loadBtn.textContent = 'Try loading again';

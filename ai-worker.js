@@ -8,13 +8,14 @@
 // (onnx/model_q4f16.onnx). The plain q4 file is 180,581,125 bytes, so
 // q4f16 is the q4 variant that keeps the one-time download ~121 MB total
 // including the tokenizer. Browser-cached after the first load.
-import { pipeline, InterruptableStreamer } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.web.js';
+import { pipeline, TextStreamer, InterruptableStoppingCriteria } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js';
 
 const MODEL_ID = 'onnx-community/SmolLM-135M-Instruct-ONNX';
 const DTYPE = 'q4f16';
 
 let generator = null;
 let streamer = null;
+let stopper = null;
 let backend = null;
 let generating = false;
 
@@ -59,11 +60,12 @@ async function generate(data) {
   generating = true;
   let tokenCount = 0;
   const start = performance.now();
-  streamer = new InterruptableStreamer(generator.tokenizer, {
+  stopper = new InterruptableStoppingCriteria();
+  streamer = new TextStreamer(generator.tokenizer, {
     skip_prompt: true,
     skip_special_tokens: true,
+    token_callback_function: () => { tokenCount += 1; },
     callback_function: (text) => {
-      tokenCount += 1;
       const secs = (performance.now() - start) / 1000;
       post({
         type: 'update',
@@ -78,6 +80,7 @@ async function generate(data) {
     const opts = {
       max_new_tokens: Math.max(16, Math.min(1024, data.maxNewTokens | 0 || 256)),
       streamer,
+      stopping_criteria: stopper,
       return_full_text: false,
     };
     if (temp > 0) { opts.do_sample = true; opts.temperature = temp; }
@@ -102,6 +105,7 @@ async function generate(data) {
   } finally {
     generating = false;
     streamer = null;
+    stopper = null;
   }
 }
 
@@ -110,7 +114,7 @@ self.onmessage = async (e) => {
   try {
     if (data.type === 'load') await load();
     else if (data.type === 'generate') await generate(data);
-    else if (data.type === 'interrupt') { if (streamer) streamer.interrupt(); }
+    else if (data.type === 'interrupt') { if (stopper) stopper.interrupt(); }
   } catch (err) {
     post({ type: 'error', message: err && err.message ? err.message : String(err) });
   }
