@@ -13,7 +13,20 @@
 import { pipeline, TextStreamer, InterruptableStoppingCriteria } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js';
 
 const MODEL_ID = 'onnx-community/gemma-3-270m-it-ONNX';
-const DTYPE = 'q4f16';
+// Tried in order per device. q4f16 is the smaller download (~293 MB total);
+// if session creation fails with it (observed 2026-10-30: downloads complete,
+// then the runtime aborts with a bare numeric error — the Gemma3 q4f16 graph
+// does not initialize in this WASM build), q4 (~343 MB, fp32 scales, the
+// widest-supported 4-bit format) is the compatibility fallback.
+const DTYPES = ['q4f16', 'q4'];
+
+function errText(err) {
+  const raw = err && err.message ? String(err.message) : String(err);
+  if (/^\d+$/.test(raw.trim())) {
+    return 'The browser AI runtime aborted (error ' + raw.trim() + ') — this usually means the model ran out of memory or hit an unsupported operation on this device.';
+  }
+  return raw;
+}
 
 let generator = null;
 let streamer = null;
@@ -41,22 +54,24 @@ async function load() {
   attempts.push('wasm');
   let lastErr = null;
   for (const device of attempts) {
-    try {
-      post({ type: 'phase', phase: 'loading-' + device });
-      generator = await pipeline('text-generation', MODEL_ID, {
-        dtype: DTYPE,
-        device,
-        progress_callback,
-      });
-      backend = device;
-      post({ type: 'ready', backend });
-      return;
-    } catch (err) {
-      lastErr = err;
-      generator = null;
+    for (const dtype of DTYPES) {
+      try {
+        post({ type: 'phase', phase: dtype === 'q4' ? 'retry-q4' : 'loading-' + device });
+        generator = await pipeline('text-generation', MODEL_ID, {
+          dtype,
+          device,
+          progress_callback,
+        });
+        backend = device;
+        post({ type: 'ready', backend });
+        return;
+      } catch (err) {
+        lastErr = err;
+        generator = null;
+      }
     }
   }
-  throw lastErr || new Error('The model could not be loaded on this device.');
+  throw new Error(errText(lastErr) || 'The model could not be loaded on this device.');
 }
 
 async function generate(data) {
@@ -121,6 +136,6 @@ self.onmessage = async (e) => {
     else if (data.type === 'generate') await generate(data);
     else if (data.type === 'interrupt') { if (stopper) stopper.interrupt(); }
   } catch (err) {
-    post({ type: 'error', message: err && err.message ? err.message : String(err) });
+    post({ type: 'error', message: errText(err) });
   }
 };
