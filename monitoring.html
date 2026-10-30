@@ -3,43 +3,48 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#070812">
 <title>Monitoring &amp; observability — DevKit guides</title>
 <meta name="description" content="Monitoring and observability are how you know your software is working — and how you find out why it isn&#x27;t. Pick based on what you need to see: uptime, errors, metrics, traces, or all of it, and whether you want to self-host or pay a vendor.">
 <link rel="canonical" href="https://astro-devkit.github.io/devkit/monitoring.html">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c3aed'/%3E%3Cstop offset='.55' stop-color='%23db2777'/%3E%3Cstop offset='1' stop-color='%230891b2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Monitoring & observability \u2014 DevKit guides","description":"Monitoring and observability are how you know your software is working \u2014 and how you find out why it isn't. Pick based on what you need to see: uptime, errors, metrics, traces, or all of it, and whether you want to self-host or pay a vendor.","url":"https://astro-devkit.github.io/devkit/monitoring.html","isPartOf":{"@type":"WebApplication","name":"DevKit","url":"https://astro-devkit.github.io/devkit/"}}</script>
 <style>
-:root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-a{color:var(--acc)}
-.topbar{position:sticky;top:0;z-index:50;background:var(--bg);padding:12px 20px;border-bottom:1px solid var(--line)}
+:root{--bg:#070812;--card:#14142c;--line:rgba(151,143,255,.24);--txt:#eef0ff;--mut:#9aa3c7;--acc:#8b5cf6;--acc2:#22d3ee;--good:#34d399;--grad:linear-gradient(92deg,#a78bfa,#f472b6 48%,#22d3ee);--bgrad:linear-gradient(135deg,#7c3aed,#db2777)}
+*{box-sizing:border-box}
+body{margin:0;color:var(--txt);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:radial-gradient(900px 520px at 12% -6%,rgba(124,58,237,.40),transparent 60%),radial-gradient(820px 500px at 92% -4%,rgba(34,211,238,.18),transparent 60%),radial-gradient(760px 640px at 50% 115%,rgba(219,39,119,.15),transparent 62%),var(--bg);background-attachment:fixed;min-height:100vh}
+::selection{background:#7c3aed;color:#fff}
+a{color:#a5b4fc}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(9,9,22,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:12px 20px;border-bottom:1px solid var(--line)}
 .topbar .in{max-width:1060px;margin:0 auto;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
-.topbar a{font-size:14px;text-decoration:none;color:var(--txt)}
-.topbar a:hover{color:var(--acc)}
-.topbar a.back{font-weight:700;color:var(--acc)}
-header{max-width:1060px;margin:0 auto;padding:36px 20px 4px}
-h1{margin:0;font-size:30px;letter-spacing:-.5px}h1 span{color:var(--acc)}
+.topbar a{font-size:14px;text-decoration:none;color:var(--txt);transition:color .15s ease}
+.topbar a:hover{color:#fff}
+.topbar a.back{font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+header{max-width:1060px;margin:0 auto;padding:40px 20px 4px;position:relative}
+h1{margin:0;font-size:32px;font-weight:800;letter-spacing:-.6px}h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 p.sub{color:var(--mut);margin:10px 0 0;max-width:640px;font-size:16px}
 main{max-width:1060px;margin:0 auto;padding:20px}
 section{margin-bottom:36px}
-section>h2{font-size:22px;margin:8px 0 2px}
+section>h2{font-size:22px;margin:8px 0 2px;font-weight:800;letter-spacing:-.4px}
 .secsub{color:var(--mut);margin:0 0 14px;font-size:14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 4px rgba(35,42,61,.05)}
+.card{background:linear-gradient(165deg,rgba(255,255,255,.075),rgba(255,255,255,.028)),var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 10px 28px rgba(0,0,0,.35);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.card:hover{transform:translateY(-3px);border-color:rgba(167,139,250,.55);box-shadow:0 16px 38px rgba(0,0,0,.45),0 8px 32px rgba(124,58,237,.16)}
 .card h3{margin:0 0 10px;font-size:16px}
 .card p{margin:8px 0}
 .toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
-.toc a{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--txt);font-size:15px}
-.toc a:hover{border-color:var(--acc);color:var(--acc)}
+.toc a{display:block;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:10px 14px;text-decoration:none;color:var(--txt);font-size:15px;transition:all .15s ease}
+.toc a:hover{border-color:var(--acc);color:#fff;transform:translateY(-1px)}
 .toc a span{float:right;color:var(--mut);font-size:13px}
 .tool-doc{margin-bottom:14px}
 .tool-doc h3 .open{float:right;font-size:13px;font-weight:700}
-.tool-doc .gotcha{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px}
+.tool-doc .gotcha{background:rgba(251,191,36,.10);border:1px solid rgba(251,191,36,.40);border-radius:12px;padding:10px 12px}
 .tool-doc .src{font-size:13px;color:var(--mut)}
-.tool-doc code{background:#f7f5f0;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+.tool-doc code{background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px;color:#dbe2ff}
 ol,ul{margin:8px 0;padding-left:22px}
 li{margin:3px 0}
 footer{max-width:1060px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font-size:13px;text-align:center}
 @media(max-width:640px){h1{font-size:24px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
