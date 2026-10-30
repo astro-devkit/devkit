@@ -178,7 +178,12 @@ function onProgress(data) {
   }
 }
 
+let modelAttempt = 0;
 function loadModel() {
+  modelAttempt = 0;
+  startWorker();
+}
+function startWorker() {
   hideError();
   if (typeof Worker === 'undefined') {
     showError('This browser does not support Web Workers, so the model has nowhere to run. Try a current version of Chrome, Edge, Firefox or Safari.');
@@ -186,25 +191,21 @@ function loadModel() {
   }
   loadBtn.disabled = true;
   loadBtn.textContent = 'Loading…';
-  setStatus('Starting the model worker…');
+  if (modelAttempt === 0) setStatus('Starting the model worker…');
   try {
-    worker = new Worker('ai-worker.js?v=85', { type: 'module' });
+    worker = new Worker('ai-worker.js?v=86&m=' + modelAttempt, { type: 'module' });
   } catch (err) {
     showError('The model worker could not start: ' + err.message);
     loadBtn.disabled = false; loadBtn.textContent = 'Try loading again';
     return;
   }
   worker.onerror = (ev) => {
-    if (!ready) {
-      showError('The model could not be loaded. The model files come from the Hugging Face CDN (~293 MB). This usually means the download was blocked, you are offline, or the model ran out of memory in this browser. Check your connection and try again.' + (ev.message ? ' (Details: ' + ev.message + ')' : ''));
-      loadBtn.disabled = false; loadBtn.textContent = 'Try loading again';
-      setStatus('Load failed.');
-    }
+    if (!ready) loadFailed(ev.message || '');
   };
   worker.onmessage = (e) => {
     const m = e.data || {};
     if (m.type === 'progress') onProgress(m.data);
-    else if (m.type === 'phase') setStatus(m.phase === 'loading-webgpu' ? 'Starting WebGPU engine…' : m.phase === 'retry-q4' ? 'That format didn\'t start on this device — retrying with a more compatible 4-bit format (one more download)…' : m.phase === 'fallback-model' ? 'The bigger model didn\'t fit on this device — loading the smaller SmolLM-135M instead…' : 'Starting WASM (CPU) engine…');
+    else if (m.type === 'phase') setStatus(m.phase === 'loading-webgpu' ? 'Starting WebGPU engine…' : 'Starting WASM (CPU) engine…');
     else if (m.type === 'ready') {
       ready = true;
       setStatus('Model loaded. It now runs entirely on your device.');
@@ -227,9 +228,7 @@ function loadModel() {
       inputEl.focus();
     } else if (m.type === 'error') {
       if (!ready) {
-        showError('The model could not be loaded. The model files come from the Hugging Face CDN (~293 MB). This usually means the download was blocked, you are offline, or the model ran out of memory in this browser. Check your connection and try again. (Details: ' + m.message + ')');
-        loadBtn.disabled = false; loadBtn.textContent = 'Try loading again';
-        setStatus('Load failed.');
+        loadFailed(m.message);
       } else {
         generating = false;
         stopBtn.disabled = true; sendBtn.disabled = false; inputEl.disabled = false;
@@ -240,6 +239,22 @@ function loadModel() {
     }
   };
   worker.postMessage({ type: 'load' });
+}
+
+// A failed load can leave the aborted runtime's memory stuck inside the
+// worker, so the fallback model gets a brand-new worker, never a retry
+// inside the poisoned one.
+function loadFailed(details) {
+  if (worker) { try { worker.terminate(); } catch (e) {} worker = null; }
+  if (modelAttempt < 1) {
+    modelAttempt += 1;
+    startWorker();
+    setStatus('The bigger model didn\'t fit on this device — loading the smaller SmolLM-135M instead (~121 MB)…');
+  } else {
+    showError('The model could not be loaded. The model files come from the Hugging Face CDN. This usually means the download was blocked, you are offline, or the model ran out of memory in this browser. Check your connection and try again.' + (details ? ' (Details: ' + details + ')' : ''));
+    loadBtn.disabled = false; loadBtn.textContent = 'Try loading again';
+    setStatus('Load failed.');
+  }
 }
 
 function send() {

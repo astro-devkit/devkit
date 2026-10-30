@@ -12,18 +12,21 @@
 // phone (WebGPU adapters without shader-f16 are now skipped — see load()).
 import { pipeline, TextStreamer, InterruptableStoppingCriteria } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js';
 
-// Model fallback chain, tried in order per device. Gemma 3 270M first
-// (Jeff's pick, 2026-10-30): q4f16 is ~293 MB total, q4 ~343 MB. BUT Gemma
-// aborts at session creation (bare numeric runtime error, after full
-// download) in memory-constrained browsers — both formats, observed
-// 2026-10-30 in a browser on a VM with ~0.5 GB free RAM. SmolLM-135M
-// (~121 MB, q4f16) is proven to load and generate in that same browser,
-// so it is the safety net: a numeric abort abandons the model (its other
-// format is bigger still) and the chain moves on.
+// One model per worker. The page drives the fallback chain — Gemma 3 270M
+// (index 0, Jeff's pick 2026-10-30, ~293 MB) first, SmolLM-135M (index 1,
+// ~121 MB) second — by spawning a FRESH worker per model (?m=<index>).
+// Why fresh: when the runtime aborts at session creation (bare numeric
+// error after a full download, observed for Gemma in memory-constrained
+// browsers), the aborted session's memory is not reliably freed inside
+// the same worker, and the next model attempted there aborts too
+// (observed 2026-10-30: in-worker chains v8.4/v8.5 never recovered).
+// SmolLM-135M q4f16 is proven to load and generate from a clean start.
 const MODELS = [
-  { id: 'onnx-community/gemma-3-270m-it-ONNX', label: 'Gemma 3 270M', dtypes: ['q4f16', 'q4'] },
-  { id: 'onnx-community/SmolLM-135M-Instruct-ONNX', label: 'SmolLM-135M', dtypes: ['q4f16', 'q4'] },
+  { id: 'onnx-community/gemma-3-270m-it-ONNX', label: 'Gemma 3 270M' },
+  { id: 'onnx-community/SmolLM-135M-Instruct-ONNX', label: 'SmolLM-135M' },
 ];
+const MODEL = MODELS[Math.min(MODELS.length - 1, Math.max(0, Number(new URLSearchParams(self.location.search).get('m')) || 0))];
+const DTYPE = 'q4f16';
 let activeModel = null;
 
 function errText(err) {
@@ -60,29 +63,20 @@ async function load() {
   attempts.push('wasm');
   let lastErr = null;
   for (const device of attempts) {
-    for (let mi = 0; mi < MODELS.length; mi++) {
-      const model = MODELS[mi];
-      for (const dtype of model.dtypes) {
-        try {
-          post({ type: 'phase', phase: mi > 0 ? 'fallback-model' : dtype === 'q4' ? 'retry-q4' : 'loading-' + device });
-          generator = await pipeline('text-generation', model.id, {
-            dtype,
-            device,
-            progress_callback,
-          });
-          backend = device;
-          activeModel = model.label;
-          post({ type: 'ready', backend, model: activeModel });
-          return;
-        } catch (err) {
-          lastErr = err;
-          generator = null;
-          // A bare numeric error is a runtime abort (out of memory / trap):
-          // this model's other format is even bigger, so abandon the model
-          // on this device and let the chain try the smaller one.
-          if (/^\d+$/.test(String(err && err.message ? err.message : err).trim())) break;
-        }
-      }
+    try {
+      post({ type: 'phase', phase: 'loading-' + device });
+      generator = await pipeline('text-generation', MODEL.id, {
+        dtype: DTYPE,
+        device,
+        progress_callback,
+      });
+      backend = device;
+      activeModel = MODEL.label;
+      post({ type: 'ready', backend, model: activeModel });
+      return;
+    } catch (err) {
+      lastErr = err;
+      generator = null;
     }
   }
   throw new Error(errText(lastErr) || 'The model could not be loaded on this device.');
