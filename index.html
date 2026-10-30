@@ -125,6 +125,15 @@ section{display:none}section.on{display:block}
 #llmExplain .llm-explainer ul{margin:6px 0;padding-left:20px}
 #llmExplain .llm-explainer svg{max-width:100%;height:auto;display:block;margin:10px 0}
 #llmExplain .llm-explainer .src{font-size:13px;color:var(--mut)}
+/* v8 tools (namespaced) */
+.pal-grid{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.pal-sw{flex:1 1 54px;border-radius:10px;padding:15px 2px 5px;font-size:11px;text-align:center;cursor:pointer;font-family:ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line)}
+.pal-lab{font-size:12px;color:var(--mut);margin:10px 0 0}
+.pomo-ringbox{position:relative;width:170px;height:170px;margin:6px auto}
+.pomo-time{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.pomo-time .t{font-size:34px;font-weight:800;line-height:1}
+.pomo-time .m{font-size:13px;color:var(--mut);margin-top:4px}
+.pomo-btns{text-align:center}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -132,7 +141,7 @@ section{display:none}section.on{display:block}
 <header>
 <h1>Dev<span>Kit</span></h1>
 <p class="hero">What do you want to <span>calculate?</span></p>
-<p class="sub">Mortgage, BMI, retirement, LLM costs, file converters and dev tools — 69 tools, all free, all in your browser.</p>
+<p class="sub">Mortgage, BMI, retirement, LLM costs, file converters and dev tools — 74 tools, all free, all in your browser.</p>
 <div class="pop">
 <button onclick="popCalc('mortgage')">Mortgage</button>
 <button onclick="popCalc('bmi')">BMI</button>
@@ -160,9 +169,9 @@ section{display:none}section.on{display:block}
 <main>
 <div id="homeView">
 <h2>Browse by category</h2>
-<p class="secsub">69 tools, all free, all in your browser. Pick a category, or search above.</p>
+<p class="secsub">74 tools, all free, all in your browser. Pick a category, or search above.</p>
 <div class="tiles">
-<a class="tile" href="#tab-llm"><h3>LLM <span>2 tools</span></h3><p>LLM cost calculator · Tokens/sec simulator</p></a>
+<a class="tile" href="#tab-llm"><h3>LLM <span>3 tools</span></h3><p>LLM cost calculator · Tokens/sec simulator · AI playground</p></a>
 <a class="tile" href="#tab-finance"><h3>Finance <span>13 tools</span></h3><p>Mortgage · Compound interest · Retirement</p></a>
 <a class="tile" href="#tab-health"><h3>Health <span>8 tools</span></h3><p>BMI · BMR &amp; calories · Macros</p></a>
 <a class="tile" href="#tab-math"><h3>Math <span>7 tools</span></h3><p>GPA · Quadratic solver · Mean &amp; SD</p></a>
@@ -170,7 +179,7 @@ section{display:none}section.on{display:block}
 <a class="tile" href="#tab-time"><h3>Time <span>2 tools</span></h3><p>Age · Days between dates</p></a>
 <a class="tile" href="#tab-everyday"><h3>Everyday <span>5 tools</span></h3><p>Recipe scaler · Paint · Concrete</p></a>
 <a class="tile" href="#tab-files"><h3>File converters <span>10 tools</span></h3><p>CSV ↔ JSON · Markdown → HTML · Image converter</p></a>
-<a class="tile" href="#tab-dev"><h3>Dev tools <span>12 tools</span></h3><p>JSON formatter · Base64 · Text diff</p></a>
+<a class="tile" href="#tab-dev"><h3>Dev tools <span>16 tools</span></h3><p>JSON formatter · Base64 · Text diff · JWT decoder · Cron explainer</p></a>
 </div>
 </div>
 <div id="pageHead" class="hide"><h2 id="pageTitle"></h2><p id="pageDesc"></p></div>
@@ -395,6 +404,11 @@ section{display:none}section.on{display:block}
     <li>Remember: the prompt you send counts as input tokens, and everything the model writes back counts as output tokens — usually the pricier kind.</li>
   </ul>
 </div>
+<div id="exp-playground" class="llm-explainer">
+  <h3>New: a free LLM that runs in your browser</h3>
+  <p>The calculators above price other people's models. The <strong>AI playground</strong> runs one on <em>your</em> machine instead: SmolLM-135M, loaded into your RAM with Transformers.js — no API key, no per-token cost, and nothing you type leaves the page. Watch it generate live, in tokens/sec, right next to the simulator above.</p>
+  <p><a href="ai-playground.html"><strong>Open the AI playground →</strong></a></p>
+</div>
 </div>
 </section>
 
@@ -547,6 +561,52 @@ section{display:none}section.on{display:block}
 <div class="card" id="tool-wc"><h3>Word counter</h3><textarea id="wcIn" rows="3" placeholder="Paste text to count words, characters and reading time"></textarea><div class="row"><button class="btn" onclick="wordCount()">Count</button></div><pre id="wcOut"></pre></div>
 <div class="card" id="tool-sort"><h3>Sort &amp; dedupe lines</h3><textarea id="sortIn" rows="3" placeholder="one line per item"></textarea><div class="row"><button class="btn" onclick="sortLines('az')">Sort A–Z</button><button class="btn" onclick="sortLines('za')">Sort Z–A</button><button class="btn" onclick="sortLines('uniq')">Remove duplicates</button></div><pre id="sortOut"></pre></div>
 <div class="card" id="tool-ts"><h3>JSON → TypeScript</h3><textarea id="tsJsonIn" rows="3" placeholder='{"name":"Ada","age":36,"admin":true}'></textarea><div class="row"><button class="btn" onclick="jsonToTs()">Generate types</button><button class="btn ghost" onclick="copyOut('tsJsonOut')">Copy</button></div><pre id="tsJsonOut"></pre></div>
+<div class="card tool" id="tool-jwt" data-name="jwt decoder json web token auth bearer">
+<h3>JWT decoder</h3>
+<textarea id="jwtIn" placeholder="Paste a JWT (eyJhbGciOiJSUzI1NiIs…)"></textarea>
+<button class="act" onclick="jwtDecode()">Decode</button>
+<button class="ghost" onclick="copyText('jwtOut')">Copy</button>
+<pre id="jwtOut">Header and payload appear here.</pre>
+<div class="formula">Decode only — the signature is NOT verified. A decoded token shows what it claims, not that it is genuine.</div>
+</div>
+<div class="card tool" id="tool-cron" data-name="cron expression explainer schedule crontab next run">
+<h3>Cron expression explainer</h3>
+<input type="text" id="cronIn" placeholder="*/15 9-17 * * 1-5">
+<button class="act" onclick="cronExplain()">Explain</button>
+<button class="ghost" onclick="copyText('cronOut')">Copy</button>
+<pre id="cronOut">Plain-English schedule and the next 5 run times appear here.</pre>
+<div class="formula">Fields: minute hour day-of-month month day-of-week · Names (JAN, MON) and steps (*/15) supported</div>
+</div>
+<div class="card tool" id="tool-palette" data-name="color palette generator complementary analogous triadic shades design">
+<h3>Color palette generator</h3>
+<input type="text" id="palIn" value="#4f46e5" placeholder="#4f46e5">
+<button class="act" onclick="paletteGen()">Generate</button>
+<button class="ghost" onclick="copyText('palOut')">Copy all</button>
+<div id="palGrid"></div>
+<pre id="palOut">Click a swatch to copy its hex.</pre>
+</div>
+<div class="card tool" id="tool-pomo" data-name="pomodoro timer focus productivity countdown">
+<h3>Pomodoro timer</h3>
+<div class="pomo-ringbox">
+<svg width="170" height="170" viewBox="0 0 170 170"><circle cx="85" cy="85" r="76" fill="none" stroke="#e8e2d6" stroke-width="10"/><circle id="pomoRingFg" cx="85" cy="85" r="76" fill="none" stroke="#4f46e5" stroke-width="10" stroke-linecap="round" stroke-dasharray="477.5" stroke-dashoffset="0" transform="rotate(-90 85 85)"/></svg>
+<div class="pomo-time"><span class="t" id="pomoTime">25:00</span><span class="m" id="pomoMode">Focus</span></div>
+</div>
+<div class="row">
+<div><div class="f">Focus (minutes)</div><input type="number" id="pomoWork" value="25" min="1"></div>
+<div><div class="f">Break (minutes)</div><input type="number" id="pomoBreak" value="5" min="1"></div>
+</div>
+<div class="pomo-btns">
+<button class="act" id="pomoToggle" onclick="pomoToggle()">Start</button>
+<button class="ghost" onclick="pomoReset()">Reset</button>
+</div>
+<div class="formula" id="pomoSessions" style="text-align:center">0 sessions done · The countdown also runs in the tab title · Visual only, no sound</div>
+</div>
+<div class="card tool" id="tool-aiplay" data-name="ai playground llm chat transformers.js local model browser inference">
+<h3>AI playground — an LLM in your browser</h3>
+<p style="font-size:14px;margin:6px 0">A real language model (SmolLM-135M) that runs 100% on your device with Transformers.js. Free, unlimited, no API key — with a live tokens/sec readout while it generates.</p>
+<a href="ai-playground.html"><button class="act" type="button">Open the AI playground</button></a>
+<div class="formula">One-time ~121 MB model download, cached by your browser · Nothing you type leaves the page</div>
+</div>
 </div>
 </section>
 <p id="noResults" class="hide">No tools match &ldquo;<span id="noResultsQ"></span>&rdquo; — try a different word.</p>
@@ -891,6 +951,48 @@ function imgConvert(){if(!imgEl){$('imgInfo').textContent='Choose an image first
 function caseConv(m){const v=$('caseIn').value;let r=v;if(m==='upper')r=v.toUpperCase();if(m==='lower')r=v.toLowerCase();if(m==='title')r=v.replace(/\w\S*/g,function(w){return w[0].toUpperCase()+w.slice(1).toLowerCase()});if(m==='snake')r=v.trim().replace(/[\s-]+/g,'_').replace(/([a-z])([A-Z])/g,'$1_$2').toLowerCase();if(m==='kebab')r=v.trim().replace(/[\s_]+/g,'-').replace(/([a-z])([A-Z])/g,'$1-$2').toLowerCase();out('caseOut',r)}
 function colConv(){const v=$('colIn').value.trim();try{let r,g,b;if(v.startsWith('#')){const h=v.slice(1);r=parseInt(h.slice(0,2),16);g=parseInt(h.slice(2,4),16);b=parseInt(h.slice(4,6),16)}else if(v.startsWith('rgb')){const parts=v.match(/\d+/g).map(Number);r=parts[0];g=parts[1];b=parts[2]}else if(v.startsWith('hsl')){const parts=v.match(/[\d.]+/g).map(Number);const hh=parts[0],ss=parts[1],ll=parts[2];const s=ss/100,l=ll/100,c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((hh/60)%2-1)),mm=l-c/2;let rt,gt,bt;if(hh<60){rt=c;gt=x;bt=0}else if(hh<120){rt=x;gt=c;bt=0}else if(hh<180){rt=0;gt=c;bt=x}else if(hh<240){rt=0;gt=x;bt=c}else if(hh<300){rt=x;gt=0;bt=c}else{rt=c;gt=0;bt=x}r=Math.round((rt+mm)*255);g=Math.round((gt+mm)*255);b=Math.round((bt+mm)*255)}else throw new Error('Use #hex, rgb() or hsl()');const hex='#'+[r,g,b].map(function(n){return n.toString(16).padStart(2,'0')}).join('');const mx=Math.max(r,g,b)/255,mn=Math.min(r,g,b)/255,l=(mx+mn)/2;let h2=0,s2=0;if(mx!==mn){const d=mx-mn;s2=l>0.5?d/(2-mx-mn):d/(mx+mn);if(mx===r/255)h2=((g-b)/255/d)%6;else if(mx===g/255)h2=(b-r)/255/d+2;else h2=(r-g)/255/d+4;h2=Math.round(h2*60);if(h2<0)h2+=360}out('colOut','HEX: '+hex+'\nRGB: rgb('+r+', '+g+', '+b+')\nHSL: hsl('+h2+', '+Math.round(s2*100)+'%, '+Math.round(l*100)+'%)')}catch(e){out('colOut','Error: '+e.message)}}
 function diffText(){const a=$('diffA').value.split('\n');const b=$('diffB').value.split('\n');const setB=new Set(b),setA=new Set(a);const onlyA=a.filter(function(l){return !setB.has(l)}),onlyB=b.filter(function(l){return !setA.has(l)});out('diffOut','Only in first ('+onlyA.length+'):\n'+onlyA.map(function(l){return '- '+l}).join('\n')+'\n\nOnly in second ('+onlyB.length+'):\n'+onlyB.map(function(l){return '+ '+l}).join('\n'))}
+/* ---- v8 tools: JWT, cron, palette, pomodoro ---- */
+function b64UrlToUtf8(s){s=String(s).replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return decodeURIComponent(escape(atob(s)))}
+function jwtParse(token){var parts=String(token||'').trim().split('.');if(parts.length!==3)throw new Error('A JWT has 3 dot-separated parts — this has '+parts.length);var header,payload;try{header=JSON.parse(b64UrlToUtf8(parts[0]));payload=JSON.parse(b64UrlToUtf8(parts[1]))}catch(e){throw new Error('Could not decode the base64url JSON: '+e.message)}return{header:header,payload:payload,signature:parts[2]}}
+function humanDur(s){s=Math.max(0,Math.floor(s));if(s<60)return s+'s';if(s<3600)return Math.floor(s/60)+'m '+(s%60)+'s';if(s<86400)return Math.floor(s/3600)+'h '+Math.floor(s%3600/60)+'m';return Math.floor(s/86400)+'d '+Math.floor(s%86400/3600)+'h'}
+function jwtExpiryText(payload,nowSec){if(!payload||typeof payload.exp!=='number')return 'No exp (expiry) claim in this token';var diff=payload.exp-nowSec;if(diff>=0)return 'Expires '+new Date(payload.exp*1000).toUTCString()+' (in '+humanDur(diff)+')';return 'Expired '+new Date(payload.exp*1000).toUTCString()+' ('+humanDur(-diff)+' ago)'}
+function jwtDecode(){try{var r=jwtParse($('jwtIn').value);var now=Math.floor(Date.now()/1000);var lines=['Header: '+JSON.stringify(r.header),'','Payload: '+JSON.stringify(r.payload,null,2),'',jwtExpiryText(r.payload,now)];if(typeof r.payload.iat==='number')lines.push('Issued at: '+new Date(r.payload.iat*1000).toUTCString());if(typeof r.payload.nbf==='number')lines.push('Not before: '+new Date(r.payload.nbf*1000).toUTCString());lines.push('','Signature: present, '+r.signature.length+' characters — NOT verified. Decoding shows what the token claims; it does not prove the token is genuine.');out('jwtOut',lines.join('\n'))}catch(e){out('jwtOut','Error: '+e.message)}}
+var CRON_MONTHS={JAN:1,FEB:2,MAR:3,APR:4,MAY:5,JUN:6,JUL:7,AUG:8,SEP:9,OCT:10,NOV:11,DEC:12};
+var CRON_DOWS={SUN:0,MON:1,TUE:2,WED:3,THU:4,FRI:5,SAT:6};
+var CRON_MON_NAMES=['','January','February','March','April','May','June','July','August','September','October','November','December'];
+var CRON_DOW_NAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+function cronFieldValues(field,min,max,names){var f=String(field).toUpperCase();if(names){for(var k in names)f=f.split(k).join(names[k])}var vals=[];function add(v){if(vals.indexOf(v)<0)vals.push(v)}f.split(',').forEach(function(part){var step=1;var sm=part.match(/^(.+)\/(\d+)$/);if(sm){part=sm[1];step=parseInt(sm[2],10);if(!(step>=1))throw new Error('Bad step in field "'+field+'"')}var lo,hi;if(part==='*'){lo=min;hi=max}else if(/^\d+$/.test(part)){lo=hi=parseInt(part,10)}else{var rm=part.match(/^(\d+)-(\d+)$/);if(!rm)throw new Error('Cannot parse cron field "'+field+'"');lo=parseInt(rm[1],10);hi=parseInt(rm[2],10)}if(lo<min||hi>max||lo>hi)throw new Error('Value out of range ('+min+'–'+max+') in field "'+field+'"');for(var v=lo;v<=hi;v+=step)add(v)});return vals.sort(function(a,b){return a-b})}
+function cronParse(expr){var f=String(expr||'').trim().split(/\s+/).filter(function(x){return x});if(f.length!==5)throw new Error('A cron expression has 5 fields (minute hour day-of-month month day-of-week) — this has '+f.length);var dow=cronFieldValues(f[4],0,7,CRON_DOWS).map(function(d){return d===7?0:d});dow=dow.filter(function(d,i){return dow.indexOf(d)===i}).sort(function(a,b){return a-b});return{min:cronFieldValues(f[0],0,59),hr:cronFieldValues(f[1],0,23),dom:cronFieldValues(f[2],1,31),mon:cronFieldValues(f[3],1,12,CRON_MONTHS),dow:dow,domStar:f[2]==='*',dowStar:f[4]==='*',raw:f}}
+function cronMatches(p,d){if(p.mon.indexOf(d.getMonth()+1)<0)return false;if(p.hr.indexOf(d.getHours())<0)return false;if(p.min.indexOf(d.getMinutes())<0)return false;var domOk=p.dom.indexOf(d.getDate())>=0,dowOk=p.dow.indexOf(d.getDay())>=0;if(p.domStar&&p.dowStar)return true;if(p.domStar)return dowOk;if(p.dowStar)return domOk;return domOk||dowOk}
+function cronNextRuns(expr,from,count){var p=cronParse(expr);var d=new Date(from.getTime());d.setSeconds(0,0);d.setMinutes(d.getMinutes()+1);var res=[];var limit=new Date(from.getTime());limit.setFullYear(limit.getFullYear()+4);while(res.length<count&&d.getTime()<=limit.getTime()){if(cronMatches(p,d))res.push(new Date(d.getTime()));d.setMinutes(d.getMinutes()+1)}return res}
+function cronDescribe(expr){var p=cronParse(expr);var f=p.raw;function one(a){return a.length===1?a[0]:null}function hhmm(h,m){var ap=h<12?'AM':'PM';var hh=h%12;if(hh===0)hh=12;return hh+':'+String(m).padStart(2,'0')+' '+ap}var h1=one(p.hr),m1=one(p.min);var parts=[];var stepM=f[0].match(/^\*\/(\d+)$/);
+if(h1!==null&&m1!==null)parts.push('at '+hhmm(h1,m1));
+else if(f[0]==='*'&&f[1]==='*')parts.push('every minute');
+else if(stepM&&f[1]==='*')parts.push('every '+stepM[1]+' minutes');
+else if(f[1]==='*'&&m1!==null)parts.push('at minute '+m1+' of every hour');
+else if(h1!==null&&f[0]==='*')parts.push('every minute of the '+h1+':00 hour');
+else parts.push('at minutes '+p.min.join(', ')+' past hours '+p.hr.join(', '));
+if(p.domStar&&p.dowStar)parts.push('every day');
+else if(!p.domStar&&p.dowStar)parts.push('on day'+(p.dom.length>1?'s':'')+' '+p.dom.join(', ')+' of the month');
+else if(p.domStar&&!p.dowStar)parts.push('on '+p.dow.map(function(d){return CRON_DOW_NAMES[d]}).join(', '));
+else parts.push('on day'+(p.dom.length>1?'s':'')+' '+p.dom.join(', ')+' of the month, or on '+p.dow.map(function(d){return CRON_DOW_NAMES[d]}).join(', ')+' — cron runs when either matches');
+if(p.mon.length<12)parts.push('in '+p.mon.map(function(m){return CRON_MON_NAMES[m]}).join(', '));
+var s=parts.join(', ');return s.charAt(0).toUpperCase()+s.slice(1)+'.'}
+function cronExplain(){try{var expr=$('cronIn').value;var desc=cronDescribe(expr);var runs=cronNextRuns(expr,new Date(),5);var lines=[desc,'','Next 5 runs:'];if(runs.length)runs.forEach(function(d,i){lines.push((i+1)+'. '+d.toLocaleString())});else lines.push('No run found in the next 4 years — check the expression.');out('cronOut',lines.join('\n'))}catch(e){out('cronOut','Error: '+e.message)}}
+function hexToHsl(hex){var s=String(hex).trim().replace(/^#/,'');if(/^[0-9a-fA-F]{3}$/.test(s))s=s.split('').map(function(c){return c+c}).join('');if(!/^[0-9a-fA-F]{6}$/.test(s))throw new Error('Enter a hex color like #4f46e5');var r=parseInt(s.slice(0,2),16)/255,g=parseInt(s.slice(2,4),16)/255,b=parseInt(s.slice(4,6),16)/255;var mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2,h=0,sat=0;if(mx!==mn){var d=mx-mn;sat=l>0.5?d/(2-mx-mn):d/(mx+mn);if(mx===r)h=((g-b)/d)%6;else if(mx===g)h=(b-r)/d+2;else h=(r-g)/d+4;h*=60;if(h<0)h+=360}return{h:Math.round(h),s:Math.round(sat*100),l:Math.round(l*100)}}
+function hslToHex(h,s,l){h=((h%360)+360)%360;s=Math.max(0,Math.min(100,s))/100;l=Math.max(0,Math.min(100,l))/100;var c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((h/60)%2-1)),m=l-c/2,r,g,b;if(h<60){r=c;g=x;b=0}else if(h<120){r=x;g=c;b=0}else if(h<180){r=0;g=c;b=x}else if(h<240){r=0;g=x;b=c}else if(h<300){r=x;g=0;b=c}else{r=c;g=0;b=x}function ch(v){return Math.round((v+m)*255).toString(16).padStart(2,'0')}return '#'+ch(r)+ch(g)+ch(b)}
+function paletteFor(hex){var hsl=hexToHsl(hex),h=hsl.h,s=hsl.s,l=hsl.l;function at(hh,ll){return hslToHex(hh,s,Math.max(6,Math.min(94,ll)))}var ladder=[l-30,l-15,l,l+15,l+30];return{base:hslToHex(h,s,l),shades:ladder.map(function(ll){return at(h,ll)}),complementary:ladder.map(function(ll){return at(h+180,ll)}),analogous:[h-30,h-15,h,h+15,h+30].map(function(hh){return at(hh,l)}),triadic:[at(h,l),at(h+120,l),at(h+240,l),at(h+120,l+20),at(h+240,l+20)]}}
+function palCopy(hex){if(navigator.clipboard)navigator.clipboard.writeText(hex).then(function(){toast('Copied '+hex)}).catch(function(){toast(hex)});else toast(hex)}
+function paletteGen(){try{var pal=paletteFor($('palIn').value);var grid=$('palGrid');var schemes=[['Shades',pal.shades],['Complementary',pal.complementary],['Analogous',pal.analogous],['Triadic',pal.triadic]];var html='';schemes.forEach(function(sc){html+='<div class="pal-lab">'+sc[0]+'</div><div class="pal-grid">'+sc[1].map(function(hex){var l=hexToHsl(hex).l;return '<div class="pal-sw" style="background:'+hex+';color:'+(l>62?'#232a3d':'#fff')+'" onclick="palCopy(\''+hex+'\')" title="Copy '+hex+'">'+hex+'</div>'}).join('')+'</div>'});grid.innerHTML=html;out('palOut','Base '+pal.base+'\n'+schemes.map(function(sc){return sc[0]+': '+sc[1].join(' ')}).join('\n'))}catch(e){out('palOut','Error: '+e.message);var g2=$('palGrid');if(g2)g2.innerHTML=''}}
+var pomo={mode:'work',left:1500,total:1500,running:false,timer:null,endAt:0,sessions:0,origTitle:document.title};
+function pomoFmt(s){s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function pomoDurations(){var w=parseFloat(($('pomoWork')||{}).value)||25,b=parseFloat(($('pomoBreak')||{}).value)||5;return{work:Math.max(1,Math.round(w))*60,brk:Math.max(1,Math.round(b))*60}}
+function pomoRender(){out('pomoTime',pomoFmt(pomo.left));out('pomoMode',pomo.mode==='work'?'Focus':'Break — stretch, look away');out('pomoSessions',pomo.sessions+' session'+(pomo.sessions===1?'':'s')+' done · The countdown also runs in the tab title · Visual only, no sound');var ring=$('pomoRingFg');if(ring&&ring.style){var C=2*Math.PI*76;ring.style.strokeDashoffset=String(C*(1-(pomo.total>0?pomo.left/pomo.total:0)))}if(pomo.running)document.title='('+pomoFmt(pomo.left)+') '+(pomo.mode==='work'?'Focus':'Break')+' · DevKit'}
+function pomoSetMode(m){pomo.mode=m;var d=pomoDurations();pomo.total=m==='work'?d.work:d.brk;pomo.left=pomo.total;pomoRender()}
+function pomoTick(){pomo.left=Math.max(0,Math.round((pomo.endAt-Date.now())/1000));if(pomo.left<=0){if(pomo.mode==='work')pomo.sessions++;pomoSetMode(pomo.mode==='work'?'break':'work');pomo.endAt=Date.now()+pomo.total*1000;pomo.left=pomo.total;pomoRender();return}pomoRender()}
+function pomoToggle(){var btn=$('pomoToggle');if(pomo.running){clearInterval(pomo.timer);pomo.running=false;if(btn)btn.textContent='Start';document.title=pomo.origTitle}else{pomo.endAt=Date.now()+pomo.left*1000;pomo.timer=setInterval(pomoTick,200);pomo.running=true;if(btn)btn.textContent='Pause'}pomoRender()}
+function pomoReset(){clearInterval(pomo.timer);pomo.running=false;pomo.sessions=0;var btn=$('pomoToggle');if(btn)btn.textContent='Start';document.title=pomo.origTitle;pomoSetMode('work')}
+try{if($('pomoTime'))pomoRender()}catch(e){}
 </script>
 </body>
 </html>

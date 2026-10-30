@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Playground — a free LLM that runs in your browser · DevKit</title>
+<meta name="description" content="Chat with a real LLM (SmolLM-135M) that runs 100% on your device with Transformers.js. Free, unlimited, no API key, no server — nothing you type leaves the page.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234f46e5'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<link rel="canonical" href="https://astro-devkit.github.io/devkit/ai-playground.html">
+<meta property="og:title" content="DevKit AI Playground — a free, unlimited LLM inside a web page">
+<meta property="og:description" content="SmolLM-135M running 100% in your browser via Transformers.js. No servers, no API key, no cost per token. Watch it generate live, in tokens/sec.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://astro-devkit.github.io/devkit/ai-playground.html">
+<meta name="twitter:card" content="summary">
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--line:#e8e2d6;--txt:#232a3d;--mut:#6f7686;--acc:#4f46e5;--acc2:#0891b2;--good:#059669}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}
+.aip-wrap{max-width:860px;margin:0 auto;padding:20px}
+.aip-head{text-align:center;padding:26px 0 4px}
+.aip-head h1{margin:0;font-size:30px;letter-spacing:-.5px}
+.aip-head h1 span{color:var(--acc)}
+.aip-hero{font-size:32px;font-weight:800;letter-spacing:-.8px;margin:10px 0 0;line-height:1.2}
+.aip-hero span{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.aip-sub{color:var(--mut);margin:10px auto 0;max-width:620px}
+.aip-nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.aip-nav a{background:#fff;color:var(--txt);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:14px;text-decoration:none}
+.aip-nav a:hover{border-color:var(--acc);color:var(--acc)}
+.aip-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 4px rgba(35,42,61,.05);margin-top:16px}
+.aip-card h2{margin:0 0 8px;font-size:19px}
+.aip-card h3{margin:14px 0 6px;font-size:15px}
+.aip-note{font-size:14px;color:var(--mut)}
+.aip-honest{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px;font-size:14px;margin-top:12px}
+.aip-bigbtn{background:var(--acc);color:#fff;border:0;border-radius:12px;padding:14px 22px;font-size:17px;font-weight:800;cursor:pointer;width:100%}
+.aip-bigbtn:hover{background:#4338ca}
+.aip-bigbtn:disabled{background:#a5a0d8;cursor:default}
+.aip-btn{background:var(--acc);color:#fff;border:0;border-radius:9px;padding:9px 14px;font-weight:700;cursor:pointer;margin:6px 6px 0 0}
+.aip-btn:disabled{background:#a5a0d8;cursor:default}
+.aip-ghost{background:transparent;color:var(--txt);border:1px solid var(--line);border-radius:9px;padding:9px 14px;cursor:pointer;margin:6px 6px 0 0}
+.aip-prow{margin-top:10px}
+.aip-prow .aip-plabel{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);font-family:ui-monospace,Menlo,Consolas,monospace}
+.aip-bar{height:8px;background:#eeeae0;border-radius:99px;overflow:hidden;margin-top:3px}
+.aip-bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .2s}
+.aip-status{font-size:14px;color:var(--mut);margin-top:10px}
+.aip-badge{display:inline-block;background:#f0fdf6;border:1px solid #bbf7d0;color:#065f46;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:600}
+.aip-err{display:none;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:10px;padding:10px 12px;font-size:14px;margin-top:12px}
+.aip-chat{display:flex;flex-direction:column;gap:10px;min-height:180px;max-height:460px;overflow:auto;padding:4px}
+.aip-msg{max-width:88%;border-radius:14px;padding:10px 13px;white-space:pre-wrap;word-break:break-word;font-size:15px}
+.aip-msg.aip-user{align-self:flex-end;background:var(--acc);color:#fff;border-bottom-right-radius:4px}
+.aip-msg.aip-bot{align-self:flex-start;background:#f4f1ea;border:1px solid var(--line);border-bottom-left-radius:4px}
+.aip-msg.aip-sys{align-self:center;background:transparent;color:var(--mut);font-size:13px;text-align:center}
+.aip-stats{font-size:13px;color:var(--mut);margin-top:8px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.aip-stats b{color:var(--good)}
+.aip-controls{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+.aip-controls label{flex:1;min-width:180px;font-size:13px;color:var(--mut)}
+.aip-controls input[type=range]{width:100%}
+.aip-controls .aip-val{color:var(--txt);font-weight:700}
+.aip-inputrow{display:flex;gap:8px;margin-top:10px}
+.aip-inputrow textarea{flex:1;background:#fff;color:var(--txt);border:1px solid var(--line);border-radius:9px;padding:9px 10px;font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:52px;resize:vertical}
+.aip-inputrow .aip-btn{margin:0;align-self:flex-end}
+.aip-specs{font-size:14px;color:var(--mut)}
+.aip-specs li{margin:3px 0}
+footer{max-width:860px;margin:0 auto;padding:8px 20px 36px;color:var(--mut);font-size:13px;text-align:center}
+</style>
+</head>
+<body>
+<div class="aip-wrap">
+<header class="aip-head">
+<h1>Dev<span>Kit</span></h1>
+<p class="aip-hero">A free, unlimited LLM — <span>inside this web page.</span></p>
+<p class="aip-sub">No servers. No API key. No cost per token. A real language model downloads once, then generates text entirely on your device — and this page shows you exactly how fast, in tokens per second.</p>
+<nav class="aip-nav">
+<a href="index.html">← All DevKit tools</a>
+<a href="index.html#tab-llm">LLM cost &amp; speed tools</a>
+<a href="devtools.html">DevTools guide</a>
+<a href="guides.html">Guides</a>
+</nav>
+</header>
+
+<div class="aip-card">
+<h2>How this works</h2>
+<p style="margin:6px 0">This page uses <a href="https://huggingface.co/docs/transformers.js" target="_blank" rel="noopener">Transformers.js</a> to run <b>SmolLM-135M-Instruct</b> (a small open model from Hugging Face) directly in your browser, inside a Web Worker so the page never freezes. Inference uses WebGPU if your browser offers it, and falls back to WASM on your CPU.</p>
+<ul class="aip-specs">
+<li><b>Model:</b> SmolLM-135M-Instruct, 4-bit quantized (q4f16) — small enough to live in your RAM</li>
+<li><b>One-time download:</b> ~121 MB, then cached by your browser for every future visit</li>
+<li><b>Privacy:</b> after the download, nothing you type leaves this page — there is no server to send it to</li>
+<li><b>Cost:</b> $0. Your device does the work, so there is no per-token bill</li>
+</ul>
+<div class="aip-honest">Honest expectations: a tiny 135M model that lives in your RAM — fun and instant, not GPT-class. It will write plausible text, answer simple questions, and cheerfully make things up. For real API models and what they cost, see the <a href="index.html#tab-llm">LLM cost calculator</a>.</div>
+</div>
+
+<div class="aip-card" id="aipLoadCard">
+<h2>1. Load the model</h2>
+<p class="aip-note" style="margin:6px 0">Nothing downloads until you click. The ~121 MB one-time download is cached by your browser, then the model runs 100% on your device — free, unlimited, no API key, nothing you type leaves the page.</p>
+<button class="aip-bigbtn" id="aipLoadBtn">Load the model (~121 MB, one time)</button>
+<div id="aipProgress"></div>
+<div class="aip-status" id="aipStatus">Not loaded yet.</div>
+<div class="aip-err" id="aipError"></div>
+</div>
+
+<div class="aip-card" id="aipChatCard">
+<h2>2. Chat with it</h2>
+<div class="aip-chat" id="aipChat">
+<div class="aip-msg aip-sys">Load the model above, then say hello. Try: “Write a haiku about autumn leaves” or “Explain what a hash table is in one sentence”.</div>
+</div>
+<div class="aip-stats" id="aipStats">Tokens generated: 0 · Speed: — tok/s</div>
+<div class="aip-controls">
+<label>Creativity (temperature): <span class="aip-val" id="aipTempVal">0.7</span><br><input type="range" id="aipTemp" min="0" max="1.5" step="0.05" value="0.7"></label>
+<label>Max new tokens: <span class="aip-val" id="aipMaxVal">256</span><br><input type="range" id="aipMax" min="32" max="512" step="16" value="256"></label>
+</div>
+<div class="aip-inputrow">
+<textarea id="aipInput" placeholder="Type a message… (Enter to send, Shift+Enter for a new line)" disabled></textarea>
+<button class="aip-btn" id="aipSend" disabled>Send</button>
+</div>
+<div>
+<button class="aip-ghost" id="aipStop" disabled>Stop generating</button>
+<button class="aip-ghost" id="aipClear">Clear chat</button>
+<span class="aip-status" id="aipBackend" style="margin-left:8px"></span>
+</div>
+</div>
+
+<footer>DevKit — calculators, converters and dev tools. All client-side, no cookies, no tracking, no uploads. Built by Astro. Source on <a href="https://github.com/astro-devkit/devkit">GitHub</a>. Model: <a href="https://huggingface.co/onnx-community/SmolLM-135M-Instruct-ONNX" target="_blank" rel="noopener">SmolLM-135M-Instruct (ONNX)</a>, run with <a href="https://huggingface.co/docs/transformers.js" target="_blank" rel="noopener">Transformers.js</a>.</footer>
+</div>
+<noscript><p style="text-align:center">The AI playground needs JavaScript — the model runs in your browser.</p></noscript>
+
+<script type="module">
+const $ = (id) => document.getElementById(id);
+const loadBtn = $('aipLoadBtn'), statusEl = $('aipStatus'), errEl = $('aipError'),
+  progEl = $('aipProgress'), chatEl = $('aipChat'), inputEl = $('aipInput'),
+  sendBtn = $('aipSend'), stopBtn = $('aipStop'), clearBtn = $('aipClear'),
+  statsEl = $('aipStats'), backendEl = $('aipBackend'),
+  tempEl = $('aipTemp'), tempVal = $('aipTempVal'), maxEl = $('aipMax'), maxVal = $('aipMaxVal');
+
+let worker = null, ready = false, generating = false;
+let history = [{ role: 'system', content: 'You are a helpful assistant. Keep answers brief and clear.' }];
+let currentBotEl = null, totalTokens = 0;
+
+function showError(msg) { errEl.textContent = msg; errEl.style.display = 'block'; }
+function hideError() { errEl.style.display = 'none'; }
+function setStatus(t) { statusEl.textContent = t; }
+function addMsg(cls, text) {
+  const d = document.createElement('div');
+  d.className = 'aip-msg ' + cls; d.textContent = text;
+  chatEl.appendChild(d); chatEl.scrollTop = chatEl.scrollHeight;
+  return d;
+}
+function setStats(tokens, tps) {
+  statsEl.innerHTML = 'Tokens generated: ' + tokens + ' · Speed: ' +
+    (tps ? '<b>' + tps.toFixed(1) + ' tok/s</b>' : '— tok/s');
+}
+
+tempEl.addEventListener('input', () => { tempVal.textContent = tempEl.value; });
+maxEl.addEventListener('input', () => { maxVal.textContent = maxEl.value; });
+
+const fileRows = {};
+function onProgress(data) {
+  if (!data || !data.file) return;
+  if (data.status === 'initiate' || data.status === 'progress' || data.status === 'done') {
+    let row = fileRows[data.file];
+    if (!row) {
+      const wrap = document.createElement('div'); wrap.className = 'aip-prow';
+      wrap.innerHTML = '<div class="aip-plabel"><span></span><span></span></div><div class="aip-bar"><i></i></div>';
+      progEl.appendChild(wrap);
+      row = fileRows[data.file] = {
+        name: wrap.querySelector('.aip-plabel span:first-child'),
+        pct: wrap.querySelector('.aip-plabel span:last-child'),
+        bar: wrap.querySelector('.aip-bar i'),
+      };
+      row.name.textContent = data.file;
+    }
+    if (data.status === 'done') { row.bar.style.width = '100%'; row.pct.textContent = 'done'; }
+    else if (typeof data.progress === 'number') {
+      row.bar.style.width = data.progress.toFixed(1) + '%';
+      const mb = (n) => (n / 1048576).toFixed(1) + ' MB';
+      row.pct.textContent = data.total ? mb(data.loaded || 0) + ' / ' + mb(data.total) : data.progress.toFixed(0) + '%';
+    }
+    setStatus('Downloading model files… (one time only — your browser caches them)');
+  }
+}
+
+function loadModel() {
+  hideError();
+  if (typeof Worker === 'undefined') {
+    showError('This browser does not support Web Workers, so the model has nowhere to run. Try a current version of Chrome, Edge, Firefox or Safari.');
+    return;
+  }
+  loadBtn.disabled = true;
+  loadBtn.textContent = 'Loading…';
+  setStatus('Starting the model worker…');
+  try {
+    worker = new Worker('ai-worker.js', { type: 'module' });
+  } catch (err) {
+    showError('The model worker could not start: ' + err.message);
+    loadBtn.disabled = false; loadBtn.textContent = 'Try loading again';
+    return;
+  }
+  worker.onerror = (ev) => {
+    if (!ready) {
+      showError('The model could not be loaded. This usually means the download was blocked or you are offline — the model files come from the Hugging Face CDN (~121 MB). Check your connection and try again.' + (ev.message ? ' (Details: ' + ev.message + ')' : ''));
+      loadBtn.disabled = false; loadBtn.textContent = 'Try loading again';
+      setStatus('Load failed.');
+    }
+  };
+  worker.onmessage = (e) => {
+    const m = e.data || {};
+    if (m.type === 'progress') onProgress(m.data);
+    else if (m.type === 'phase') setStatus(m.phase === 'loading-webgpu' ? 'Starting WebGPU engine…' : 'Starting WASM (CPU) engine…');
+    else if (m.type === 'ready') {
+      ready = true;
+      setStatus('Model loaded. It now runs entirely on your device.');
+      backendEl.innerHTML = 'Running on: <span class="aip-badge">' + (m.backend === 'webgpu' ? 'WebGPU — your graphics chip' : 'WASM — your CPU') + '</span>';
+      loadBtn.textContent = 'Model loaded ✓';
+      inputEl.disabled = false; sendBtn.disabled = false;
+      inputEl.focus();
+    } else if (m.type === 'update') {
+      if (currentBotEl) { currentBotEl.textContent += m.text; chatEl.scrollTop = chatEl.scrollHeight; }
+      setStats(m.tokens, m.tps);
+    } else if (m.type === 'complete') {
+      generating = false;
+      stopBtn.disabled = true; sendBtn.disabled = false; inputEl.disabled = false;
+      if (currentBotEl && m.text && !currentBotEl.textContent) currentBotEl.textContent = m.text;
+      if (currentBotEl && !currentBotEl.textContent) currentBotEl.textContent = '(no output — try raising the temperature or max tokens)';
+      totalTokens = m.tokens;
+      setStats(m.tokens, m.tps);
+      history.push({ role: 'assistant', content: currentBotEl ? currentBotEl.textContent : m.text });
+      currentBotEl = null;
+      inputEl.focus();
+    } else if (m.type === 'error') {
+      if (!ready) {
+        showError('The model could not be loaded. This usually means the download was blocked or you are offline — the model files come from the Hugging Face CDN (~121 MB). Check your connection and try again. (Details: ' + m.message + ')');
+        loadBtn.disabled = false; loadBtn.textContent = 'Try loading again';
+        setStatus('Load failed.');
+      } else {
+        generating = false;
+        stopBtn.disabled = true; sendBtn.disabled = false; inputEl.disabled = false;
+        if (currentBotEl && !currentBotEl.textContent) currentBotEl.textContent = '(generation stopped)';
+        showError(m.message);
+        currentBotEl = null;
+      }
+    }
+  };
+  worker.postMessage({ type: 'load' });
+}
+
+function send() {
+  if (!ready || generating) return;
+  const text = inputEl.value.trim();
+  if (!text) return;
+  hideError();
+  inputEl.value = '';
+  addMsg('aip-user', text);
+  history.push({ role: 'user', content: text });
+  currentBotEl = addMsg('aip-bot', '');
+  generating = true;
+  sendBtn.disabled = true; inputEl.disabled = true; stopBtn.disabled = false;
+  setStats(0, 0);
+  const recent = [history[0]].concat(history.slice(-9));
+  worker.postMessage({
+    type: 'generate',
+    messages: recent,
+    temperature: parseFloat(tempEl.value),
+    maxNewTokens: parseInt(maxEl.value, 10),
+  });
+}
+
+loadBtn.addEventListener('click', loadModel);
+sendBtn.addEventListener('click', send);
+inputEl.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
+stopBtn.addEventListener('click', () => { if (worker) worker.postMessage({ type: 'interrupt' }); });
+clearBtn.addEventListener('click', () => {
+  history = [history[0]];
+  chatEl.innerHTML = '';
+  addMsg('aip-sys', 'Chat cleared. The model is still loaded — ask it something new.');
+  setStats(0, 0);
+});
+</script>
+</body>
+</html>
